@@ -3,6 +3,7 @@
 ## Table of Contents
 - [Abstract](#abstract)
 - [Course Overview](#course-overview)
+- [Technical Stack](#tech-stack)
 
 This is a course about functional programming. It is intended to introduce people to the concepts of functional programming and functional reactive programming with examples in C#, F# and TypeScript.
 
@@ -55,4 +56,14 @@ As the result of this course you should know and understand the common principle
 - Topic 4: [Functional Reactive]()
 - Meeting: [Module Summary and Workshop]()
 
-### Resources
+## Technical Stack <a name="tech-stack"></a>
+
+|Tier   |F#                     |C#                     |TypeScript         |
+|---    |---                    |---                    |---                |
+|Engine |Pure F#                |Pure C#                |Pure TS            |
+|Api    |Giraffe/Saturn/SignalR |ASP.NET Core/SignalR   |-                  |
+|Web    |Fable/Elmish           |-                      |React.js/Cycle.js  |
+|Tests  |-                      |xUnit                  |                   |
+
+
+## Resources
