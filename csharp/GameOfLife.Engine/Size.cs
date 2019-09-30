@@ -13,5 +13,12 @@
         public int Width { get; }
 
         public int Height { get; }
+
+        public override bool Equals(object obj) => 
+            obj is Size size
+                && size.Width == Width
+                && size.Height == Height;
+
+        public override int GetHashCode() => Height ^ Width;
     }
 }

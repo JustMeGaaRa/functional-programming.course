@@ -60,6 +60,7 @@ As the result of this course you should know and understand the common principle
 
 |Tier   |F#                     |C#                     |TypeScript         |
 |---    |---                    |---                    |---                |
+|Store  |EventStore             |SQL Server             |localStorage       |
 |Engine |Pure F#                |Pure C#                |Pure TS            |
 |Api    |Giraffe/Saturn/SignalR |ASP.NET Core/SignalR   |-                  |
 |Web    |Fable/Elmish           |-                      |React.js/Cycle.js  |

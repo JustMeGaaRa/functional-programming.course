@@ -1,4 +1,6 @@
-﻿namespace GameOfLife.Engine
+﻿using System.Linq;
+
+namespace GameOfLife.Engine
 {
     public class World
     {
@@ -30,20 +32,18 @@
 
         public Size Size { get; }
 
-        public uint Generation { get; }
-
         public World Evolve()
         {
             Cell[,] cells = _cells
-                .Select((cell, row, column) => GetNextPopulationState(_cells, row, column))
+                .Select((cell, row, column) => GetNextPopulationState(_cells, Size, row, column))
                 .Select(Cell.Create);
             return new World(cells, Size);
         }
 
-        private Population GetNextPopulationState(Cell[,] cells, int row, int column)
+        private Population GetNextPopulationState(Cell[,] cells, Size size, int row, int column)
         {
             var cell = cells[row, column];
-            int aliveNeighbours = CountAliveNeighbours(cells, row, column);
+            int aliveNeighbours = CountAliveNeighbours(cells, size, row, column);
             var state = (cell, aliveNeighbours) switch
             {
                 // Any live cell with fewer than two live neighbours dies, as if by underpopulation.
@@ -65,9 +65,27 @@
             return state;
         }
 
-        private int CountAliveNeighbours(Cell[,] cells, int row, int column)
+        private int CountAliveNeighbours(Cell[,] cells, Size size, int row, int column)
         {
-            return 0;
+            (int row, int column)[] indicies = new[]
+            {
+                (row - 1, column - 1),
+                (row - 1, column),
+                (row - 1, column + 1),
+                (row, column - 1),
+                (row, column + 1),
+                (row + 1, column - 1),
+                (row + 1, column),
+                (row + 1, column + 1)
+            };
+            return indicies.Count(position => CheckPopulationSafely(cells, size, position.row, position.column));
+        }
+
+        private bool CheckPopulationSafely(Cell[,] cells, Size size, int row, int column)
+        {
+            return row >= 0 && column >= 0
+                && row < size.Height && column < size.Width
+                && cells[row, column].Population.IsAlive();
         }
     }
 }
