@@ -10,6 +10,10 @@
             Number = number;
         }
 
+        public Cell this[int row, int column] => _world[row, column];
+
+        public Size Size => _world.Size;
+
         public uint Number { get; }
 
         public static Generation Zero(int width, int height) => new Generation(World.FromSize(width, height), 0);
