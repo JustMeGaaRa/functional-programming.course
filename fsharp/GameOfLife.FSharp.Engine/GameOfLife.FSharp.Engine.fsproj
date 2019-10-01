@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Position.fs" />
+    <Compile Include="Size.fs" />
+    <Compile Include="Cell.fs" />
+    <Compile Include="World.fs" />
+    <Compile Include="PopulationPatterns.fs" />
+  </ItemGroup>
+
+</Project>
