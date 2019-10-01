@@ -14,6 +14,10 @@ namespace GameOfLife.Engine
 
         public static World Empty => new World(new Cell[0, 0], Size.None);
 
+        public Cell this[int row, int column] => _cells[row, column];
+
+        public Size Size { get; }
+
         public static World FromSize(int width, int height)
         {
             Size size = new Size(width, height);
@@ -27,10 +31,6 @@ namespace GameOfLife.Engine
             Cell[,] cells = states.Select(Cell.Create);
             return new World(cells, size);
         }
-
-        public Cell this[int row, int column] => _cells[row, column];
-
-        public Size Size { get; }
 
         public World Evolve()
         {

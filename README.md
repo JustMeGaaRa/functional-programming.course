@@ -58,13 +58,14 @@ As the result of this course you should know and understand the common principle
 
 ## Technical Stack <a name="tech-stack"></a>
 
-|Tier   |F#                     |C#                     |TypeScript         |
-|---    |---                    |---                    |---                |
-|Store  |EventStore             |SQL Server             |localStorage       |
-|Engine |Pure F#                |Pure C#                |Pure TS            |
-|Api    |Giraffe/Saturn/SignalR |ASP.NET Core/SignalR   |-                  |
-|Web    |Fable/Elmish           |-                      |React.js/Cycle.js  |
-|Tests  |-                      |xUnit                  |                   |
+|Tier       |F#                     |C#                     |TypeScript         |
+|---        |---                    |---                    |---                |
+|Store      |EventStore             |SQL Server             |localStorage       |
+|Engine     |Pure F#                |Pure C#                |Pure TS            |
+|Api        |Giraffe/Saturn/SignalR |ASP.NET Core/SignalR   |-                  |
+|Desktop    |Console                |Console                |-                  |
+|Web        |Fable/Elmish           |-                      |React.js/Cycle.js  |
+|Tests      |-                      |xUnit                  |                   |
 
 
 ## Resources

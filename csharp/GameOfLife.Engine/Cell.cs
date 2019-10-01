@@ -9,7 +9,5 @@
         public static Cell Empty => new Cell(Population.Dead);
 
         public static Cell Create(Population state) => new Cell(state);
-
-        public Cell ChangeState(Population state) => new Cell(state);
     }
 }
