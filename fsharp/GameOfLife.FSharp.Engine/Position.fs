@@ -1,11 +1,11 @@
 ﻿namespace GameOfLife.FSharp.Engine
+    
+type Position = {
+    row: int;
+    column: int;
+}
 
 module Position =
-    
-    type Position = {
-        row: int;
-        column: int;
-    }
 
     let create row column = {
         row = row;

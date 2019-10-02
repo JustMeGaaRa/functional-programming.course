@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace GameOfLife.Engine
 {
-    public class Time
+    public class Time : IObservable<Generation>
     {
         private readonly CancellationTokenSource _cts;
         private readonly ISubject<Generation> _observable;
@@ -17,11 +17,16 @@ namespace GameOfLife.Engine
             _observable = new Subject<Generation>();
         }
 
-        public IObservable<Generation> Start(Population[,] pattern)
+        public IDisposable Subscribe(IObserver<Generation> observer)
+        {
+            return _observable.Subscribe(observer);
+        }
+
+        public Task<Generation> Start(Population[,] pattern)
         {
             Generation generation0 = Generation.Zero(pattern);
             _generationTask = Task.Run(() => Flow(_observable, generation0, _cts.Token));
-            return _observable;
+            return _generationTask;
         }
 
         public async Task<Generation> End()

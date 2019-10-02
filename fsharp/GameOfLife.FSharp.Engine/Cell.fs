@@ -1,9 +1,9 @@
 ﻿namespace GameOfLife.FSharp.Engine
 
-module Cell = 
+type Cell = 
+    | Dead
+    | Alive
 
-    type Cell = 
-        | Dead
-        | Alive
+module Cell = 
 
     let empty() = Dead

@@ -1,14 +1,11 @@
 ﻿namespace GameOfLife.FSharp.Engine
 
-open Cell
-open Size
+type World = {
+    cells: Cell[,];
+    size: Size;
+}
 
 module World =
-
-    type World = {
-        cells: Cell[,];
-        size: Size;
-    }
 
     let empty() = {
         cells = Array2D.create 0 0 Dead;

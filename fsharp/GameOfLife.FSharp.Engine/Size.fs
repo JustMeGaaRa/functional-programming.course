@@ -1,11 +1,11 @@
 ﻿namespace GameOfLife.FSharp.Engine
+    
+type Size = {
+    width: int;
+    height: int;
+}
 
 module Size =
-    
-    type Size = {
-        width: int;
-        height: int;
-    }
 
     let create width height = {
         width = width;

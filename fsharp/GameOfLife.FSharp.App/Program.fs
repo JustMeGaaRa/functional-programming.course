@@ -2,5 +2,5 @@
 
 [<EntryPoint>]
 let main argv =
-    let world = World.fromPattern PopulationPatterns.pulsar
+    let world = Generation.zero PopulationPatterns.pulsar
     0 // return an integer exit code

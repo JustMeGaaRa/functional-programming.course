@@ -1,7 +1,5 @@
 ﻿namespace GameOfLife.FSharp.Engine
 
-open Cell
-
 module PopulationPatterns =
 
     /// <summary>

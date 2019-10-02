@@ -15,8 +15,8 @@ namespace GameOfLife.App
             Console.Clear();
 
             Time time = new Time();
-            IObservable<Generation> obserable = time.Start(PopulationPatterns.Pulsar);
-            using IDisposable disposable = obserable.Subscribe(Render);
+            time.Start(PopulationPatterns.Pulsar);
+            time.Subscribe(Render);
             await Task.Delay(10000);
             await time.End();
         }
