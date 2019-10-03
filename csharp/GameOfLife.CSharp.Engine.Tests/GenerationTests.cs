@@ -8,7 +8,7 @@ namespace GameOfLife.Engine.Tests
         public void Next_FromBlinkerPeriod1Pattern_ReturnsGeneration1()
         {
             // Arrange, Act
-            Generation generation0 = Generation.Zero(PopulationPatterns.Blinker);
+            Generation generation0 = Generation.Zero(WorldPatternCollection.Blinker);
             Generation generation1 = generation0.Next();
 
             // Assert

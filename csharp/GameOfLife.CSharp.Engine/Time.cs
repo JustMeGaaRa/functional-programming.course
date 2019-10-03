@@ -22,7 +22,7 @@ namespace GameOfLife.Engine
             return _observable.Subscribe(observer);
         }
 
-        public Task<Generation> Start(Population[,] pattern)
+        public Task<Generation> Start(WorldPattern pattern)
         {
             Generation generation0 = Generation.Zero(pattern);
             _generationTask = Task.Run(() => Flow(_observable, generation0, _cts.Token));
@@ -37,7 +37,7 @@ namespace GameOfLife.Engine
 
         private static async Task<Generation> Flow(ISubject<Generation> observable, Generation generation, CancellationToken token)
         {
-            await Task.Delay(1000);
+            observable.OnNext(generation);
 
             if (token.IsCancellationRequested)
             {
@@ -45,9 +45,8 @@ namespace GameOfLife.Engine
                 return generation;
             }
 
-            var next = generation.Next();
-            observable.OnNext(next);
-            return await Flow(observable, next, token);
+            await Task.Delay(1000);
+            return await Flow(observable, generation.Next(), token);
         }
     }
 }

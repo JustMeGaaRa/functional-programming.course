@@ -25,10 +25,10 @@ namespace GameOfLife.Engine
             return new World(cells, size);
         }
 
-        public static World FromPattern(Population[,] states)
+        public static World FromPattern(WorldPattern pattern)
         {
-            Size size = new Size(states.GetLength(1), states.GetLength(0));
-            Cell[,] cells = states.Select(Cell.Create);
+            Size size = new Size(pattern.Width, pattern.Height);
+            Cell[,] cells = pattern.Select(alive => Cell.Create(alive ? Population.Alive : Population.Dead));
             return new World(cells, size);
         }
 

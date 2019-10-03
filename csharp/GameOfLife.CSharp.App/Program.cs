@@ -8,26 +8,11 @@ namespace GameOfLife.App
     {
         private static async Task Main(string[] args)
         {
-            Generation generation0 = Generation.Zero(PopulationPatterns.Pulsar);
-            Generation generationN = ObserveCommands(generation0);
-
-            Console.WriteLine(generationN);
-            Console.Clear();
-
             Time time = new Time();
-            time.Start(PopulationPatterns.Pulsar);
             time.Subscribe(Render);
+            time.Start(WorldPatternCollection.Pulsar);
             await Task.Delay(10000);
             await time.End();
-        }
-
-        private static Generation ObserveCommands(Generation generation)
-        {
-            var keyInfo = Console.ReadKey();
-            Render(generation);
-            return keyInfo.Key == ConsoleKey.Escape
-                ? generation
-                : ObserveCommands(generation.Next());
         }
 
         private static void Render(Generation generation)

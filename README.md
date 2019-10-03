@@ -65,7 +65,7 @@ As the result of this course you should know and understand the common principle
 |Api        |Giraffe/Saturn/SignalR |ASP.NET Core/SignalR   |-                  |
 |Desktop    |Console                |Console                |-                  |
 |Web        |Fable/Elmish           |-                      |React.js/Cycle.js  |
-|Tests      |-                      |xUnit                  |                   |
+|Tests      |-                      |xUnit                  |-                  |
 
 
 ## Resources
