@@ -15,7 +15,7 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "GameOfLife.FSharp.App", "fs
 EndProject
 Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "GameOfLife.TypeScript.App", "typescript\GameOfLife.TypeScript.App\GameOfLife.TypeScript.App.njsproj", "{D4EED506-1455-4E6C-A79D-BE1CD942E507}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameOfLife.CSharp.Api", "csharp\GameOfLife.CSharp.Api\GameOfLife.CSharp.Api.csproj", "{BA31E8D3-4939-4844-8570-2E7418897614}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameOfLife.CSharp.Api", "csharp\GameOfLife.CSharp.Api\GameOfLife.CSharp.Api.csproj", "{BA31E8D3-4939-4844-8570-2E7418897614}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "csharp", "csharp", "{466132C7-8D11-4F74-B035-42C1EA0B27B8}"
 EndProject

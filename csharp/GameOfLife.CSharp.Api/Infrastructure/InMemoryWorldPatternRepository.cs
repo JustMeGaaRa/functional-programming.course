@@ -12,7 +12,7 @@ namespace GameOfLife.CSharp.Api.Infrastructure
 
         public InMemoryWorldPatternRepository()
         {
-            _patterns = new List<WorldPattern>();
+            _patterns = new List<WorldPattern>(WorldPatternCollection.AllPatterns);
         }
 
         public WorldPattern CreatePattern(WorldPattern pattern)

@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 
 namespace GameOfLife.Engine
 {
-    public class Time : IObservable<Generation>
+    public class Time : IObservable<Generation>, IDisposable
     {
         private readonly CancellationTokenSource _cts;
         private readonly ISubject<Generation> _observable;
+        private IDisposable _disposable;
         private Task<Generation> _generationTask;
 
         public Time()
@@ -19,20 +20,22 @@ namespace GameOfLife.Engine
 
         public IDisposable Subscribe(IObserver<Generation> observer)
         {
-            return _observable.Subscribe(observer);
+            _disposable = _observable.Subscribe(observer);
+            return _disposable;
         }
 
-        public Task<Generation> Start(WorldPattern pattern)
+        public void Dispose()
         {
-            Generation generation0 = Generation.Zero(pattern);
-            _generationTask = Task.Run(() => Flow(_observable, generation0, _cts.Token));
-            return _generationTask;
-        }
-
-        public async Task<Generation> End()
-        {
+            _disposable.Dispose();
             _cts.Cancel();
-            return await _generationTask;
+            _generationTask.Wait();
+        }
+
+        public Generation Start(WorldPattern pattern)
+        {
+            var generation = Generation.Zero(pattern);
+            _generationTask = Task.Run(() => Flow(_observable, generation, _cts.Token));
+            return generation;
         }
 
         private static async Task<Generation> Flow(ISubject<Generation> observable, Generation generation, CancellationToken token)

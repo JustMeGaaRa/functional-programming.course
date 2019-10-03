@@ -1,7 +1,9 @@
 ﻿using GameOfLife.CSharp.Api.Models;
+using GameOfLife.CSharp.Api.Services;
 using GameOfLife.Engine;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace GameOfLife.CSharp.Api.Controllers
 {
@@ -10,10 +12,12 @@ namespace GameOfLife.CSharp.Api.Controllers
     public class WorldPatternController : ControllerBase
     {
         private readonly IWorldPatternRepository _repository;
+        private readonly IGameOfLifeService _gameOfLifeService;
 
-        public WorldPatternController(IWorldPatternRepository repository)
+        public WorldPatternController(IWorldPatternRepository repository, IGameOfLifeService gameOfLifeService)
         {
             _repository = repository;
+            _gameOfLifeService = gameOfLifeService;
         }
 
         [ProducesResponseType(typeof(WorldPatternVM), 200)]
@@ -21,7 +25,7 @@ namespace GameOfLife.CSharp.Api.Controllers
         public IActionResult GetWorldPatterns(int userId)
         {
             var worldPatterns = _repository.GetUserPatterns(userId);
-            var worldPatternVms = worldPatterns.Select(FromWorldPattern).ToList();
+            var worldPatternVms = worldPatterns.Select(ToWorldPatternVM).ToList();
             return Ok(worldPatternVms);
         }
 
@@ -30,7 +34,7 @@ namespace GameOfLife.CSharp.Api.Controllers
         public IActionResult GetWorldPatternById(int patternId)
         {
             var worldPattern = _repository.GetPatternById(patternId);
-            var worldPatternVm = FromWorldPattern(worldPattern);
+            var worldPatternVm = ToWorldPatternVM(worldPattern);
             return Ok(worldPatternVm);
         }
 
@@ -53,19 +57,24 @@ namespace GameOfLife.CSharp.Api.Controllers
             return success ? Ok() : StatusCode(500);
         }
 
-        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(WorldPatternVM), 200)]
         [HttpPost("{patternId:int}/game")]
-        public IActionResult StartGameFromPattern(int patternId)
+        public async Task<IActionResult> StartGameFromPattern(int patternId)
         {
-            var worldPattern = _repository.GetPatternById(patternId);
-            var time = new Time();
-            time.Start(worldPattern);
-            return Ok();
+            int userId = 0;
+            var generation = await _gameOfLifeService.StartGameAsync(userId, patternId);
+            var generationVm = ToGenerationVM(generation);
+            return Ok(generationVm);
         }
 
-        private WorldPatternVM FromWorldPattern(WorldPattern pattern)
+        private WorldPatternVM ToWorldPatternVM(WorldPattern pattern)
         {
-            return new WorldPatternVM { Height = pattern.Height, Width = pattern.Width };
+            return new WorldPatternVM { Name = pattern.Name, Height = pattern.Height, Width = pattern.Width };
+        }
+
+        private GenerationVM ToGenerationVM(Generation generation)
+        {
+            return new GenerationVM { Height = generation.Size.Height, Width = generation.Size.Width };
         }
     }
 }

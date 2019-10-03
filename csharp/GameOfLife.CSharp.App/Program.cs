@@ -9,10 +9,9 @@ namespace GameOfLife.App
         private static async Task Main(string[] args)
         {
             Time time = new Time();
-            time.Subscribe(Render);
+            using var disposable = time.Subscribe(Render);
             time.Start(WorldPatternCollection.Pulsar);
             await Task.Delay(10000);
-            await time.End();
         }
 
         private static void Render(Generation generation)
