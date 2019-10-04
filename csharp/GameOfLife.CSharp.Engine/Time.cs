@@ -7,16 +7,10 @@ namespace GameOfLife.Engine
 {
     public class Time : IObservable<Generation>, IDisposable
     {
-        private readonly CancellationTokenSource _cts;
-        private readonly ISubject<Generation> _observable;
-        private IDisposable _disposable;
-        private Task<Generation> _generationTask;
-
-        public Time()
-        {
-            _cts = new CancellationTokenSource();
-            _observable = new Subject<Generation>();
-        }
+        private readonly CancellationTokenSource _cts = new CancellationTokenSource();
+        private readonly ISubject<Generation> _observable = new Subject<Generation>();
+        private IDisposable? _disposable;
+        private Task<Generation>? _generationTask;
 
         public IDisposable Subscribe(IObserver<Generation> observer)
         {
@@ -26,9 +20,10 @@ namespace GameOfLife.Engine
 
         public void Dispose()
         {
-            _disposable.Dispose();
+            _disposable?.Dispose();
             _cts.Cancel();
-            _generationTask.Wait();
+            _cts.Dispose();
+            _generationTask?.Wait();
         }
 
         public Generation Start(WorldPattern pattern)

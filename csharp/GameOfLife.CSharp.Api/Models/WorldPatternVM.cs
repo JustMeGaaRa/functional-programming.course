@@ -4,7 +4,7 @@ namespace GameOfLife.CSharp.Api.Models
 {
     public class WorldPatternVM
     {
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [Required]
         public int Height { get; set; }

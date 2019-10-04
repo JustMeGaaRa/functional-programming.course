@@ -8,6 +8,6 @@ namespace GameOfLife.CSharp.Api.Models
 
         public int Width { get; set; }
 
-        public ICollection<PositionVM> AliveCells { get; set; }
+        public ICollection<PositionVM>? AliveCells { get; set; }
     }
 }
