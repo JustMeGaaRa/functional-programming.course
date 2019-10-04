@@ -26,7 +26,7 @@ namespace GameOfLife.Engine
             _generationTask?.Wait();
         }
 
-        public Generation Start(WorldPattern pattern)
+        public Generation Start(PopulationPattern pattern)
         {
             var generation = Generation.Zero(pattern);
             _generationTask = Task.Run(() => Flow(_observable, generation, _cts.Token));

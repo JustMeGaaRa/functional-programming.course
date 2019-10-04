@@ -7,20 +7,20 @@ open Microsoft.AspNetCore.Hosting
 open Microsoft.Extensions.Logging
 open Microsoft.Extensions.DependencyInjection
 open Giraffe
+open GameOfLife.FSharp.Engine
 
 module Startup =
     
     let indexHandler (name : string) =
-        let greetings = sprintf "Hello %s, from Giraffe!" name
-        let model     = { Text = greetings }
-        let view      = Views.index model
+        let model = Generation.zero PopulationPatterns.pulsar
+        let view = Views.index model
         htmlView view
     
     let webApp =
         choose [
             GET >=>
                 choose [
-                    route "/" >=> indexHandler "world"
+                    route "/" >=> indexHandler "Conway's Game Of Life"
                     routef "/hello/%s" indexHandler
                 ]
             setStatusCode 404 >=> text "Not Found" ]

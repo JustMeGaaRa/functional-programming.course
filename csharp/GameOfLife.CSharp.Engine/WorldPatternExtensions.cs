@@ -4,7 +4,7 @@ namespace GameOfLife.Engine
 {
     public static class WorldPatternExtensions
     {
-        public static TOutput[,] Select<TOutput>(this WorldPattern pattern, Func<bool, int, int, TOutput> func)
+        public static TOutput[,] Select<TOutput>(this PopulationPattern pattern, Func<bool, int, int, TOutput> func)
         {
             TOutput[,] clone = new TOutput[pattern.Height, pattern.Width];
 
@@ -19,7 +19,7 @@ namespace GameOfLife.Engine
             return clone;
         }
 
-        public static TOutput[,] Select<TOutput>(this WorldPattern pattern, Func<bool, TOutput> func)
+        public static TOutput[,] Select<TOutput>(this PopulationPattern pattern, Func<bool, TOutput> func)
         {
             return Select(pattern, (value, row, column) => func(value));
         }

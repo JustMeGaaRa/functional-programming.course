@@ -17,7 +17,6 @@
     <Content Include="WebRoot\**\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Compile Include="Models\Message.fs" />
     <Compile Include="Views\Views.fs" />
     <Compile Include="Startup.fs" />
     <Compile Include="Program.fs" />
@@ -29,6 +28,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GameOfLife.FSharp.Engine\GameOfLife.FSharp.Engine.fsproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\" />
   </ItemGroup>
 
 

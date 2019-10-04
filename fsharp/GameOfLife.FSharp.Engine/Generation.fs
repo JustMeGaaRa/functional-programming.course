@@ -7,8 +7,13 @@ type Generation = {
 
 module Generation =
 
-    let zero states = {
-        world = World.fromPattern states;
+    let create width height = {
+        world = World.fromSize width height;
+        number = 0;
+    }
+
+    let zero pattern = {
+        world = World.fromPattern pattern.cells;
         number = 0;
     }
 

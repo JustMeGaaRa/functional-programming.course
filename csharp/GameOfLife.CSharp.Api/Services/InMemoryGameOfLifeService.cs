@@ -22,7 +22,7 @@ namespace GameOfLife.CSharp.Api.Services
 
         public Task<Generation> StartGameAsync(int userId, int patternId)
         {
-            WorldPattern pattern = _repository.GetPatternById(patternId);
+            PopulationPattern pattern = _repository.GetPatternById(patternId);
             _activeGames[userId] = new Time();
             _activeGames[userId].Subscribe(PushGenerationToHub);
             Generation generation = _activeGames[userId].Start(pattern);

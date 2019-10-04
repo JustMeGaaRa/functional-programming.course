@@ -7,15 +7,15 @@ namespace GameOfLife.CSharp.Api.Infrastructure
 {
     public class InMemoryWorldPatternRepository : IWorldPatternRepository
     {
-        private readonly ICollection<WorldPattern> _patterns;
+        private readonly ICollection<PopulationPattern> _patterns;
         private int _identity = 0;
 
         public InMemoryWorldPatternRepository()
         {
-            _patterns = new List<WorldPattern>(WorldPatternCollection.AllPatterns);
+            _patterns = new List<PopulationPattern>(PopulationPatterns.AllPatterns);
         }
 
-        public WorldPattern CreatePattern(WorldPattern pattern)
+        public PopulationPattern CreatePattern(PopulationPattern pattern)
         {
             _patterns.Add(pattern);
             Interlocked.Increment(ref _identity);
@@ -23,14 +23,15 @@ namespace GameOfLife.CSharp.Api.Infrastructure
             return pattern;
         }
 
-        public WorldPattern GetPatternById(int patternId)
+        public PopulationPattern GetPatternById(int patternId)
         {
             return _patterns.FirstOrDefault(x => x.WorldPatternId == patternId);
         }
 
-        public ICollection<WorldPattern> GetUserPatterns(int userId)
+        public ICollection<PopulationPattern> GetUserPatterns(int userId)
         {
-            return _patterns.Where(x => x.UserId == userId).ToList();
+            // TODO: add a reference to user and filter by userId
+            return _patterns.ToList();
         }
     }
 }

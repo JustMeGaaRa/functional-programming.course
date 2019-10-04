@@ -2,7 +2,7 @@
 
 namespace GameOfLife.Engine
 {
-    public static class WorldPatternCollection
+    public static class PopulationPatterns
     {
         private const bool dead = false;
         private const bool live = true;
@@ -10,7 +10,7 @@ namespace GameOfLife.Engine
         /// <summary>
         /// A collection of predefined patterns: Blinker, Toad, Beacon, Pulsar
         /// </summary>
-        public static ICollection<WorldPattern> AllPatterns => new[]
+        public static ICollection<PopulationPattern> AllPatterns => new[]
         {
             Blinker,
             Toad,
@@ -21,7 +21,7 @@ namespace GameOfLife.Engine
         /// <summary>
         /// Blinker Pattern - Period 2
         /// </summary>
-        public static WorldPattern Blinker => WorldPattern.FromArray2D(0, "Blinker", new[,]
+        public static PopulationPattern Blinker => PopulationPattern.FromArray2D("Blinker", new[,]
         {
             { dead, live, dead },
             { dead, live, dead },
@@ -31,7 +31,7 @@ namespace GameOfLife.Engine
         /// <summary>
         /// Toad Pattern - Period 2
         /// </summary>
-        public static WorldPattern Toad => WorldPattern.FromArray2D(0, "Toad", new[,]
+        public static PopulationPattern Toad => PopulationPattern.FromArray2D("Toad", new[,]
         {
             { dead, dead, dead, dead },
             { dead, live, live, live },
@@ -42,7 +42,7 @@ namespace GameOfLife.Engine
         /// <summary>
         /// Beacon Pattern - Period 2
         /// </summary>
-        public static WorldPattern Beacon => WorldPattern.FromArray2D(0, "Beacon", new[,]
+        public static PopulationPattern Beacon => PopulationPattern.FromArray2D("Beacon", new[,]
         {
             { live, live, dead, dead },
             { live, live, dead, dead },
@@ -53,7 +53,7 @@ namespace GameOfLife.Engine
         /// <summary>
         /// Pulsar Pattern - Period 3
         /// </summary>
-        public static WorldPattern Pulsar => WorldPattern.FromArray2D(0, "Pulsar", new[,]
+        public static PopulationPattern Pulsar => PopulationPattern.FromArray2D("Pulsar", new[,]
         {
             { dead, dead, dead, dead, dead, dead, dead, dead, dead, dead, dead, dead, dead, dead, dead },
             { dead, dead, dead, live, live, live, dead, dead, dead, live, live, live, dead, dead, dead },

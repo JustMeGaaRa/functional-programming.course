@@ -2,25 +2,46 @@
 
 open Giraffe
 open GiraffeViewEngine
+open GameOfLife.FSharp.Engine
 
 module Views =
 
     let layout (content: XmlNode list) =
         html [] [
             head [] [
-                title []  [ encodedText "fsharp" ]
+                title []  [ encodedText "Conway's Game Of Life" ]
                 link [
-                        _type "text/css"
-                        _href "/main.css" ]
+                    _rel "stylesheet"
+                    _type "text/css"
+                    _href "/main.css" 
+                ]
             ]
-            body [] content
+            body [
+                _class "layout"
+            ] content
         ]
 
-    let partial () =
-        h1 [] [ encodedText "fsharp" ]
+    let index (genertion : Generation) =
+        let getRow row (array: 'a[,]) = array.[row, *] |> Seq.toList
+        
+        let toCell cell =
+            let style = function
+                | Dead -> "population dead"
+                | Alive -> "population alive"
+            td [] [
+                div [ _class (style cell) ] []
+            ]
 
-    let index (model : Message) =
-        [
-            partial()
-            p [] [ encodedText model.Text ]
-        ] |> layout
+        let rows = genertion.world.size.height - 1
+        let cells = genertion.world.cells
+        let trs = [
+            for row in 0..rows -> getRow row cells |> List.map toCell |> tr []
+        ]
+
+        layout [
+            div [
+                _class "grid centered"
+            ] [
+                table [] trs
+            ]
+        ]

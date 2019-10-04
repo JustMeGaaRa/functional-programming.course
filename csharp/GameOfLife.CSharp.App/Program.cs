@@ -10,7 +10,7 @@ namespace GameOfLife.App
         {
             Time time = new Time();
             using var disposable = time.Subscribe(Render);
-            time.Start(WorldPatternCollection.Pulsar);
+            time.Start(PopulationPatterns.Pulsar);
             await Task.Delay(10000);
         }
 

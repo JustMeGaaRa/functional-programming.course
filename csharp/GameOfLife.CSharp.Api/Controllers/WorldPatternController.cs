@@ -42,8 +42,7 @@ namespace GameOfLife.CSharp.Api.Controllers
         [HttpPost]
         public IActionResult CreateWorldPattern([FromBody] WorldPatternVM pattern)
         {
-            int userId = 0;
-            var worldPattern = WorldPattern.FromSize(userId, pattern.Name, pattern.Width, pattern.Height);
+            var worldPattern = PopulationPattern.FromSize(pattern.Name, pattern.Width, pattern.Height);
             return Ok(_repository.CreatePattern(worldPattern));
         }
 
@@ -67,7 +66,7 @@ namespace GameOfLife.CSharp.Api.Controllers
             return Ok(generationVm);
         }
 
-        private WorldPatternVM ToWorldPatternVM(WorldPattern pattern)
+        private WorldPatternVM ToWorldPatternVM(PopulationPattern pattern)
         {
             return new WorldPatternVM { Name = pattern.Name, Height = pattern.Height, Width = pattern.Width };
         }

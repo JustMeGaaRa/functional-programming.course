@@ -4,10 +4,10 @@ namespace GameOfLife.Engine
 {
     public interface IWorldPatternRepository
     {
-        WorldPattern CreatePattern(WorldPattern pattern);
+        PopulationPattern CreatePattern(PopulationPattern pattern);
 
-        WorldPattern GetPatternById(int patternId);
+        PopulationPattern GetPatternById(int patternId);
 
-        ICollection<WorldPattern> GetUserPatterns(int userId);
+        ICollection<PopulationPattern> GetUserPatterns(int userId);
     }
 }

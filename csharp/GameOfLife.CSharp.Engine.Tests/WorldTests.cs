@@ -34,7 +34,7 @@ namespace GameOfLife.Engine.Tests
             Size expectedSize = new Size(3, 4);
             bool dead = false;
             bool live = true;
-            WorldPattern pattern = WorldPattern.FromArray2D(0, string.Empty, new[,]
+            PopulationPattern pattern = PopulationPattern.FromArray2D(string.Empty, new[,]
             {
                 { dead, live, dead },
                 { dead, live, dead },
@@ -77,7 +77,7 @@ namespace GameOfLife.Engine.Tests
             Size expectedSize = new Size(3, 3);
 
             // Act
-            World world = World.FromPattern(WorldPatternCollection.Blinker);
+            World world = World.FromPattern(PopulationPatterns.Blinker);
             World evolved = world.Evolve();
 
             // Assert
@@ -113,7 +113,7 @@ namespace GameOfLife.Engine.Tests
             Size expectedSize = new Size(4, 4);
 
             // Act
-            World world = World.FromPattern(WorldPatternCollection.Toad);
+            World world = World.FromPattern(PopulationPatterns.Toad);
             World evolved = world.Evolve();
 
             // Assert

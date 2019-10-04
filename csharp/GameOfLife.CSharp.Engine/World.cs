@@ -25,7 +25,7 @@ namespace GameOfLife.Engine
             return new World(cells, size);
         }
 
-        public static World FromPattern(WorldPattern pattern)
+        public static World FromPattern(PopulationPattern pattern)
         {
             Size size = new Size(pattern.Width, pattern.Height);
             Cell[,] cells = pattern.Select(alive => Cell.Create(alive ? Population.Alive : Population.Dead));
