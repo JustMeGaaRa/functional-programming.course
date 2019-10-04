@@ -21,7 +21,7 @@ namespace GameOfLife.Engine
         /// <summary>
         /// Blinker Pattern - Period 2
         /// </summary>
-        public static PopulationPattern Blinker => PopulationPattern.FromArray2D("Blinker", new[,]
+        public static PopulationPattern Blinker => PopulationPattern.FromArray2D(1, "Blinker", new[,]
         {
             { dead, live, dead },
             { dead, live, dead },
@@ -31,7 +31,7 @@ namespace GameOfLife.Engine
         /// <summary>
         /// Toad Pattern - Period 2
         /// </summary>
-        public static PopulationPattern Toad => PopulationPattern.FromArray2D("Toad", new[,]
+        public static PopulationPattern Toad => PopulationPattern.FromArray2D(2, "Toad", new[,]
         {
             { dead, dead, dead, dead },
             { dead, live, live, live },
@@ -42,7 +42,7 @@ namespace GameOfLife.Engine
         /// <summary>
         /// Beacon Pattern - Period 2
         /// </summary>
-        public static PopulationPattern Beacon => PopulationPattern.FromArray2D("Beacon", new[,]
+        public static PopulationPattern Beacon => PopulationPattern.FromArray2D(3, "Beacon", new[,]
         {
             { live, live, dead, dead },
             { live, live, dead, dead },
@@ -53,7 +53,7 @@ namespace GameOfLife.Engine
         /// <summary>
         /// Pulsar Pattern - Period 3
         /// </summary>
-        public static PopulationPattern Pulsar => PopulationPattern.FromArray2D("Pulsar", new[,]
+        public static PopulationPattern Pulsar => PopulationPattern.FromArray2D(4, "Pulsar", new[,]
         {
             { dead, dead, dead, dead, dead, dead, dead, dead, dead, dead, dead, dead, dead, dead, dead },
             { dead, dead, dead, live, live, live, dead, dead, dead, live, live, live, dead, dead, dead },

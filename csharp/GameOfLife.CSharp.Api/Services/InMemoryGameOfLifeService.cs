@@ -1,5 +1,5 @@
-﻿using GameOfLife.CSharp.Api.Hubs;
-using GameOfLife.CSharp.Api.Models;
+﻿using GameOfLife.CSharp.Api.Extensions;
+using GameOfLife.CSharp.Api.Hubs;
 using GameOfLife.Engine;
 using Microsoft.AspNetCore.SignalR;
 using System;
@@ -38,12 +38,7 @@ namespace GameOfLife.CSharp.Api.Services
         private void PushGenerationToHub(Generation generation)
         {
             const string RemoteWebAppMethod = "UpdateGameWorld";
-            _hubContext.Clients.All.SendAsync(RemoteWebAppMethod, ToGenerationVM(generation));
-        }
-
-        private GenerationVM ToGenerationVM(Generation generation)
-        {
-            return new GenerationVM { Height = generation.Size.Height, Width = generation.Size.Width };
+            _hubContext.Clients.All.SendAsync(RemoteWebAppMethod, generation.ToWorldVM());
         }
     }
 }

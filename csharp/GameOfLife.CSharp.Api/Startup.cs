@@ -16,6 +16,7 @@ namespace GameOfLife.CSharp.Api
     {
         private const string SwaggerApiName = "Conway's Game of Life Api";
         private const string SwaggerApiVersion = "v1";
+        private const string CorsPolicyName = "Allow All CORS Policy";
 
         public Startup(IConfiguration configuration)
         {
@@ -28,6 +29,7 @@ namespace GameOfLife.CSharp.Api
         {
             services.AddControllers();
             services.AddMvc();
+            services.AddCors(policy => policy.AddPolicy(CorsPolicyName, options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
             services.AddSignalR();
             services.AddSwaggerGen(ConfigureSwaggerGenOptions);
             services.AddSingleton<IWorldPatternRepository, InMemoryWorldPatternRepository>();
@@ -44,9 +46,10 @@ namespace GameOfLife.CSharp.Api
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();
+            app.UseCors(CorsPolicyName);
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllers().RequireCors(CorsPolicyName);
                 endpoints.MapHub<GameOfLifeHub>("/game");
             });
             app.UseDefaultFiles();

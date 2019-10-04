@@ -1,0 +1,12 @@
+.population {
+    width: 25px;
+    height: 25px;
+}
+
+    .population.dead {
+        background-color: gray;
+    }
+
+    .population.alive {
+        background-color: dodgerblue;
+    }

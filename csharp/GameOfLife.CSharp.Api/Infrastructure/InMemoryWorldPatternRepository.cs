@@ -19,13 +19,13 @@ namespace GameOfLife.CSharp.Api.Infrastructure
         {
             _patterns.Add(pattern);
             Interlocked.Increment(ref _identity);
-            pattern.WorldPatternId = _identity;
+            pattern.PatternId = _identity;
             return pattern;
         }
 
         public PopulationPattern GetPatternById(int patternId)
         {
-            return _patterns.FirstOrDefault(x => x.WorldPatternId == patternId);
+            return _patterns.FirstOrDefault(x => x.PatternId == patternId);
         }
 
         public ICollection<PopulationPattern> GetUserPatterns(int userId)

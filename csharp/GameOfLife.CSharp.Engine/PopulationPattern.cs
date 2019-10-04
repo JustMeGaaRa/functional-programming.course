@@ -4,9 +4,10 @@
     {
         private readonly bool[,] _pattern;
 
-        public PopulationPattern(string name, int width, int height)
+        public PopulationPattern(int patternId, string name, int width, int height)
         {
             _pattern = new bool[height, width];
+            PatternId = patternId;
             Name = name;
             Width = width;
             Height = height;
@@ -14,7 +15,7 @@
 
         public bool this[int row, int column] => _pattern[row, column];
 
-        public int WorldPatternId { get; set; }
+        public int PatternId { get; set; }
 
         public string Name { get; }
 
@@ -28,14 +29,14 @@
 
         public static PopulationPattern FromSize(string name, int width, int height)
         {
-            return new PopulationPattern(name, width, height);
+            return new PopulationPattern(0, name, width, height);
         }
 
-        public static PopulationPattern FromArray2D(string name, bool[,] aliveCells)
+        public static PopulationPattern FromArray2D(int patternId, string name, bool[,] aliveCells)
         {
             int width = aliveCells.GetLength(0);
             int height = aliveCells.GetLength(1);
-            var pattern = new PopulationPattern(name, width, height);
+            var pattern = new PopulationPattern(patternId, name, width, height);
 
             for (int row = 0; row < height; row++)
             {

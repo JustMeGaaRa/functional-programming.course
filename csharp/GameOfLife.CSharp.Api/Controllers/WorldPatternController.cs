@@ -1,4 +1,5 @@
-﻿using GameOfLife.CSharp.Api.Models;
+﻿using GameOfLife.CSharp.Api.Extensions;
+using GameOfLife.CSharp.Api.Models;
 using GameOfLife.CSharp.Api.Services;
 using GameOfLife.Engine;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GameOfLife.CSharp.Api.Controllers
 {
-    [Route("api/world")]
+    [Route("api/worlds")]
     [ApiController]
     public class WorldPatternController : ControllerBase
     {
@@ -21,8 +22,8 @@ namespace GameOfLife.CSharp.Api.Controllers
         }
 
         [ProducesResponseType(typeof(WorldPatternVM), 200)]
-        [HttpGet]
-        public IActionResult GetWorldPatterns(int userId)
+        [HttpGet("~/api/users/{userId:int}/worlds")]
+        public IActionResult GetWorldPatternsByUserId(int userId)
         {
             var worldPatterns = _repository.GetUserPatterns(userId);
             var worldPatternVms = worldPatterns.Select(ToWorldPatternVM).ToList();
@@ -43,7 +44,9 @@ namespace GameOfLife.CSharp.Api.Controllers
         public IActionResult CreateWorldPattern([FromBody] WorldPatternVM pattern)
         {
             var worldPattern = PopulationPattern.FromSize(pattern.Name, pattern.Width, pattern.Height);
-            return Ok(_repository.CreatePattern(worldPattern));
+            worldPattern = _repository.CreatePattern(worldPattern);
+            var worldPatternVm = ToWorldPatternVM(worldPattern);
+            return Ok(worldPatternVm);
         }
 
         [ProducesResponseType(200)]
@@ -57,23 +60,34 @@ namespace GameOfLife.CSharp.Api.Controllers
         }
 
         [ProducesResponseType(typeof(WorldPatternVM), 200)]
+        [HttpGet("{patternId:int}/game")]
+        public IActionResult GetGameFromPattern(int patternId)
+        {
+            var worldPattern = _repository.GetPatternById(patternId);
+            var generation = Generation.Zero(worldPattern);
+            var generationVm = generation.ToWorldVM();
+            return Ok(generationVm);
+        }
+
+        [ProducesResponseType(typeof(WorldPatternVM), 200)]
         [HttpPost("{patternId:int}/game")]
         public async Task<IActionResult> StartGameFromPattern(int patternId)
         {
             int userId = 0;
             var generation = await _gameOfLifeService.StartGameAsync(userId, patternId);
-            var generationVm = ToGenerationVM(generation);
+            var generationVm = generation.ToWorldVM();
             return Ok(generationVm);
         }
 
         private WorldPatternVM ToWorldPatternVM(PopulationPattern pattern)
         {
-            return new WorldPatternVM { Name = pattern.Name, Height = pattern.Height, Width = pattern.Width };
-        }
-
-        private GenerationVM ToGenerationVM(Generation generation)
-        {
-            return new GenerationVM { Height = generation.Size.Height, Width = generation.Size.Width };
+            return new WorldPatternVM
+            {
+                PatternId = pattern.PatternId,
+                Name = pattern.Name,
+                Height = pattern.Height,
+                Width = pattern.Width
+            };
         }
     }
 }
