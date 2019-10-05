@@ -43,17 +43,19 @@ As the result of this course you should know and understand the common principle
 - Topic 1: [Immutable Data Structures]()
 - Topic 2: [Monads, Functors]()
 - Topic 3: [Functional Domain Modeling]()
+- Topic 4: [Pattern Matching]()
 - Meeting: [Module Summary and Workshop]()
 ### Part 3: Functional Features
-- Topic 1: [Pattern Matching]()
 - Topic 2: [Pipelining]()
 - Topic 3: [Closures]()
+- Topic 4: [Railway-Oriented Programming]()
+- Topic 5: [Functional Reactive]()
 - Meeting: [Module Summary and Workshop]()
 ### Part 4: Functional Techniques
-- Topic 2: [Type Providers]()
-- Topic 1: [Workflows]()
-- Topic 3: [Railway-Oriented Programming]()
-- Topic 4: [Functional Reactive]()
+- Topic 1: [Push/Pull Models]()
+- Topic 2: [Synchronous/Asynchronous Models]()
+- Topic 3: [Workflows]()
+- Topic 4: [Type Providers]()
 - Meeting: [Module Summary and Workshop]()
 
 ## Technical Stack <a name="tech-stack"></a>
@@ -64,7 +66,7 @@ As the result of this course you should know and understand the common principle
 |Engine         |[+] Pure F#                |[+] Pure C#                |[ ] Pure TS    |
 |Api            |[ ] Giraffe/Saturn/SignalR |[+] ASP.NET Core/SignalR   |-              |
 |Desktop        |[+] Console                |[+] Console                |[ ] Console    |
-|Web            |[ ] Fable/Elmish           |-                          |[ ] React.js   |
+|Web            |[ ] Fable/Elmish           |-                          |[+] React.js   |
 |Tests          |-                          |[+] xUnit                  |-              |
 
 

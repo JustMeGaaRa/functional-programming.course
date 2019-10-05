@@ -31,7 +31,8 @@ namespace GameOfLife.CSharp.Api.Services
 
         public Task EndGameAsync(int userId)
         {
-            _activeGames[userId].Dispose();
+            _activeGames.TryGetValue(userId, out Time? time);
+            time?.Dispose();
             return Task.CompletedTask;
         }
 

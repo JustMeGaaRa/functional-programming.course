@@ -34,7 +34,7 @@ namespace GameOfLife.Engine.Tests
             Size expectedSize = new Size(3, 4);
             bool dead = false;
             bool live = true;
-            PopulationPattern pattern = PopulationPattern.FromArray2D(string.Empty, new[,]
+            PopulationPattern pattern = PopulationPattern.FromArray2D(1, string.Empty, new[,]
             {
                 { dead, live, dead },
                 { dead, live, dead },

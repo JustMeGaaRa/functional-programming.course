@@ -69,16 +69,6 @@ namespace GameOfLife.CSharp.Api.Controllers
             return Ok(generationVm);
         }
 
-        [ProducesResponseType(typeof(WorldPatternVM), 200)]
-        [HttpPost("{patternId:int}/game")]
-        public async Task<IActionResult> StartGameFromPattern(int patternId)
-        {
-            int userId = 0;
-            var generation = await _gameOfLifeService.StartGameAsync(userId, patternId);
-            var generationVm = generation.ToWorldVM();
-            return Ok(generationVm);
-        }
-
         private WorldPatternVM ToWorldPatternVM(PopulationPattern pattern)
         {
             return new WorldPatternVM

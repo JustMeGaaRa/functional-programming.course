@@ -29,7 +29,12 @@ namespace GameOfLife.CSharp.Api
         {
             services.AddControllers();
             services.AddMvc();
-            services.AddCors(policy => policy.AddPolicy(CorsPolicyName, options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+            services.AddCors(policy => policy
+                .AddPolicy(CorsPolicyName, options => options
+                    .WithOrigins("http://localhost:3000")
+                    .AllowCredentials()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()));
             services.AddSignalR();
             services.AddSwaggerGen(ConfigureSwaggerGenOptions);
             services.AddSingleton<IWorldPatternRepository, InMemoryWorldPatternRepository>();
@@ -50,7 +55,7 @@ namespace GameOfLife.CSharp.Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers().RequireCors(CorsPolicyName);
-                endpoints.MapHub<GameOfLifeHub>("/game");
+                endpoints.MapHub<GameOfLifeHub>("/game").RequireCors(CorsPolicyName);
             });
             app.UseDefaultFiles();
             app.UseStaticFiles();

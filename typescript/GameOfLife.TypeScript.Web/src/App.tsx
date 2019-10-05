@@ -2,6 +2,7 @@ import React from 'react';
 import './app.css';
 import WorldGrid from "./world-grid/world-grid";
 import { World, PopulationPattern } from './models/PopulationPattern';
+import { GameService } from "./services/game-service";
 
 interface AppState {
     world: World;
@@ -9,9 +10,12 @@ interface AppState {
 }
 
 class App extends React.Component<{}, AppState> {
+    private gameService: GameService;
 
     constructor(props: AppState) {
         super(props);
+
+        this.gameService = new GameService();
 
         this.state = {
             world: new World(0, 0, []),
@@ -38,27 +42,30 @@ class App extends React.Component<{}, AppState> {
     }
 
     componentDidMount() {
-        const worldUrl = `https://localhost:44370/api/worlds/${1}/game`;
-        const patternsUrl = `https://localhost:44370/api/users/${1}/worlds`;
-        const worldPromise = this.requestData<World>(worldUrl);
+        const userId = 1;
+        const patternsUrl = `https://localhost:44370/api/users/${userId}/worlds`;
         const patternsPromise = this.requestData<Array<PopulationPattern>>(patternsUrl);
-        Promise.all([worldPromise, patternsPromise])
-            .then(data => this.setState({
-                world: data[0],
-                patterns: data[1]
-            }))
-            .catch(error => {
-                console.log(error);
-            });
+        patternsPromise
+            .then(data => this.setState({ patterns: data }))
+            .catch(error => { console.log(error); });
+        this.gameService.subscribe(data => {
+            console.log(data);
+            this.setState({ world: data });
+        });
     }
 
     handleOnSelect(event: React.ChangeEvent<HTMLSelectElement>) {
-        const worldUrl = `https://localhost:44370/api/worlds/${event.target.value}/game`;
+        const userId = 1;
+        const patternId = event.target.value;
+        const worldUrl = `https://localhost:44370/api/worlds/${patternId}/game`;
         const worldPromise = this.requestData<World>(worldUrl);
         worldPromise
-            .then(data => this.setState({
-                world: data
-            }))
+            .then(data => {
+                this.setState({ world: data });
+                this.gameService.end(userId);
+                this.gameService.start(userId, parseInt(patternId));
+            })
+            .catch(error => { console.log(error); });
     }
 
     async requestData<T>(url: string): Promise<T> {
@@ -71,8 +78,7 @@ class App extends React.Component<{}, AppState> {
                 headers: headers
             };
             const response = await fetch(url, options);
-            const data = await response.json();
-            return data;
+            return await response.json();
         } catch (error) {
             return error;
         }
