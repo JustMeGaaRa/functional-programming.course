@@ -1,10 +1,7 @@
-﻿using GameOfLife.CSharp.Api.Extensions;
-using GameOfLife.CSharp.Api.Models;
-using GameOfLife.CSharp.Api.Services;
+﻿using GameOfLife.CSharp.Api.Models;
 using GameOfLife.Engine;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace GameOfLife.CSharp.Api.Controllers
 {
@@ -13,12 +10,10 @@ namespace GameOfLife.CSharp.Api.Controllers
     public class WorldPatternController : ControllerBase
     {
         private readonly IWorldPatternRepository _repository;
-        private readonly IGameOfLifeService _gameOfLifeService;
 
-        public WorldPatternController(IWorldPatternRepository repository, IGameOfLifeService gameOfLifeService)
+        public WorldPatternController(IWorldPatternRepository repository)
         {
             _repository = repository;
-            _gameOfLifeService = gameOfLifeService;
         }
 
         [ProducesResponseType(typeof(WorldPatternVM), 200)]
@@ -57,16 +52,6 @@ namespace GameOfLife.CSharp.Api.Controllers
             var worldPattern = _repository.GetPatternById(patternId);
             var success = worldPattern.TrySetCellState(cell.Row, cell.Column, cell.Alive);
             return success ? Ok() : StatusCode(500);
-        }
-
-        [ProducesResponseType(typeof(WorldPatternVM), 200)]
-        [HttpGet("{patternId:int}/game")]
-        public IActionResult GetGameFromPattern(int patternId)
-        {
-            var worldPattern = _repository.GetPatternById(patternId);
-            var generation = Generation.Zero(worldPattern);
-            var generationVm = generation.ToWorldVM();
-            return Ok(generationVm);
         }
 
         private WorldPatternVM ToWorldPatternVM(PopulationPattern pattern)

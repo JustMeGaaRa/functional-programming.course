@@ -1,5 +1,5 @@
 import React from 'react';
-import { WorldRow } from '../../models/PopulationPattern';
+import { WorldRow } from '../../models/WorldRow';
 import WorldGridColumn from './world-grid-column/world-grid-column';
 
 const WorldGridRow: React.FC<WorldRow> = (row) => {

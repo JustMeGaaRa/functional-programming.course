@@ -1,7 +1,8 @@
 import React from 'react';
 import './app.css';
 import WorldGrid from "./world-grid/world-grid";
-import { World, PopulationPattern } from './models/PopulationPattern';
+import { PopulationPattern } from './models/PopulationPattern';
+import { World } from "./models/World";
 import { GameService } from "./services/game-service";
 
 interface AppState {
@@ -18,13 +19,13 @@ class App extends React.Component<{}, AppState> {
         this.gameService = new GameService();
 
         this.state = {
-            world: new World(0, 0, []),
-            patterns: []
+            world: new World(0, 0, 0, []),
+            patterns: new Array<PopulationPattern>(0)
         };
     }
 
     render() {
-        const { width, height, rows } = this.state.world;
+        const { generation, width, height, rows } = this.state.world;
         const { patterns } = this.state;
 
         return (
@@ -36,7 +37,8 @@ class App extends React.Component<{}, AppState> {
                         </option>
                     ))}
                 </select>
-                <WorldGrid width={width} height={height} rows={rows} />
+                <p>Generation: {generation}</p>
+                <WorldGrid generation={generation} width={width} height={height} rows={rows} />
             </div>
         );
     }
@@ -48,8 +50,8 @@ class App extends React.Component<{}, AppState> {
         patternsPromise
             .then(data => this.setState({ patterns: data }))
             .catch(error => { console.log(error); });
+        this.gameService.connect();
         this.gameService.subscribe(data => {
-            console.log(data);
             this.setState({ world: data });
         });
     }
@@ -57,31 +59,20 @@ class App extends React.Component<{}, AppState> {
     handleOnSelect(event: React.ChangeEvent<HTMLSelectElement>) {
         const userId = 1;
         const patternId = event.target.value;
-        const worldUrl = `https://localhost:44370/api/worlds/${patternId}/game`;
-        const worldPromise = this.requestData<World>(worldUrl);
-        worldPromise
-            .then(data => {
-                this.setState({ world: data });
-                this.gameService.end(userId);
-                this.gameService.start(userId, parseInt(patternId));
-            })
-            .catch(error => { console.log(error); });
+        this.gameService.end(userId);
+        this.gameService.start(userId, parseInt(patternId));
     }
 
     async requestData<T>(url: string): Promise<T> {
-        try {
-            const headers = new Headers({
-                "Content-Type": "application/json",
-            });
-            const options = {
-                method: "GET",
-                headers: headers
-            };
-            const response = await fetch(url, options);
-            return await response.json();
-        } catch (error) {
-            return error;
-        }
+        const headers = new Headers({
+            "Content-Type": "application/json",
+        });
+        const options = {
+            method: "GET",
+            headers: headers
+        };
+        const response = await fetch(url, options);
+        return await response.json();
     }
 } 
 

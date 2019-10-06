@@ -1,6 +1,6 @@
 import React from 'react';
 import './world-grid-column.css';
-import { WorldColumn } from '../../../models/PopulationPattern';
+import { WorldColumn } from '../../../models/WorldColumn';
 
 const WorldGridColumn: React.FC<WorldColumn> = (column) => {
     const className = column.isAlive
