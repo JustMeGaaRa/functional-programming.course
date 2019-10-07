@@ -13,13 +13,13 @@ namespace GameOfLife.CSharp.Api.Infrastructure
         public InMemoryWorldPatternRepository()
         {
             _patterns = new List<PopulationPattern>(PopulationPatterns.AllPatterns);
+            _identity = _patterns.Max(x => x.PatternId);
         }
 
         public PopulationPattern CreatePattern(PopulationPattern pattern)
         {
             _patterns.Add(pattern);
-            Interlocked.Increment(ref _identity);
-            pattern.PatternId = _identity;
+            pattern.PatternId = Interlocked.Increment(ref _identity);
             return pattern;
         }
 

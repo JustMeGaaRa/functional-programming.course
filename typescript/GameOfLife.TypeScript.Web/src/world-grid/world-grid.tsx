@@ -8,7 +8,7 @@ const WorldGrid: React.FC<World> = (pattern) => {
         <div className="grid centered">
             <table>
                 <tbody>
-                    {pattern.rows.map(row => <WorldGridRow columns={row.columns} />)}
+                    {pattern.rows.map(row => <WorldGridRow {...row} />)}
                 </tbody>
             </table>
         </div>

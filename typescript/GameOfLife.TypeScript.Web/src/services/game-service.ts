@@ -11,9 +11,9 @@ export class GameService {
     }
     
     public connect() {
-        if (this.connection.state === HubConnectionState.Disconnected) {
-            this.connection.start();
-        }
+        return this.connection.state === HubConnectionState.Disconnected
+            ? this.connection.start()
+            : Promise.resolve();
     }
 
     public subscribe(func: (world: World) => void) {
@@ -21,15 +21,15 @@ export class GameService {
     }
     
     public start(userId: number, patternId: number) {
-        if (this.connection.state === HubConnectionState.Connected) {
-            this.connection.invoke("StartGameFromPattern", userId, patternId);
-        }
+        return this.connection.state === HubConnectionState.Connected
+            ? this.connection.invoke("StartGameFromPattern", userId, patternId)
+            : Promise.resolve();
     }
 
     public end(userId: number) {
-        if (this.connection.state === HubConnectionState.Connected) {
-            this.connection.invoke("EndUserGame", userId);
-        }
+        return this.connection.state === HubConnectionState.Connected
+            ? this.connection.invoke("EndUserGame", userId)
+            : Promise.resolve();
     }
 }
 

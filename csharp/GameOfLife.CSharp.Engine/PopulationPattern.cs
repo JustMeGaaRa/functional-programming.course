@@ -23,9 +23,20 @@
 
         public int Height { get; }
 
-        public bool TrySetCellState(int row, int column, bool alive) => _pattern[row, column] = alive;
+        public bool TrySetCellState(int row, int column, bool alive)
+        {
+            if (row >= 0 && column >= 0 && row < Width && column < Height)
+            {
+                return _pattern[row, column] = alive;
+            }
 
-        public bool IsCellAlive(int row, int column) => _pattern[row, column];
+            return false;
+        }
+
+        public bool IsCellAlive(int row, int column)
+        {
+            return row >= 0 && column >= 0 && row < Width && column < Height && _pattern[row, column];
+        }
 
         public static PopulationPattern FromSize(string name, int width, int height)
         {

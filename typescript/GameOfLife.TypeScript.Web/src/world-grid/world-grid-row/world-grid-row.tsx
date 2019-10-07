@@ -5,7 +5,7 @@ import WorldGridColumn from './world-grid-column/world-grid-column';
 const WorldGridRow: React.FC<WorldRow> = (row) => {
     return (
         <tr>
-            {row.columns.map(column => <WorldGridColumn isAlive={column.isAlive} />)}
+            {row.columns.map(column => <WorldGridColumn {...column} />)}
         </tr>
     );
 }

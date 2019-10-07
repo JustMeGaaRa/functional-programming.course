@@ -17,10 +17,10 @@ namespace GameOfLife.CSharp.Api.Extensions
                 for (int column = 0; column < generation.Size.Width; column++)
                 {
                     bool isAlive = generation[row, column].Population.IsAlive();
-                    columns.Add(new WorldColumnVM { IsAlive = isAlive });
+                    columns.Add(new WorldColumnVM { Row = row, Column = column, IsAlive = isAlive });
                 }
 
-                rows.Add(new WorldRowVM { Columns = columns });
+                rows.Add(new WorldRowVM { Number = row, Columns = columns });
             }
 
             return new WorldVM
