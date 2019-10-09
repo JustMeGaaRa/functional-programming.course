@@ -39,7 +39,7 @@ namespace GameOfLife.CSharp.Api.Services
         private void PushGenerationToHub(Generation generation)
         {
             const string RemoteWebAppMethod = "UpdateGameWorld";
-            _hubContext.Clients.All.SendAsync(RemoteWebAppMethod, generation.ToWorldVM());
+            _hubContext.Clients.All.SendAsync(RemoteWebAppMethod, generation.ToPatternViewVM());
         }
     }
 }

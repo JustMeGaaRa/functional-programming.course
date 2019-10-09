@@ -2,7 +2,7 @@
 
 namespace GameOfLife.CSharp.Api.Models
 {
-    public class WorldCellVM
+    public class PopulationPatternCellVM
     {
         [Required]
         public int Row { get; set; }
@@ -11,6 +11,6 @@ namespace GameOfLife.CSharp.Api.Models
         public int Column { get; set; }
 
         [Required]
-        public bool Alive { get; set; }
+        public bool IsAlive { get; set; }
     }
 }

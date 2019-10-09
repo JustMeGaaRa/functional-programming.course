@@ -2,10 +2,10 @@
 
 namespace GameOfLife.CSharp.Api.Models
 {
-    public class WorldRowVM
+    public class PopulationPatternRowVM
     {
         public int Number { get; set; }
 
-        public ICollection<WorldColumnVM>? Columns { get; set; }
+        public ICollection<PopulationPatternCellVM>? Columns { get; set; }
     }
 }

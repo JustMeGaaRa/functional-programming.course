@@ -2,11 +2,11 @@ import React from 'react';
 import './app.css';
 import PopulationPatternGrid from "./population-pattern-grid/population-pattern-grid";
 import { PopulationPattern } from './models/PopulationPattern';
-import { World } from "./models/World";
+import { World, UserInfo, WorldColumn } from "./models";
 import { GameService } from "./services/game-service";
 
 interface AppState {
-    world: World;
+    selectedWorld: World;
     patterns: Array<PopulationPattern>;
     userId: number;
     newPatternName: string;
@@ -31,18 +31,18 @@ class App extends React.Component<{}, AppState> {
         this.handleOnHeightChange = this.handleOnHeightChange.bind(this);
 
         this.state = {
-            world: new World(0, 0, 0, []),
+            selectedWorld: new World(0, 0, 0, []),
+            selectedPatternId: 1,
             patterns: new Array<PopulationPattern>(0),
             userId: 1,
             newPatternName: "New Pattern",
-            newPatternWidth: 1,
-            newPatternHeight: 1,
-            selectedPatternId: 1
+            newPatternWidth: 10,
+            newPatternHeight: 10,
         };
     }
 
     render() {
-        const { generation, width, height, rows } = this.state.world;
+        const { generation, width, height, rows } = this.state.selectedWorld;
         const { patterns, newPatternName, newPatternWidth, newPatternHeight } = this.state;
 
         return (
@@ -98,20 +98,34 @@ class App extends React.Component<{}, AppState> {
     }
 
     componentDidMount() {
-        const patternsUrl = `https://localhost:44370/api/users/${this.state.userId}/worlds`;
-        this.requestData<Array<PopulationPattern>>(patternsUrl)
+        const userInfoUrl = "https://localhost:44370/api/users";
+
+        this.requestAction<UserInfo>(userInfoUrl, {}, "POST")
+            .then(data => {
+                const patternsUrl = this.getPatternUrl(data.userId);
+                this.setState({ userId: data.userId });
+                return this.requestAction<Array<PopulationPattern>>(patternsUrl);
+            })
             .then(data => this.setState({ patterns: data }))
             .catch(error => { console.log(error); });
+        
         this.gameService.connect();
         this.gameService.subscribe(data => {
-            this.setState({ world: data });
+            this.setState({ selectedWorld: data });
         });
     }
 
     handleOnSelect(event: React.ChangeEvent<HTMLSelectElement>) {
+        const { userId } = this.state;
         const patternId = parseInt(event.target.value);
-        this.gameService.end(this.state.userId);
-        this.setState({ selectedPatternId: patternId })
+        this.gameService.end(userId)
+            .then(data => {
+                this.setState({ selectedPatternId: patternId });
+                const patternsUrl = this.getPatternViewUrl(userId, patternId);
+                return this.requestAction<World>(patternsUrl);
+            })
+            .then(data => this.setState({ selectedWorld: data }))
+            .catch(error => { console.log(error); });
     }
 
     handleOnNameChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -127,11 +141,17 @@ class App extends React.Component<{}, AppState> {
     }
 
     handleOnCreateClick(event: any) {
-        const { newPatternName, newPatternWidth, newPatternHeight } = this.state;
+        const { userId, selectedPatternId, newPatternName, newPatternWidth, newPatternHeight } = this.state;
+        const patternsUrl = this.getPatternUrl(userId);
         const data = new PopulationPattern(0, newPatternName, newPatternWidth, newPatternHeight);
-        const patternsUrl = `https://localhost:44370/api/worlds`;
+
         this.requestAction<PopulationPattern>(patternsUrl, data)
-            .then(data => this.setState({ patterns: this.state.patterns.concat(data) }))
+            .then(data => {
+                this.setState({ patterns: this.state.patterns.concat(data) });
+                const patternsUrl = this.getPatternViewUrl(userId, selectedPatternId);
+                return this.requestAction<World>(patternsUrl);
+            })
+            .then(data => this.setState({ selectedWorld: data }))
             .catch(error => { console.log(error); });
     }
 
@@ -145,28 +165,33 @@ class App extends React.Component<{}, AppState> {
     }
 
     handleOnPatternCellClick(row: number, column: number, isAlive: boolean) {
-        const patternsUrl = `https://localhost:44370/api/users/${this.state.userId}/worlds`;
-        this.requestData<World>(patternsUrl);
+        const { userId, selectedPatternId } = this.state;
+        const patternsUrl = this.getPatternCellUrl(userId, selectedPatternId);
+        const data = new WorldColumn(row, column, !isAlive);
+
+        this.requestAction<World>(patternsUrl, data, "PUT")
+            .then(data => this.setState({ selectedWorld: data }))
+            .catch(error => { console.log(error); });
     }
 
-    async requestData<T>(url: string): Promise<T> {
+    getPatternUrl(userId: number) {
+        return `https://localhost:44370/api/users/${userId}/patterns`;
+    }
+
+    getPatternViewUrl(userId: number, patternId: number) {
+        return `https://localhost:44370/api/users/${userId}/patterns/${patternId}/view`;
+    }
+    
+    getPatternCellUrl(userId: number, patternId: number) {
+        return `https://localhost:44370/api/users/${userId}/patterns/${patternId}/view/cell`;
+    }
+
+    async requestAction<T>(url: string, body: any = undefined, method: string = "GET"): Promise<T> {
         const headers = new Headers({
             "Content-Type": "application/json",
         });
         const options = {
-            method: "GET",
-            headers: headers
-        };
-        const response = await fetch(url, options);
-        return await response.json();
-    }
-
-    async requestAction<T>(url: string, body: any): Promise<T> {
-        const headers = new Headers({
-            "Content-Type": "application/json",
-        });
-        const options = {
-            method: "POST",
+            method: method,
             headers: headers,
             body: JSON.stringify(body)
         };

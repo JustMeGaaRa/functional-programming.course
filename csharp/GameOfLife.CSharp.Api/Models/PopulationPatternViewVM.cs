@@ -2,7 +2,7 @@
 
 namespace GameOfLife.CSharp.Api.Models
 {
-    public class WorldVM
+    public class PopulationPatternViewVM
     {
         public uint Generation { get; set; }
 
@@ -10,6 +10,6 @@ namespace GameOfLife.CSharp.Api.Models
 
         public int Width { get; set; }
 
-        public ICollection<WorldRowVM>? Rows { get; set; }
+        public ICollection<PopulationPatternRowVM>? Rows { get; set; }
     }
 }

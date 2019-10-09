@@ -6,24 +6,24 @@ namespace GameOfLife.CSharp.Api.Extensions
 {
     public static class GenerationExtensions
     {
-        public static WorldVM ToWorldVM(this Generation generation)
+        public static PopulationPatternViewVM ToPatternViewVM(this Generation generation)
         {
-            ICollection<WorldRowVM> rows = new List<WorldRowVM>();
+            ICollection<PopulationPatternRowVM> rows = new List<PopulationPatternRowVM>();
 
             for (int row = 0; row < generation.Size.Height; row++)
             {
-                ICollection<WorldColumnVM> columns = new List<WorldColumnVM>();
+                ICollection<PopulationPatternCellVM> columns = new List<PopulationPatternCellVM>();
 
                 for (int column = 0; column < generation.Size.Width; column++)
                 {
                     bool isAlive = generation[row, column].Population.IsAlive();
-                    columns.Add(new WorldColumnVM { Row = row, Column = column, IsAlive = isAlive });
+                    columns.Add(new PopulationPatternCellVM { Row = row, Column = column, IsAlive = isAlive });
                 }
 
-                rows.Add(new WorldRowVM { Number = row, Columns = columns });
+                rows.Add(new PopulationPatternRowVM { Number = row, Columns = columns });
             }
 
-            return new WorldVM
+            return new PopulationPatternViewVM
             {
                 Generation = generation.Number,
                 Height = generation.Size.Height,

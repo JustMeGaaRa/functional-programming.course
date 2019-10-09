@@ -5,11 +5,11 @@ namespace GameOfLife.CSharp.Api.Extensions
 {
     public static class PopulationPatternExtensions
     {
-        public static WorldPatternVM? ToWorldPatternVM(this PopulationPattern pattern)
+        public static PopulationPatternInfoVM? ToPatternInfoVM(this PopulationPattern pattern)
         {
             return pattern == null
                 ? null
-                : new WorldPatternVM
+                : new PopulationPatternInfoVM
                 {
                     PatternId = pattern.PatternId,
                     Name = pattern.Name,

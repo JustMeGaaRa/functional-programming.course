@@ -2,7 +2,7 @@
 
 namespace GameOfLife.CSharp.Api.Models
 {
-    public class WorldPatternVM
+    public class PopulationPatternInfoVM
     {
         public int PatternId { get; set; }
 
