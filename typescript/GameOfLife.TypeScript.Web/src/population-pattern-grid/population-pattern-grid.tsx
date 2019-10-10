@@ -6,20 +6,22 @@ import PopulationPatternRow from './population-pattern-row/population-pattern-ro
 export type OnPatternCellClick = (row: number, column: number, isAlive: boolean) => void;
 
 type PopulationPatternProps = World & {
+    readonly?: boolean;
     onClick?: OnPatternCellClick;
 }
 
-const PopulationPatternGrid: React.FC<PopulationPatternProps> = (pattern) => {
+const PopulationPatternGrid: React.FC<PopulationPatternProps> = (props) => {
     return (
         <div className="grid centered">
             <table>
                 <tbody>
-                    {pattern.rows.map(row => (
+                    {props.rows.map(row => (
                         <PopulationPatternRow
                             key={`pattern_row_${row.number}`}
+                            readonly={props.readonly}
                             number={row.number}
                             columns={row.columns}
-                            onClick={pattern.onClick}
+                            onClick={props.onClick}
                         />
                     ))}
                 </tbody>

@@ -4,6 +4,7 @@ import { OnPatternCellClick } from "../../population-pattern-grid";
 import { WorldColumn } from '../../../models/WorldColumn';
 
 type PopulationPatternCellProps = WorldColumn & {
+    readonly?: boolean;
     onClick?: OnPatternCellClick;
 }
 
@@ -12,7 +13,9 @@ const PopulationPatternCell: React.FC<PopulationPatternCellProps> = (props) => {
         ? "population alive"
         : "population dead";
     const onClick = (event: any) => {
-        props.onClick && props.onClick(props.row, props.column, props.isAlive);
+        props.readonly === false
+        && props.onClick
+        && props.onClick(props.row, props.column, props.isAlive);
     };
     
     return (

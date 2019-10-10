@@ -9,6 +9,7 @@ interface AppState {
     selectedWorld: World;
     patterns: Array<PopulationPattern>;
     userId: number;
+    isReadonly: boolean;
     newPatternName: string;
     newPatternWidth: number;
     newPatternHeight: number;
@@ -35,6 +36,7 @@ class App extends React.Component<{}, AppState> {
             selectedPatternId: 1,
             patterns: new Array<PopulationPattern>(0),
             userId: 1,
+            isReadonly: false,
             newPatternName: "New Pattern",
             newPatternWidth: 10,
             newPatternHeight: 10,
@@ -43,7 +45,7 @@ class App extends React.Component<{}, AppState> {
 
     render() {
         const { generation, width, height, rows } = this.state.selectedWorld;
-        const { patterns, newPatternName, newPatternWidth, newPatternHeight } = this.state;
+        const { isReadonly, patterns, newPatternName, newPatternWidth, newPatternHeight } = this.state;
 
         return (
             <div className="app layout">
@@ -87,6 +89,7 @@ class App extends React.Component<{}, AppState> {
                 </section>
                 <p>Generation: {generation}</p>
                 <PopulationPatternGrid
+                    readonly={isReadonly}
                     generation={generation}
                     width={width}
                     height={height}
@@ -124,7 +127,7 @@ class App extends React.Component<{}, AppState> {
                 const patternsUrl = this.getPatternViewUrl(userId, patternId);
                 return this.requestAction<World>(patternsUrl);
             })
-            .then(data => this.setState({ selectedWorld: data }))
+            .then(data => this.setState({ selectedWorld: data, isReadonly: false }))
             .catch(error => { console.log(error); });
     }
 
@@ -145,7 +148,7 @@ class App extends React.Component<{}, AppState> {
         const patternsUrl = this.getPatternUrl(userId);
         const data = new PopulationPattern(0, newPatternName, newPatternWidth, newPatternHeight);
 
-        this.requestAction<PopulationPattern>(patternsUrl, data)
+        this.requestAction<PopulationPattern>(patternsUrl, data, "POST")
             .then(data => {
                 this.setState({ patterns: this.state.patterns.concat(data) });
                 const patternsUrl = this.getPatternViewUrl(userId, selectedPatternId);
@@ -157,11 +160,15 @@ class App extends React.Component<{}, AppState> {
 
     handleOnStartClick(event: any) {
         const { userId, selectedPatternId } = this.state;
-        this.gameService.start(userId, selectedPatternId);
+        this.gameService.start(userId, selectedPatternId)
+            .then(data => this.setState({ isReadonly: true }))
+            .catch(error => { console.log(error); });
     }
 
     handleOnStopClick(event: any) {
-        this.gameService.end(this.state.userId);
+        this.gameService.end(this.state.userId)
+            .then(data => this.setState({ isReadonly: false }))
+            .catch(error => { console.log(error); });
     }
 
     handleOnPatternCellClick(row: number, column: number, isAlive: boolean) {
