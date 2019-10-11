@@ -48,7 +48,7 @@ class App extends React.Component<{}, AppState> {
         const { isReadonly, patterns, newPatternName, newPatternWidth, newPatternHeight } = this.state;
 
         return (
-            <div className="app layout">
+            <div className="layout">
                 <section>
                     <select onChange={this.handleOnSelect.bind(this)}>
                         {patterns.map(pattern => (

@@ -64,9 +64,9 @@ As the result of this course you should know and understand the common principle
 |---            |---                        |---                        |---            |
 |Store          |[ ] EventStore             |[ ] SQL Server             |-              |
 |Engine         |[+] Pure F#                |[+] Pure C#                |[ ] Pure TS    |
-|Api            |[ ] Giraffe/Saturn/SignalR |[+] ASP.NET Core/SignalR   |-              |
+|Api            |[ ] Giraffe/SignalR        |[+] ASP.NET Core/SignalR   |-              |
 |Desktop        |[+] Console                |[+] Console                |[ ] Console    |
-|Web            |[ ] Fable/Elmish           |-                          |[+] React.js   |
+|Web            |[ ] Fable/Elmish           |[ ] ASP.NET Blazor         |[+] React.js   |
 |Tests          |-                          |[+] xUnit                  |-              |
 
 
