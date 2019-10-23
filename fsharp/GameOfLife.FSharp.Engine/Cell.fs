@@ -4,6 +4,6 @@ type Cell =
     | Dead
     | Alive
 
-module Cell = 
+    with
 
-    let empty() = Dead
+    static member empty = Dead

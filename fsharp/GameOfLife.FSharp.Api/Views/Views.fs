@@ -25,11 +25,13 @@ module Views =
         let getRow row (array: 'a[,]) = array.[row, *] |> Seq.toList
         
         let toCell cell =
-            let style = function
+            let style = 
+                match cell with
                 | Dead -> "population dead"
                 | Alive -> "population alive"
+
             td [] [
-                div [ _class (style cell) ] []
+                div [ _class style ] []
             ]
 
         let rows = genertion.world.size.height - 1

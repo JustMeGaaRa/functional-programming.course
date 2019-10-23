@@ -1,16 +1,16 @@
 ﻿namespace GameOfLife.FSharp.Engine
 
 type World = {
-    cells: Cell[,];
-    size: Size;
-}
+        cells: Cell[,];
+        size: Size;
+    } with
+
+    static member empty = {
+        cells = Array2D.create 0 0 Cell.empty;
+        size = Size.none;
+    }
 
 module World =
-
-    let empty() = {
-        cells = Array2D.create 0 0 Dead;
-        size = Size.none();
-    }
 
     let fromSize width height = {
         cells = Array2D.create height width Dead;

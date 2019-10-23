@@ -27,7 +27,6 @@ open Elmish.React
 open Elmish.Debug
 open Elmish.HMR
 
-// App
 Program.mkProgram init update root
 #if DEBUG
 |> Program.withDebugger
