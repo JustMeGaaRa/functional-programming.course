@@ -332,3 +332,6 @@ ASALocalRun/
 # Visual Studio Code
 .vs
 .ionide
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
