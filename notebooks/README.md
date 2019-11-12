@@ -47,7 +47,7 @@ As the result of this course you should know and understand the common principle
 - [Purity](./tp-purity/README.md)
 - [Recursion](./tp-recursion/README.md)
 - [Immutability](./tp-immutability/README.md)
-- [Functors, Monoids, Monads](./tp-monads/README.md)
+- [Functors, Monoids, Monads](./tp-category-theory/README.md)
 - [Railway-Oriented Programming](./tp-railway-oriented/README.md)
 - [Functional Reactive](./tp-functional-reactive/README.md)
 - [Asynchrony](./tp-asynchrony/README.md)
