@@ -16,7 +16,7 @@ Within each topic I will try to answer three questions:
 
 I'll start with the description of this course.
 
-### Why is it important to learn functional programming?
+### Why is it important to learn new programming style?
 
 I believe that learning new programming styles and practices makes us a better programmer. It helps us to understand the systems, frameworks and the world of programming. Moreover, it gives us the tools to come up with creative and elegant solutions to previously unknown problems.
 
@@ -24,20 +24,11 @@ If you know one language, then you can write code in that language. If you know 
 
 Nowadays there are armies of developers who use OOP in everyday life. They fight the imperative dragon with factories and strategies, and strategy factories. They use shields of inheritance to protect themselves and versatility of polymorphism parry the attacks of ever-changing requirements, until they burn themselves with tight coupling and boilerplate code. Functional programming is here to help deal with the complexity.
 
-### How can we deal with the complexity?
+### How can we learn a new programming style fast and simple?
 
-Each paradigm has its own principles - pillars on which it stands. This course is will introduce those principles with examples in C#, F# and TypeScript. Some of those languages are imperative-first (like C# and TypeScript), some are functional-first (like F#). This should be a great way to introduce functional concepts in a language that people have been working with for some time. Moreover, comparing the code side by side will help to understand the implementation in other languages.
+Each paradigm and programming style has its own principles and concepts. The easiest way to learn something new and completely different is to try and compare it with what you already know. Given code examples in differnt languages side-by-side should help to understand new concepts and learn how to use them in real-world. This course is will introduce those principles with examples in C#, F# and TypeScript. Some of those languages are imperative-first (like C# and TypeScript), some are functional-first (like F#). This should be a great way to introduce new concepts in a language that people have been working with for some time.
 
-- A complete project as a real-world example, and examples ONLY for additional concepts.
-- A comparison of code in different languages, for people with different backgrounds to understand the concepts easier.
-- Introduce the functional principles.
-- Show functional principles applied in different languages.
-- Compare functional paradigm to imperative, so that people know when it's better and when not.
-- Explain some of the techniques/architecture built around functional programming and how to implement them.
-- Introduce F# language and it's syntax.
-- Watch some great videos from community experts, discuss, communicate and simply have fun in the process.
-
-### What tools functional programming has to offer?
+### What is there to use to improve productivity?
 
 As the result of this course you should know and understand the common principles behind functional programming. You shall learn when to use it and how to be more productive at times. It's not only about productivity, but about correctness of the system. So, you'll have a better understanding on how to write more error prone code and benefit from features like type inference and functional data types.
 
@@ -53,7 +44,7 @@ As the result of this course you should know and understand the common principle
 - [Asynchrony](./tp-asynchrony/README.md)
 - [Functional Domain Modeling](./tp-ddd/README.md)
 - [Functional Patterns](./tp-functional-patterns/README.md)
-- [Unidirectional View Patterns](./tp-unidirectional-uis/README.md)
+- [Unidirectional UI Patterns](./tp-unidirectional-uis/README.md)
 - [F# Features](./tp-fsharp-features/README.md)
 - [Type Providers](./tp-type-providers/README.md)
 
@@ -61,23 +52,15 @@ As the result of this course you should know and understand the common principle
 
 - [F# for C# programmers](https://www.youtube.com/watch?v=KPa8Yw_Navk)
 - [Mere Functional Programming](https://dev.to/kspeakman/mere-functional-programming-in-f-do8)
-- [What the Functor](https://www.matthewgerstman.com/tech/what-the-functor/)
-- [Mary Had a Little Lambda](https://www.matthewgerstman.com/tech/mary-had-a-little-lambda/)
 - [Exceptions vs. Result Types in F#](https://danielwertheim.se/exceptions-vs-the-result-type-in-fsharp/)
 - [The Rise and Fall of Object-Oriented Programming](https://medium.com/machine-words/the-rise-and-fall-of-object-oriented-programming-d67078f970e2)
-- [Your Easy Guide to Monads, Applicatives and Functors](https://medium.com/@lettier/your-easy-guide-to-monads-applicatives-functors-862048d61610)
 - [Mostly Adequate Guide to Functional Programming](https://mostly-adequate.gitbooks.io/mostly-adequate-guide/)
-- [Curry and Function Composition](https://medium.com/javascript-scene/curry-and-function-composition-2c208d774983)
 - [Pros and Cons of Functional Programming](https://itnext.io/pros-and-cons-of-functional-programming-32cdf527e1c2)
 - [Disadvantage of Functional Programming](https://alvinalexander.com/scala/fp-book/disadvantages-of-functional-programming)
 - [What are the Disadvantages of Functional Programming?](https://www.quora.com/What-are-some-limitations-disadvantages-of-functional-programming-Where-does-it-break-down-when-you-want-to-get-things-done/answer/Tikhon-Jelvis)
-- [A Fistful of Monads](http://learnyouahaskell.com/a-fistful-of-monads)
 - Real-World Functional Programming
 - Programming F# 3.0 2nd Edition
 - F# for C# Developers
-
-Additional links:
-
 - [Orleans Event Sourcing](http://dotnet.github.io/orleans/Documentation/grains/event_sourcing/index.html)
 - [Event Sourcing is Awesome](https://medium.com/jettech/event-sourcing-is-awesome-c4fe25ad24cd)
 - [Building a Game with SignalR and F#](http://www.codesuji.com/2019/02/19/Building-Game-with-SignalR-and-F/)
