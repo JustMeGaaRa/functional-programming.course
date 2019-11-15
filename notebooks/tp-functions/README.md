@@ -80,7 +80,7 @@ printfn "The answer changed to: %i" value
 
 Now, we have to process the data. We can do that with a function. So what is a function? Function is something that operates on data, it takes an input and produces an output.
 
-![Function](../../resources/fp-function-definition.png)
+![Function](../../resources/fn-function-definition.png)
 
 First, let's start with a mathematical definition of a function.
 
