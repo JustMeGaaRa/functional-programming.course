@@ -8,7 +8,7 @@ namespace GameOfLife.CSharp.Api.Infrastructure
     public class InMemoryWorldPatternRepository : IWorldPatternRepository
     {
         private readonly ICollection<PopulationPattern> _patterns;
-        private int _identity = 0;
+        private volatile int _identity = 0;
 
         public InMemoryWorldPatternRepository()
         {
@@ -16,7 +16,7 @@ namespace GameOfLife.CSharp.Api.Infrastructure
             _identity = _patterns.Max(x => x.PatternId);
         }
 
-        public PopulationPattern CreatePattern(PopulationPattern pattern)
+        public PopulationPattern SavePattern(PopulationPattern pattern)
         {
             _patterns.Add(pattern);
             pattern.PatternId = Interlocked.Increment(ref _identity);

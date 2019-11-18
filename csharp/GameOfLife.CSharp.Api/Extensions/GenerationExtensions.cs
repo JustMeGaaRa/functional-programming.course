@@ -31,5 +31,31 @@ namespace GameOfLife.CSharp.Api.Extensions
                 Rows = rows
             };
         }
+
+        public static PopulationPatternViewVM ToPatternViewVM(this PopulationPattern pattern)
+        {
+            ICollection<PopulationPatternRowVM> rows = new List<PopulationPatternRowVM>();
+
+            for (int row = 0; row < pattern.Height; row++)
+            {
+                ICollection<PopulationPatternCellVM> columns = new List<PopulationPatternCellVM>();
+
+                for (int column = 0; column < pattern.Width; column++)
+                {
+                    bool isAlive = pattern[row, column];
+                    columns.Add(new PopulationPatternCellVM { Row = row, Column = column, IsAlive = isAlive });
+                }
+
+                rows.Add(new PopulationPatternRowVM { Number = row, Columns = columns });
+            }
+
+            return new PopulationPatternViewVM
+            {
+                Generation = 0,
+                Height = pattern.Height,
+                Width = pattern.Width,
+                Rows = rows
+            };
+        }
     }
 }

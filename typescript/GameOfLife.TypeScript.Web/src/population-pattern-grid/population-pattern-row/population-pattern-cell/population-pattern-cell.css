@@ -1,13 +1,15 @@
 .population {
     width: 25px;
     height: 25px;
+    border: 1px solid lightgray;
 }
 
 .population.dead {
     background-color: transparent;
-    border: 1px solid lightgray;
+    transition: all 1s ease-in-out;
 }
 
 .population.alive {
     background-color: dodgerblue;
+    transition: all 2s ease-in-out;
 }

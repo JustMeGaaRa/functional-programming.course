@@ -27,6 +27,7 @@ namespace GameOfLife.CSharp.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<GameOptions>(Configuration.GetSection(nameof(GameOptions)));
             services.AddControllers();
             services.AddMvc();
             services.AddCors(policy => policy
@@ -37,7 +38,7 @@ namespace GameOfLife.CSharp.Api
                     .AllowAnyHeader()));
             services.AddSignalR();
             services.AddSwaggerGen(ConfigureSwaggerGenOptions);
-            services.AddSingleton<IWorldPatternRepository, InMemoryWorldPatternRepository>();
+            services.AddSingleton<IWorldPatternRepository, JsonWorldPatternRepository>();
             services.AddSingleton<IGameOfLifeService, InMemoryGameOfLifeService>();
         }
 

@@ -30,48 +30,49 @@ namespace GameOfLife.CSharp.Api.Controllers
         public IActionResult CreatePopulationPattern(int userId, [FromBody] PopulationPatternInfoVM pattern)
         {
             var populationPattern = PopulationPattern.FromSize(pattern.Name, pattern.Width, pattern.Height);
-            populationPattern = _repository.CreatePattern(populationPattern);
-            var worldPatternVm = populationPattern.ToPatternInfoVM();
-            return Ok(worldPatternVm);
+            populationPattern = _repository.SavePattern(populationPattern);
+            var populationPatternVm = populationPattern.ToPatternInfoVM();
+            return Ok(populationPatternVm);
         }
 
         [ProducesResponseType(typeof(PopulationPatternInfoVM), 200)]
         [HttpGet("{userId:int}/patterns")]
         public IActionResult GetPopulationPatternInfosByUserId(int userId)
         {
-            var worldPatterns = _repository.GetUserPatterns(userId);
-            var worldPatternVms = worldPatterns
+            var populationPattern = _repository.GetUserPatterns(userId);
+            var populationPatternVms = populationPattern
                 .Select(PopulationPatternExtensions.ToPatternInfoVM)
                 .ToList();
-            return Ok(worldPatternVms);
+            return Ok(populationPatternVms);
         }
 
         [ProducesResponseType(typeof(PopulationPatternInfoVM), 200)]
         [HttpGet("{userId:int}/patterns/{patternId:int}/info")]
         public IActionResult GetPopulationPatternById(int userId, int patternId)
         {
-            var worldPattern = _repository.GetPatternById(patternId);
-            var worldPatternVm = worldPattern.ToPatternInfoVM();
-            return Ok(worldPatternVm);
+            var populationPattern = _repository.GetPatternById(patternId);
+            var populationPatternVm = populationPattern.ToPatternInfoVM();
+            return Ok(populationPatternVm);
         }
 
         [ProducesResponseType(typeof(PopulationPatternViewVM), 200)]
         [HttpGet("{userId:int}/patterns/{patternId:int}/view")]
         public IActionResult GetPopulationPatternViewsByUserId(int userId, int patternId)
         {
-            var worldPattern = _repository.GetPatternById(patternId);
-            var worldPatternVm = Generation.Zero(worldPattern).ToPatternViewVM();
-            return Ok(worldPatternVm);
+            var populationPattern = _repository.GetPatternById(patternId);
+            var populationPatternVm = Generation.Zero(populationPattern).ToPatternViewVM();
+            return Ok(populationPatternVm);
         }
 
         [ProducesResponseType(typeof(PopulationPatternViewVM), 200)]
         [HttpPut("{userId:int}/patterns/{patternId:int}/view/cell")]
         public IActionResult SetPopulationPatternCellState(int userId, int patternId, [FromBody] PopulationPatternCellVM cell)
         {
-            var worldPattern = _repository.GetPatternById(patternId);
-            _ = worldPattern.TrySetCellState(cell.Row, cell.Column, cell.IsAlive);
-            var worldPatternVm = Generation.Zero(worldPattern).ToPatternViewVM();
-            return Ok(worldPatternVm);
+            var populationPattern = _repository.GetPatternById(patternId);
+            _ = populationPattern.TrySetCellState(cell.Row, cell.Column, cell.IsAlive);
+            populationPattern = _repository.SavePattern(populationPattern);
+            var populationPatternVm = Generation.Zero(populationPattern).ToPatternViewVM();
+            return Ok(populationPatternVm);
         }
     }
 }

@@ -4,7 +4,7 @@ namespace GameOfLife.Engine
 {
     public interface IWorldPatternRepository
     {
-        PopulationPattern CreatePattern(PopulationPattern pattern);
+        PopulationPattern SavePattern(PopulationPattern pattern);
 
         PopulationPattern GetPatternById(int patternId);
 
