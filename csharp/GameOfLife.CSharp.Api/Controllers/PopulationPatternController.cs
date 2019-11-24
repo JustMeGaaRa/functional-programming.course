@@ -29,7 +29,8 @@ namespace GameOfLife.CSharp.Api.Controllers
         [HttpPost("{userId:int}/patterns")]
         public IActionResult CreatePopulationPattern(int userId, [FromBody] PopulationPatternInfoVM pattern)
         {
-            var populationPattern = PopulationPattern.FromSize(pattern.Name, pattern.Width, pattern.Height);
+            int patternId = PopulationPatternIdentity.GenerateIdentity();
+            var populationPattern = PopulationPattern.FromSize(patternId, pattern.Name, pattern.Width, pattern.Height);
             populationPattern = _repository.SavePattern(populationPattern);
             var populationPatternVm = populationPattern.ToPatternInfoVM();
             return Ok(populationPatternVm);

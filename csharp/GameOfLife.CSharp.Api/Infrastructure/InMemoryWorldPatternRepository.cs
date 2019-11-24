@@ -1,37 +1,30 @@
 ﻿using GameOfLife.Engine;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 
 namespace GameOfLife.CSharp.Api.Infrastructure
 {
     public class InMemoryWorldPatternRepository : IWorldPatternRepository
     {
-        private readonly ICollection<PopulationPattern> _patterns;
-        private volatile int _identity = 0;
+        private readonly Dictionary<int, PopulationPattern> _patterns = new Dictionary<int, PopulationPattern>();
 
-        public InMemoryWorldPatternRepository()
+        public PopulationPattern? SavePattern(PopulationPattern pattern)
         {
-            _patterns = new List<PopulationPattern>(PopulationPatterns.AllPatterns);
-            _identity = _patterns.Max(x => x.PatternId);
+            return pattern != null
+                ? _patterns[pattern.PatternId] = pattern
+                : null;
         }
 
-        public PopulationPattern SavePattern(PopulationPattern pattern)
+        public PopulationPattern? GetPatternById(int patternId)
         {
-            _patterns.Add(pattern);
-            pattern.PatternId = Interlocked.Increment(ref _identity);
-            return pattern;
-        }
-
-        public PopulationPattern GetPatternById(int patternId)
-        {
-            return _patterns.FirstOrDefault(x => x.PatternId == patternId);
+            return _patterns.ContainsKey(patternId)
+                ? _patterns[patternId]
+                : null;
         }
 
         public ICollection<PopulationPattern> GetUserPatterns(int userId)
         {
             // TODO: add a reference to user and filter by userId
-            return _patterns.ToList();
+            return _patterns.Values;
         }
     }
 }

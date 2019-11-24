@@ -10,9 +10,16 @@ open Giraffe
 open GameOfLife.FSharp.Engine
 
 module Startup =
+
+    let toad = PopulationPattern.create "Toad" (array2D [|
+        [| Dead; Dead; Dead; Dead |];
+        [| Dead; Alive; Alive; Alive |];
+        [| Alive; Alive; Alive; Dead |];
+        [| Dead; Dead; Dead; Dead |];
+    |])
     
     let indexHandler (name : string) =
-        let model = Generation.zero PopulationPatterns.pulsar
+        let model = Generation.zero toad
         let view = Views.index model
         htmlView view
     
