@@ -24,14 +24,13 @@ module World =
 
     let evolve world =
         let countAliveNeighbours world row column =
-            let isAlive = function
-                | Dead -> false
-                | Alive -> true
 
             let checkPopulationSafely (row, column) =
-                row >= 0 && column >= 0
-                && row < world.size.height && column < world.size.width
-                && isAlive world.cells.[row, column]
+                row >= 0
+                && column >= 0
+                && row < world.size.height
+                && column < world.size.width
+                && world.cells.[row, column].isAlive
 
             let indicies = [|
                 (row - 1, column - 1);
@@ -55,5 +54,4 @@ module World =
             | (Dead, 3) -> Alive
             | _ -> Dead
 
-        let cells = Array2D.mapi (getNextCellState world) world.cells
-        { world with cells = cells }
+        { world with cells = Array2D.mapi (getNextCellState world) world.cells }

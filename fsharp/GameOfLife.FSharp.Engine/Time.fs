@@ -7,8 +7,6 @@ open System.Threading
 module Time =
     
     let start pattern (cts: CancellationTokenSource) = 
-        let subject = new Subject<Generation>()
-        let generation0 = Generation.zero pattern
 
         let rec flow (observer: IObserver<Generation>) generation (cts: CancellationTokenSource) = async {
             observer.OnNext(generation)
@@ -16,6 +14,9 @@ module Time =
             if cts.IsCancellationRequested then return ()
             else return! flow observer (Generation.next generation) cts
         }
+
+        let subject = new Subject<Generation>()
+        let generation0 = Generation.zero pattern
 
         flow subject generation0 cts |> Async.Start
         subject

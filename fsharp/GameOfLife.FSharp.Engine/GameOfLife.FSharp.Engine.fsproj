@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Position.fs" />
     <Compile Include="Size.fs" />
     <Compile Include="Cell.fs" />
     <Compile Include="World.fs" />
