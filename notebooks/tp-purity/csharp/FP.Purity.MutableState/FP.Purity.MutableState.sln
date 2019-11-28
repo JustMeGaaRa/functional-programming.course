@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29409.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FP.Purity.MutableState", "FP.Purity.MutableState.csproj", "{0D6320AA-8BBE-4927-BD50-133CC2DF3580}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0D6320AA-8BBE-4927-BD50-133CC2DF3580}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D6320AA-8BBE-4927-BD50-133CC2DF3580}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D6320AA-8BBE-4927-BD50-133CC2DF3580}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D6320AA-8BBE-4927-BD50-133CC2DF3580}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1A89D443-8C8F-4288-B6E8-4B8062EABA65}
+	EndGlobalSection
+EndGlobal
