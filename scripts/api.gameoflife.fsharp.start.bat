@@ -1,0 +1,1 @@
+dotnet run --project ..\fsharp\GameOfLife.FSharp.Api\GameOfLife.FSharp.Api.fsproj

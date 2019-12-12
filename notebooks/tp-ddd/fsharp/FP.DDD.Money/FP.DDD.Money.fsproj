@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Money.fs" />
+    <Compile Include="BankAccount.fs" />
+    <Compile Include="StockMarket.fs" />
+    <Compile Include="REIT.fs" />
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+
+</Project>

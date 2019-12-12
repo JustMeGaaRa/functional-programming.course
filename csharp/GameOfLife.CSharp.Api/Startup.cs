@@ -32,7 +32,7 @@ namespace GameOfLife.CSharp.Api
             services.AddMvc();
             services.AddCors(policy => policy
                 .AddPolicy(CorsPolicyName, options => options
-                    .WithOrigins("http://localhost:3000")
+                    .WithOrigins(Configuration["CORS:Origin"])
                     .AllowCredentials()
                     .AllowAnyMethod()
                     .AllowAnyHeader()));

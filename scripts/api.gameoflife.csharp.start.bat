@@ -1,0 +1,1 @@
+dotnet run --project ..\csharp\GameOfLife.CSharp.Api\GameOfLife.CSharp.Api.csproj

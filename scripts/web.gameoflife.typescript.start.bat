@@ -1,0 +1,1 @@
+npm run --prefix "../typescript/GameOfLife.TypeScript.Web" start
