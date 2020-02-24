@@ -1,4 +1,4 @@
-﻿using GameOfLife.Engine;
+﻿using GameOfLife.CSharp.Engine;
 using System.Threading.Tasks;
 
 namespace GameOfLife.CSharp.Api.Services

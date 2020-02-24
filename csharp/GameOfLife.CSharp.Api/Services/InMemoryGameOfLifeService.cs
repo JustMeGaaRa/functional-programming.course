@@ -1,6 +1,6 @@
 ﻿using GameOfLife.CSharp.Api.Extensions;
 using GameOfLife.CSharp.Api.Hubs;
-using GameOfLife.Engine;
+using GameOfLife.CSharp.Engine;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;

@@ -3,7 +3,7 @@ using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace GameOfLife.Engine
+namespace GameOfLife.CSharp.Engine
 {
     public class Time : IObservable<Generation>, IDisposable
     {

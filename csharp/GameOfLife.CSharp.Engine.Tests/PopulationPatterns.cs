@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using GameOfLife.CSharp.Engine;
+using System.Collections.Generic;
 
 namespace GameOfLife.Engine
 {

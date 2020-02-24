@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GameOfLife.Engine
+namespace GameOfLife.CSharp.Engine
 {
     public class PopulationPattern
     {
@@ -29,7 +29,7 @@ namespace GameOfLife.Engine
 
         public bool TrySetCellState(int row, int column, bool alive)
         {
-            if (row >= 0 && column >= 0 && row < Width && column < Height)
+            if (row >= 0 && column >= 0 && row < Height && column < Width)
             {
                 return _pattern[row, column] = alive;
             }
@@ -39,7 +39,7 @@ namespace GameOfLife.Engine
 
         public bool IsCellAlive(int row, int column)
         {
-            return row >= 0 && column >= 0 && row < Width && column < Height && _pattern[row, column];
+            return row >= 0 && column >= 0 && row < Height && column < Width && _pattern[row, column];
         }
 
         public static PopulationPattern FromSize(int patternId, string name, int width, int height)
@@ -59,8 +59,8 @@ namespace GameOfLife.Engine
                 throw new ArgumentException("Parameter cannot be null, empty or whitespace.", nameof(name));
             }
 
-            int width = aliveCells.GetLength(0);
-            int height = aliveCells.GetLength(1);
+            int width = aliveCells.GetLength(1);
+            int height = aliveCells.GetLength(0);
             var pattern = new PopulationPattern(patternId, name, width, height);
 
             for (int row = 0; row < height; row++)

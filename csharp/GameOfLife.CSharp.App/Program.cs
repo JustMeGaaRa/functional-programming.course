@@ -1,4 +1,5 @@
-﻿using GameOfLife.Engine;
+﻿using GameOfLife.CSharp.Engine;
+using GameOfLife.Engine;
 using System;
 using System.Threading.Tasks;
 
@@ -22,7 +23,7 @@ namespace GameOfLife.App
             {
                 for (int column = 0; column < generation.Size.Width; column++)
                 {
-                    string cell = generation[row, column].Population.IsAlive() ? "+" : " ";
+                    string cell = generation[row, column].IsAlive() ? "+" : " ";
                     Console.Write(cell);
                 }
 

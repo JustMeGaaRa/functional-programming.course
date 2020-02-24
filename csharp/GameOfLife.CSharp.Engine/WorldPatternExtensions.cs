@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GameOfLife.Engine
+namespace GameOfLife.CSharp.Engine
 {
     public static class WorldPatternExtensions
     {

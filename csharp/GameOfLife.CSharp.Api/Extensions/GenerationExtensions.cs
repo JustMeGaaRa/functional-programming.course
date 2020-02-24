@@ -1,5 +1,5 @@
 ﻿using GameOfLife.CSharp.Api.Models;
-using GameOfLife.Engine;
+using GameOfLife.CSharp.Engine;
 using System.Collections.Generic;
 
 namespace GameOfLife.CSharp.Api.Extensions
@@ -16,7 +16,7 @@ namespace GameOfLife.CSharp.Api.Extensions
 
                 for (int column = 0; column < generation.Size.Width; column++)
                 {
-                    bool isAlive = generation[row, column].Population.IsAlive();
+                    bool isAlive = generation[row, column].IsAlive();
                     columns.Add(new PopulationPatternCellVM { Row = row, Column = column, IsAlive = isAlive });
                 }
 

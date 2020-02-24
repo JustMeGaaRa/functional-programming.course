@@ -1,4 +1,4 @@
-﻿using GameOfLife.Engine;
+﻿using GameOfLife.CSharp.Engine;
 using System.Collections.Generic;
 
 namespace GameOfLife.CSharp.Api.Infrastructure

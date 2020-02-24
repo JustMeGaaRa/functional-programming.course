@@ -1,7 +1,7 @@
 using GameOfLife.CSharp.Api.Hubs;
 using GameOfLife.CSharp.Api.Infrastructure;
 using GameOfLife.CSharp.Api.Services;
-using GameOfLife.Engine;
+using GameOfLife.CSharp.Engine;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;

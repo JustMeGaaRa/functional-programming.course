@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using GameOfLife.CSharp.Engine;
+using Xunit;
 
 namespace GameOfLife.Engine.Tests
 {
@@ -34,7 +35,7 @@ namespace GameOfLife.Engine.Tests
             Size expectedSize = new Size(3, 4);
             bool dead = false;
             bool live = true;
-            PopulationPattern pattern = PopulationPattern.FromArray2D(1, string.Empty, new[,]
+            PopulationPattern pattern = PopulationPattern.FromArray2D(1, "Test", new[,]
             {
                 { dead, live, dead },
                 { dead, live, dead },
@@ -77,8 +78,8 @@ namespace GameOfLife.Engine.Tests
             Size expectedSize = new Size(3, 3);
 
             // Act
-            World world = World.FromPattern(PopulationPatterns.Blinker);
-            World evolved = world.Evolve();
+            IWorld world = World.FromPattern(PopulationPatterns.Blinker);
+            IWorld evolved = world.Evolve();
 
             // Assert
             Assert.NotNull(world);
@@ -113,8 +114,8 @@ namespace GameOfLife.Engine.Tests
             Size expectedSize = new Size(4, 4);
 
             // Act
-            World world = World.FromPattern(PopulationPatterns.Toad);
-            World evolved = world.Evolve();
+            IWorld world = World.FromPattern(PopulationPatterns.Toad);
+            IWorld evolved = world.Evolve();
 
             // Assert
             Assert.NotNull(world);

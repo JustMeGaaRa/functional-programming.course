@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using GameOfLife.CSharp.Engine;
+using Xunit;
 
 namespace GameOfLife.Engine.Tests
 {

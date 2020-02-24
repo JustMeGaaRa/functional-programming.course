@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace GameOfLife.Engine
+namespace GameOfLife.CSharp.Engine
 {
     public interface IWorldPatternRepository
     {

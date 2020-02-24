@@ -1,3 +1,4 @@
+using GameOfLife.CSharp.Engine;
 using Xunit;
 
 namespace GameOfLife.Engine.Tests
@@ -12,10 +13,11 @@ namespace GameOfLife.Engine.Tests
 
             // Act, Assert
             Assert.NotNull(cell);
-            Assert.Equal(Population.Dead, cell.Population);
+            Assert.Equal(Population.Empty, cell.Population);
         }
 
         [Theory]
+        [InlineData(Population.Empty)]
         [InlineData(Population.Alive)]
         [InlineData(Population.Dead)]
         public void Cell_CreateWithPopulationState_ShouldNotBeNullAndHaveSpecifiedState(Population population)

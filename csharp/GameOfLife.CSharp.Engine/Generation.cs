@@ -1,10 +1,10 @@
-﻿namespace GameOfLife.Engine
+﻿namespace GameOfLife.CSharp.Engine
 {
     public class Generation
     {
-        private readonly World _world;
+        private readonly IWorld _world;
 
-        private Generation(World world, uint number)
+        private Generation(IWorld world, uint number)
         {
             _world = world;
             Number = number;

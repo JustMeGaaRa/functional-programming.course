@@ -19,13 +19,14 @@
 ## Roadmap <a name="roadmap"></a>
 
 ### Version 1
-- Conway's Game Of Life
-- A fully working game with rendering on console or/and web.
+- Fully working Conway's Game Of Life.
+- Support for desktop and web.
+- Interchangeable packages/layers (engine, API and web client) written in C#, F# and TypeScript.
 
 ### Version 2
-- LED Screen / Lights
-- An IoT gadget that renders game to LED lights.
+- Rendering the game to LED light matrix
+- Conect to LED light matrix via wireless network for rendering.
 
 ### Version 3
-- Modular LED Lights
-- A set of square LED light that can be combined together to shape the "world".
+- Ability to merge two game world into single one.
+- LED light matrix with magnets to detect two combined worlds.

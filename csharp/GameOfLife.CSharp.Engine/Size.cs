@@ -1,4 +1,4 @@
-﻿namespace GameOfLife.Engine
+﻿namespace GameOfLife.CSharp.Engine
 {
     public class Size
     {
@@ -14,7 +14,7 @@
 
         public int Height { get; }
 
-        public override bool Equals(object obj) => 
+        public override bool Equals(object obj) =>
             obj is Size size
                 && size.Width == Width
                 && size.Height == Height;

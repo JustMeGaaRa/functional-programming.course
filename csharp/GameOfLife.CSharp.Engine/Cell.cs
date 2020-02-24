@@ -1,4 +1,4 @@
-﻿namespace GameOfLife.Engine
+﻿namespace GameOfLife.CSharp.Engine
 {
     public class Cell
     {
@@ -6,7 +6,7 @@
 
         public Population Population { get; }
 
-        public static Cell Empty => new Cell(Population.Dead);
+        public static Cell Empty => new Cell(Population.Empty);
 
         public static Cell Create(Population state) => new Cell(state);
     }
