@@ -48,6 +48,8 @@
             return new World(cells, Offset.None, size);
         }
 
+        public override string ToString() => $"{TopLeft} {BottomRight} {Size}";
+
         public IWorld Move(int shiftLeft, int shiftTop) => new World(_cells, TopLeft.Shift(shiftLeft, shiftTop), Size);
 
         public bool IsCellAliveBySelfOffset(int relativeRow, int relativeColumn) => this[relativeRow, relativeColumn].IsAlive();

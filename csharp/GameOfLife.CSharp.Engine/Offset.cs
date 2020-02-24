@@ -14,6 +14,8 @@
 
         public int Top { get; }
 
+        public override string ToString() => $"(x, y): ({Left}, {Top});";
+
         public override bool Equals(object obj) =>
             obj is Offset offset
                 && offset.Left == Left

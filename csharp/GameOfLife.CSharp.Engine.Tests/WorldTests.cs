@@ -1,4 +1,5 @@
 ﻿using GameOfLife.CSharp.Engine;
+using System;
 using Xunit;
 
 namespace GameOfLife.Engine.Tests
@@ -17,7 +18,7 @@ namespace GameOfLife.Engine.Tests
         }
 
         [Fact]
-        public void FromSize_Width10AndHeight10_Should_ReturnsInstanceOfRespectiveSize()
+        public void FromSize_Width10AndHeight10_ShouldReturnInstanceOfRespectiveSize()
         {
             // Arrange, Act
             Size expectedSize = new Size(10, 10);
@@ -26,6 +27,13 @@ namespace GameOfLife.Engine.Tests
             // Assert
             Assert.NotNull(world);
             Assert.Equal(expectedSize, world.Size);
+        }
+
+        [Fact]
+        public void FromState_WithNullParameters_ShouldThrowArgumentNullException()
+        {
+            // Act, Assert
+            Assert.Throws<ArgumentNullException>(() => World.FromState(null, null, null));
         }
 
         [Fact]
@@ -61,6 +69,81 @@ namespace GameOfLife.Engine.Tests
             Assert.Equal(Population.Dead, world[1, 2].Population);
             Assert.Equal(Population.Dead, world[2, 2].Population);
             Assert.Equal(Population.Dead, world[3, 0].Population);
+        }
+
+        [Theory]
+        [InlineData(3, 7)]
+        [InlineData(5, 0)]
+        [InlineData(-3, -7)]
+        public void Move_ShiftByLeft2Top4_ShouldChangeTopLeftRespectively(int left, int top)
+        {
+            // Arrange
+            IWorld world = World.FromSize(10, 10);
+
+            // Act
+            IWorld actual = world.Move(left, top);
+
+            // Assert
+            Assert.Equal(left, actual.TopLeft.Left);
+            Assert.Equal(top, actual.TopLeft.Top);
+        }
+
+        [Theory]
+        [InlineData(3, 7, 4, 4, true)]
+        [InlineData(3, 7, 10, 10, false)]
+        [InlineData(3, 7, 7, 9, false)]
+        [InlineData(5, 0, 4, 4, true)]
+        [InlineData(5, 0, 10, 10, false)]
+        [InlineData(5, 0, 9, 4, false)]
+        public void IsCellAliveBySelfOffset_WithSize5By5_ShouldIgnoreTopLeft(int left, int top, int column, int row, bool expected)
+        {
+            // Arrange
+            bool dead = false;
+            bool live = true;
+            PopulationPattern pattern = PopulationPattern.FromArray2D(1, "Test", new[,]
+            {
+                { dead, dead, dead, dead, dead },
+                { dead, dead, dead, dead, dead },
+                { dead, dead, dead, dead, dead },
+                { dead, dead, dead, dead, dead },
+                { dead, dead, dead, dead, live }
+            });
+            IWorld world = World.FromPattern(pattern);
+
+            // Act
+            bool actual = world.Move(left, top).IsCellAliveBySelfOffset(row, column);
+
+            // Assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData(3, 7, 4, 4, false)]
+        [InlineData(3, 7, 10, 10, false)]
+        [InlineData(3, 7, 7, 9, true)]
+        [InlineData(5, 0, 4, 4, false)]
+        [InlineData(5, 0, 10, 10, false)]
+        [InlineData(5, 0, 9, 4, false)]
+        public void IsCellAliveByAbsoluteOffset_WithSize5By5_ShouldIncludeTopLeft(int left, int top, int column, int row, bool expected)
+        {
+            // Arrange
+            bool dead = false;
+            bool live = true;
+            PopulationPattern pattern = PopulationPattern.FromArray2D(1, "Test", new[,]
+            {
+                { dead, dead, dead, dead, dead },
+                { dead, dead, dead, dead, dead },
+                { dead, dead, dead, dead, live },
+                { dead, dead, dead, dead, dead },
+                { dead, dead, dead, dead, dead }
+            });
+            IWorld world = World.FromPattern(pattern);
+
+            // Act
+            bool actual = world.Move(left, top).IsCellAliveByAbsoluteOffset(row, column);
+
+            // Assert
+            Assert.Equal(expected, actual);
         }
 
         /// <summary>

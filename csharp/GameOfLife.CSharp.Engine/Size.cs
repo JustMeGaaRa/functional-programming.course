@@ -14,6 +14,8 @@
 
         public int Height { get; }
 
+        public override string ToString() => $"Width: {Width}; Height: {Height};";
+
         public override bool Equals(object obj) =>
             obj is Size size
                 && size.Width == Width

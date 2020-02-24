@@ -47,6 +47,8 @@ namespace GameOfLife.CSharp.Engine
             return new Universe(worlds, topLeft, bottomRight, size);
         }
 
+        public override string ToString() => $"{TopLeft} {BottomRight} {Size}";
+
         public IWorld Move(int shiftLeft, int shiftTop)
         {
             return new Universe(_worlds, TopLeft.Shift(shiftLeft, shiftTop), BottomRight.Shift(shiftLeft, shiftTop), Size);

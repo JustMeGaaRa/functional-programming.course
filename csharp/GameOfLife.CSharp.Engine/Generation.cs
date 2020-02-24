@@ -20,6 +20,8 @@
 
         public static Generation Zero(PopulationPattern pattern) => new Generation(World.FromPattern(pattern), 0);
 
+        public override string ToString() => $"Generation: {Number};";
+
         public Generation Next() => new Generation(_world.Evolve(), Number + 1);
     }
 }

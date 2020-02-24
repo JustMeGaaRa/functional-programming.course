@@ -9,5 +9,7 @@
         public static Cell Empty => new Cell(Population.Empty);
 
         public static Cell Create(Population state) => new Cell(state);
+
+        public override string ToString() => $"Population: {Population}";
     }
 }

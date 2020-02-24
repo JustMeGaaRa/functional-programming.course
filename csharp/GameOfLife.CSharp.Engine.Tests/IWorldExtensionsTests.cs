@@ -13,17 +13,20 @@ namespace GameOfLife.CSharp.Engine.Tests
         }
 
         [Theory]
-        [InlineData(10, 10, 3, 3, true)]
-        [InlineData(7, 9, 3, 3, true)]
-        [InlineData(5, 5, 10, 3, false)]
-        [InlineData(5, 5, 3, 10, false)]
-        public void IsValidIndex_WithWorldSize10_ShouldReturnTrue(int width, int height, int column, int row, bool expected)
+        [InlineData(3, 7, 4, 4, true)]
+        [InlineData(3, 7, 10, 10, false)]
+        [InlineData(3, 7, 7, 9, false)]
+        [InlineData(5, 0, 4, 4, true)]
+        [InlineData(5, 0, 10, 10, false)]
+        [InlineData(5, 0, 9, 4, false)]
+        public void IsValidIndex_WithSize5By5_ShouldIgnoreTopLeft(int left, int top, int column, int row, bool expected)
         {
             // Arrange
-            IWorld world = World.FromSize(width, height);
+            IWorld world = World.FromSize(5, 5);
 
             // Act
-            bool actual = IWorldExtensions.IsValidIndex(world, row, column);
+            IWorld moved = world.Move(left, top);
+            bool actual = IWorldExtensions.IsValidIndex(moved, row, column);
 
             // Assert
             Assert.Equal(expected, actual);
@@ -37,18 +40,20 @@ namespace GameOfLife.CSharp.Engine.Tests
         }
 
         [Theory]
-        [InlineData(10, 10, 3, 3, false)]
-        [InlineData(7, 9, 3, 3, false)]
-        [InlineData(7, 9, 10, 10, true)]
-        [InlineData(5, 5, 15, 10, false)]
-        [InlineData(5, 5, 10, 15, false)]
-        public void IsInBounds_WithWorldSize10_ShouldReturnTrue(int width, int height, int column, int row, bool expected)
+        [InlineData(3, 7, 4, 4, false)]
+        [InlineData(3, 7, 10, 10, false)]
+        [InlineData(3, 7, 7, 9, true)]
+        [InlineData(5, 0, 4, 4, false)]
+        [InlineData(5, 0, 10, 10, false)]
+        [InlineData(5, 0, 9, 4, true)]
+        public void IsInBounds_WithSize5By5_ShouldIncludeTopLeft(int left, int top, int column, int row, bool expected)
         {
             // Arrange
-            IWorld world = World.FromSize(width, height).Move(10, 5);
+            IWorld world = World.FromSize(5, 5);
 
             // Act
-            bool actual = IWorldExtensions.IsInBounds(world, row, column);
+            IWorld moved = world.Move(left, top);
+            bool actual = IWorldExtensions.IsInBounds(moved, row, column);
 
             // Assert
             Assert.Equal(expected, actual);
