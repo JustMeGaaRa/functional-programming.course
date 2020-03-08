@@ -1,0 +1,13 @@
+﻿<td>
+    <div class=@ClassName></div>
+</td>
+
+@code {
+    [Parameter]
+    public string ClassName { get; set; }
+
+    protected override void OnInitialized()
+    {
+        ClassName = ClassName ?? "population dead";
+    }
+}
