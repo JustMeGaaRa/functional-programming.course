@@ -1,0 +1,16 @@
+﻿<tr>
+    @foreach (var cell in RowData)
+    {
+        <CellComponent className="@cell" />
+    }
+</tr>
+
+@code {
+    [Parameter]
+    public IList<string> RowData { get; set; }
+
+    protected override void OnInitialized()
+    {
+        RowData = RowData;
+    }
+}
