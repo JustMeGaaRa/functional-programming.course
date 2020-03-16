@@ -1,15 +1,16 @@
 ﻿using GameOfLife.CSharp.Web.Data;
+using GameOfLife.CSharp.Web.Models;
 using Microsoft.AspNetCore.Components;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace GameOfLife.CSharp.Web.Components
 {
     public class LayoutBase : ComponentBase
     {
-        [Inject] IPopulationDataService PopulationDataService { get; set; }
+        [Inject] 
+        private IPopulationDataService PopulationDataService { get; set; }
 
-        protected IList<List<string>> _populationData;
+        protected World _populationData;
 
         protected override async Task OnInitializedAsync()
         {
