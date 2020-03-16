@@ -1,0 +1,8 @@
+﻿@inherits PopulationPatternRowBase
+
+<tr>
+    @foreach (var column in Columns)
+    {
+        <PopulationPatternCell Column="@column" />
+    }
+</tr>
