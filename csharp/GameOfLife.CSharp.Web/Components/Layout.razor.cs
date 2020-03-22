@@ -7,14 +7,14 @@ namespace GameOfLife.CSharp.Web.Components
 {
     public class LayoutBase : ComponentBase
     {
-        [Inject] 
-        private IPopulationDataService PopulationDataService { get; set; }
+        [Inject]
+        public IPopulationDataService PopulationDataService { get; set; }
 
-        protected World _populationData;
+        public World World { get; private set; }
 
         protected override async Task OnInitializedAsync()
         {
-            _populationData = await PopulationDataService.GetPopulationData();
+            World = await PopulationDataService?.GetPopulationData();
         }
     }
 }
