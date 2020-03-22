@@ -5,14 +5,9 @@ namespace GameOfLife.CSharp.Web.Components
 {
     public class PopulationPatternCellBase : ComponentBase
     {
-        protected string _className { get; set; }
+        public string Style => Column.IsAlive ? "population alive" : "population dead";
 
         [Parameter]
         public WorldColumn Column { get; set; }
-
-        protected override void OnInitialized()
-        {
-            _className = Column.IsAlive ? "population alive" : "population dead";
-        }
     }
 }
