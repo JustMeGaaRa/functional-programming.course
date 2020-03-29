@@ -2,7 +2,7 @@
 
 namespace GameOfLife.CSharp.Engine
 {
-    public static class WorldPatternExtensions
+    public static class PopulationPatternExtensions
     {
         public static TOutput[,] Select<TOutput>(this PopulationPattern pattern, Func<bool, int, int, TOutput> func)
         {

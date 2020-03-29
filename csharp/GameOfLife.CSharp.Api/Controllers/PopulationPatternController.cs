@@ -11,9 +11,9 @@ namespace GameOfLife.CSharp.Api.Controllers
     [ApiController]
     public class PopulationPatternController : ControllerBase
     {
-        private readonly IWorldPatternRepository _repository;
+        private readonly IPopulationPatternRepository _repository;
 
-        public PopulationPatternController(IWorldPatternRepository repository)
+        public PopulationPatternController(IPopulationPatternRepository repository)
         {
             _repository = repository;
         }
@@ -43,7 +43,7 @@ namespace GameOfLife.CSharp.Api.Controllers
         {
             var populationPattern = _repository.GetUserPatterns(userId);
             var populationPatternVms = populationPattern
-                .Select(PopulationPatternExtensions.ToPatternInfoVM)
+                .Select(Extensions.PopulationPatternExtensions.ToPatternInfoVM)
                 .ToList();
             return Ok(populationPatternVms);
         }

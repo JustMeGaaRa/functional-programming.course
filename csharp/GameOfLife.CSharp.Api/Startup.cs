@@ -38,7 +38,7 @@ namespace GameOfLife.CSharp.Api
                     .AllowAnyHeader()));
             services.AddSignalR();
             services.AddSwaggerGen(ConfigureSwaggerGenOptions);
-            services.AddSingleton<IWorldPatternRepository, JsonWorldPatternRepository>();
+            services.AddSingleton<IPopulationPatternRepository, JsonWorldPatternRepository>();
             services.AddSingleton<IGameOfLifeService, InMemoryGameOfLifeService>();
         }
 

@@ -2,7 +2,7 @@
 {
     public enum Population
     {
-        Empty = 0,
+        None = 0,
         Dead = 1,
         Alive = 2
     }

@@ -1,52 +1,37 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 
 namespace GameOfLife.CSharp.Engine
 {
-    public static class IWorldExtensions
+    public static class ImmutableGridExtensions
     {
-        public static bool IsInBounds(this IWorld world, int absoluteRow, int absoluteColumn)
+        public static bool IsValidIndex(Size size, int relativeRow, int relativeColumn)
         {
-            if (world is null) throw new ArgumentNullException(nameof(world));
-
-            return world.TopLeft.Left <= absoluteColumn
-                && world.TopLeft.Top <= absoluteRow
-                && absoluteColumn < world.BottomRight.Left
-                && absoluteRow < world.BottomRight.Top;
-        }
-
-        public static bool IsValidIndex(this IWorld world, int relativeRow, int relativeColumn)
-        {
-            if (world is null) throw new ArgumentNullException(nameof(world));
-
             return relativeRow >= 0
                 && relativeColumn >= 0
-                && relativeRow < world.Size.Height
-                && relativeColumn < world.Size.Width;
+                && relativeRow < size.Height
+                && relativeColumn < size.Width;
         }
 
-        public static IWorld Evolve(this IWorld world)
+        public static void Evolve(this IImmutableGrid immutableGrid, IMutableGrid mutableGrid)
         {
-            Cell[,] clone = new Cell[world.Size.Height, world.Size.Width];
-
-            for (int row = 0; row < world.Size.Height; row++)
+            for (int row = 0; row < immutableGrid.Size.Height; row++)
             {
-                for (int column = 0; column < world.Size.Width; column++)
+                for (int column = 0; column < immutableGrid.Size.Width; column++)
                 {
-                    clone[row, column] = Cell.Create(GetNextPopulationState(world, row, column));
+                    var state = GetNextPopulationState(immutableGrid, row, column);
+                    var cell = Cell.Create(state);
+                    mutableGrid.Set(row, column, cell);
                 }
             }
-
-            return World.FromState(clone, world.TopLeft, world.Size);
         }
 
-        private static Population GetNextPopulationState(IWorld grid, int row, int column)
+        private static Population GetNextPopulationState(IImmutableGrid grid, int row, int column)
         {
             int aliveNeighbours = CountAliveNeighbours(grid, row, column);
             var state = (grid[row, column], aliveNeighbours) switch
             {
                 // Any empty cell with should remain empty.
-                ({ Population: Population.Empty }, _) => Population.Empty,
+                ({ Population: Population.None }, _) => Population.None,
 
                 // Any live cell with fewer than two live neighbours dies, as if by underpopulation.
                 ({ Population: Population.Alive }, var alive) when alive < 2 => Population.Dead,
@@ -67,7 +52,7 @@ namespace GameOfLife.CSharp.Engine
             return state;
         }
 
-        private static int CountAliveNeighbours(IWorld grid, int row, int column)
+        private static int CountAliveNeighbours(IImmutableGrid grid, int row, int column)
         {
             (int row, int column)[] indicies = new[]
             {
@@ -80,7 +65,7 @@ namespace GameOfLife.CSharp.Engine
                 (row + 1, column),
                 (row + 1, column + 1)
             };
-            return indicies.Count(position => grid.IsCellAliveBySelfOffset(position.row, position.column));
+            return indicies.Count(position => grid.Get(position.row, position.column).IsAlive());
         }
     }
 }

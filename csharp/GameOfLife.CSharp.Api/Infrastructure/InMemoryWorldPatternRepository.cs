@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace GameOfLife.CSharp.Api.Infrastructure
 {
-    public class InMemoryWorldPatternRepository : IWorldPatternRepository
+    public class InMemoryWorldPatternRepository : IPopulationPatternRepository
     {
         private readonly Dictionary<int, PopulationPattern> _patterns = new Dictionary<int, PopulationPattern>();
 

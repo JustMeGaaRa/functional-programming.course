@@ -6,7 +6,7 @@
 
         public Population Population { get; }
 
-        public static Cell Empty => new Cell(Population.Empty);
+        public static Cell Empty => new Cell(Population.None);
 
         public static Cell Create(Population state) => new Cell(state);
 

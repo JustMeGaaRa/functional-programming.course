@@ -2,9 +2,9 @@
 {
     public class Generation
     {
-        private readonly IWorld _world;
+        private readonly IUniverse _world;
 
-        private Generation(IWorld world, uint number)
+        private Generation(IUniverse world, uint number)
         {
             _world = world;
             Number = number;
@@ -16,9 +16,7 @@
 
         public uint Number { get; }
 
-        public static Generation Zero(int width, int height) => new Generation(World.FromSize(width, height), 0);
-
-        public static Generation Zero(PopulationPattern pattern) => new Generation(World.FromPattern(pattern), 0);
+        public static Generation Zero(PopulationPattern pattern) => new Generation(Universe.FromPattern(pattern), 0);
 
         public override string ToString() => $"Generation: {Number};";
 

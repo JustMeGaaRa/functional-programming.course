@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace GameOfLife.CSharp.Api.Infrastructure
 {
-    public class JsonWorldPatternRepository : IWorldPatternRepository
+    public class JsonWorldPatternRepository : IPopulationPatternRepository
     {
         private readonly Dictionary<int, PopulationPattern> _patterns = new Dictionary<int, PopulationPattern>();
         private readonly IOptions<GameOptions> _options;

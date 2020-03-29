@@ -13,11 +13,11 @@ namespace GameOfLife.Engine.Tests
 
             // Act, Assert
             Assert.NotNull(cell);
-            Assert.Equal(Population.Empty, cell.Population);
+            Assert.Equal(Population.None, cell.Population);
         }
 
         [Theory]
-        [InlineData(Population.Empty)]
+        [InlineData(Population.None)]
         [InlineData(Population.Alive)]
         [InlineData(Population.Dead)]
         public void Cell_CreateWithPopulationState_ShouldNotBeNullAndHaveSpecifiedState(Population population)

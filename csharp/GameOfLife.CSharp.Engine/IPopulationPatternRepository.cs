@@ -2,7 +2,7 @@
 
 namespace GameOfLife.CSharp.Engine
 {
-    public interface IWorldPatternRepository
+    public interface IPopulationPatternRepository
     {
         PopulationPattern SavePattern(PopulationPattern pattern);
 

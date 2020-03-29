@@ -11,13 +11,13 @@ namespace GameOfLife.CSharp.Api.Services
     public class InMemoryGameOfLifeService : IGameOfLifeService
     {
         private readonly Dictionary<int, Time> _activeGames = new Dictionary<int, Time>();
-        private readonly IWorldPatternRepository _repository;
+        private readonly IPopulationPatternRepository _repository;
         private readonly IHubContext<GameOfLifeHub> _hubContext;
 
-        public InMemoryGameOfLifeService(IWorldPatternRepository repository, IHubContext<GameOfLifeHub> hubContext)
+        public InMemoryGameOfLifeService(IPopulationPatternRepository repository, IHubContext<GameOfLifeHub> hubContext)
         {
-            _repository = repository;
-            _hubContext = hubContext;
+            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _hubContext = hubContext ?? throw new ArgumentNullException(nameof(hubContext));
         }
 
         public Task<Generation> StartGameAsync(int userId, int patternId)
