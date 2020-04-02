@@ -25,13 +25,6 @@ namespace GameOfLife.CSharp.Engine
 
         public static IUniverse Empty => new Universe();
 
-        public static IUniverse FromPattern(PopulationPattern pattern)
-        {
-            Cell[,] cells = pattern.Select(alive => Cell.Create(alive ? Population.Alive : Population.Dead));
-            IImmutableGrid grid = ImmutableGrid.FromState(cells);
-            return Universe.Empty.Join(grid, Offset.None);
-        }
-
         public Cell this[int row, int column] => InternalFindAndGet(row, column) ?? Cell.Empty;
 
         public Size Size { get; }
@@ -41,6 +34,14 @@ namespace GameOfLife.CSharp.Engine
         #endregion
 
         #region Public Methods
+
+        public static IUniverse FromPattern(PopulationPattern pattern)
+        {
+            if (pattern is null) throw new ArgumentNullException(nameof(pattern));
+
+            Cell[,] cells = pattern.Select(alive => Cell.Create(alive ? Population.Alive : Population.Dead));
+            return Empty.Join(ImmutableGrid.FromState(cells), Offset.None);
+        }
 
         public Cell Get(int row, int column) => InternalFindAndGet(row, column) ?? Cell.Empty;
 
@@ -72,11 +73,12 @@ namespace GameOfLife.CSharp.Engine
             int right = Math.Max(Size.Width, island.BottomRight.Left);
             int bottom = Math.Max(Size.Height, island.BottomRight.Top);
 
+            var shift = new Offset(Math.Abs(left), Math.Abs(top));
             var size = new Size(right - left, bottom - top);
 
             var islands = _islands
                 .Concat(new ImmutableIsland[] { island })
-                .Select(island => UpdateLocation(offset, island))
+                .Select(island => island.Move(shift.Left, shift.Top))
                 .ToList();
 
             return new Universe(islands, size);
@@ -84,26 +86,19 @@ namespace GameOfLife.CSharp.Engine
 
         public ICollection<IUniverse> Split(IImmutableGrid immutableGrid)
         {
-            throw new NotImplementedException();
+            var island = _islands.FirstOrDefault(island => island.ImmutableGrid == immutableGrid);
+
+            if (island != null && _islands.Remove(island))
+            {
+                return new List<IUniverse>();
+            }
+
+            return new List<IUniverse>();
         }
 
         #endregion
 
         #region Private Methods
-
-        private MutableGridAggregate ToMutableGrid()
-        {
-            var islands = _islands
-                .Select(island => island.ToMutable())
-                .ToList();
-            return new MutableGridAggregate(islands, Size);
-        }
-
-        private static ImmutableIsland UpdateLocation(Offset offset, ImmutableIsland island)
-        {
-            // TODO: uodate the coordinates properly
-            return island.Shift(offset);
-        }
 
         private Cell? InternalFindAndGet(int row, int column)
         {
@@ -111,7 +106,6 @@ namespace GameOfLife.CSharp.Engine
                 .Where(island => island.IsInBounds(row, column))
                 .Select(island => InternalGet(island, row, column))
                 .FirstOrDefault();
-
         }
 
         private Cell? InternalGet(ImmutableIsland island, int row, int column)
@@ -121,11 +115,19 @@ namespace GameOfLife.CSharp.Engine
             return island.ImmutableGrid[relativeRow, relativeColumn];
         }
 
+        private MutableGridAggregate ToMutableGrid()
+        {
+            var islands = _islands
+                .Select(island => island.ToMutable())
+                .ToList();
+            return new MutableGridAggregate(islands, Size);
+        }
+
         #endregion
 
         #region Private Internal Types
 
-        private class ImmutableIsland : IMutableConverter<MutableIsland>
+        internal class ImmutableIsland : IMoveable<ImmutableIsland>, IMutableConverter<MutableIsland>
         {
             public ImmutableIsland(IImmutableGrid immutableGrid, Offset topLeft)
             {
@@ -140,9 +142,9 @@ namespace GameOfLife.CSharp.Engine
 
             public Offset BottomRight { get; }
 
-            public ImmutableIsland Shift(Offset offset)
+            public ImmutableIsland Move(int shiftLeft, int shiftTop)
             {
-                var shiftedTopLeft = new Offset(TopLeft.Left + offset.Left, TopLeft.Top + offset.Top);
+                var shiftedTopLeft = new Offset(TopLeft.Left + shiftLeft, TopLeft.Top + shiftTop);
                 return new ImmutableIsland(ImmutableGrid, shiftedTopLeft);
             }
 
@@ -157,7 +159,7 @@ namespace GameOfLife.CSharp.Engine
             public MutableIsland ToMutable() => new MutableIsland(ImmutableGrid.ToMutable(), TopLeft);
         }
 
-        private class MutableIsland : IImmutableConverter<ImmutableIsland>
+        internal class MutableIsland : IImmutableConverter<ImmutableIsland>
         {
             public MutableIsland(IMutableGrid mutableGrid, Offset topLeft)
             {
@@ -183,7 +185,7 @@ namespace GameOfLife.CSharp.Engine
             public ImmutableIsland ToImmutable() => new ImmutableIsland(MutableGrid.ToImmutable(), TopLeft);
         }
 
-        private class MutableGridAggregate : IMutableUniverse
+        internal class MutableGridAggregate : IMutableUniverse
         {
             private readonly List<MutableIsland> _islands = new List<MutableIsland>();
 

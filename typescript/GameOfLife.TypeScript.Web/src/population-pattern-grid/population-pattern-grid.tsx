@@ -3,7 +3,12 @@ import './population-pattern-grid.css';
 import { World } from '../models/World';
 import PopulationPatternRow from './population-pattern-row/population-pattern-row';
 
-export type OnPatternCellClick = (row: number, column: number, isAlive: boolean) => void;
+export type OnPatternCellClick = (
+    row: number,
+    column: number,
+    isAlive: boolean,
+    isEmpty: boolean
+) => void;
 
 type PopulationPatternProps = World & {
     readonly?: boolean;

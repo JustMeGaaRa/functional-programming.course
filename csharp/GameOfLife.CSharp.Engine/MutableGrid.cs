@@ -33,7 +33,7 @@ namespace GameOfLife.CSharp.Engine
 
         public void Set(int row, int column, Cell cell) => InternalSet(row, column, cell);
 
-        public IImmutableGrid ToImmutable() => ImmutableGrid.FromState(_cells);
+        public IImmutableGrid ToImmutable() => ImmutableGrid.FromState((Cell[,])_cells.Clone());
 
         protected void InternalSet(int row, int column, Cell cell)
         {

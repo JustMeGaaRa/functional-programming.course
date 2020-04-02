@@ -14,6 +14,15 @@ namespace GameOfLife.CSharp.Engine
 
         public static ImmutableGrid Empty => new ImmutableGrid(new Cell[0, 0], Size.None);
 
+        public static ImmutableGrid FromPattern(PopulationPattern pattern)
+        {
+            if (pattern is null) throw new ArgumentNullException(nameof(pattern));
+
+            Size size = new Size(pattern.Width, pattern.Height);
+            Cell[,] cells = pattern.Select(alive => Cell.Create(alive ? Population.Alive : Population.Dead));
+            return new ImmutableGrid(cells, size);
+        }
+
         public static ImmutableGrid FromState(Cell[,] cells)
         {
             int width = cells.GetLength(1);
@@ -35,7 +44,7 @@ namespace GameOfLife.CSharp.Engine
 
         public Cell Get(int row, int column) => InternalGet(row, column);
 
-        public IMutableGrid ToMutable() => MutableGrid.FromState(_cells);
+        public IMutableGrid ToMutable() => MutableGrid.FromState((Cell[,])_cells.Clone());
 
         protected Cell InternalGet(int row, int column)
         {

@@ -171,10 +171,10 @@ class App extends React.Component<{}, AppState> {
             .catch(error => { console.log(error); });
     }
 
-    handleOnPatternCellClick(row: number, column: number, isAlive: boolean) {
+    handleOnPatternCellClick(row: number, column: number, isAlive: boolean, isEmpty: boolean) {
         const { userId, selectedPatternId } = this.state;
         const patternsUrl = this.getPatternCellUrl(userId, selectedPatternId);
-        const data = new WorldColumn(row, column, !isAlive);
+        const data = new WorldColumn(row, column, !isAlive, isEmpty);
 
         this.requestAction<World>(patternsUrl, data, "PUT")
             .then(data => this.setState({ selectedWorld: data }))

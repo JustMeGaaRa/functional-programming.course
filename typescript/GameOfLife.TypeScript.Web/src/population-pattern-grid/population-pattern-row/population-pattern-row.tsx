@@ -18,6 +18,7 @@ const PopulationPatternRow: React.FC<PopulationPatternRowProps> = (props) => {
                     row={cell.row}
                     column={cell.column}
                     isAlive={cell.isAlive}
+                    isEmpty={cell.isEmpty}
                     onClick={props.onClick}
                 />
             ))}

@@ -1,6 +1,6 @@
 ﻿namespace GameOfLife.CSharp.Engine
 {
-    public interface IMoveable
+    public interface IMoveable<TResult> where TResult : IMoveable<TResult>
     {
         /// <summary>
         /// Gets the coordinates of top left corner of the world space.
@@ -12,7 +12,7 @@
         /// </summary>
         /// <param name="shiftLeft">Shift from left border (on the X axis).</param>
         /// <param name="shiftTop">Shift from top border (on the Y axis).</param>
-        /// <returns>Instance of <see cref="IWorld"/> implementation.</returns>
-        IMoveable Move(int shiftLeft, int shiftTop);
+        /// <returns>Instance of <see cref="TResult"/> implementation.</returns>
+        TResult Move(int shiftLeft, int shiftTop);
     }
 }
