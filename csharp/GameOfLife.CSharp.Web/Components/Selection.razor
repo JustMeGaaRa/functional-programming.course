@@ -1,16 +1,17 @@
 ﻿@inherits SelectionBase
 
 <section>
-    <select>
-        <option value="6">Beacon</option>
-        <option value="4">Blinker</option>
-        <option value="3">Glider</option>
-        <option value="2">Gosper Glider Gun</option>
-        <option value="1">Pulsar</option>
-        <option value="5">Toad</option>
-    </select>
-    <button>Start</button>
-    <button>Stop</button>
+    @if (Patterns != null)
+    {
+        <select>
+            @foreach (var pattern in Patterns)
+            {
+                <option value="@pattern.PatternId">@pattern.Name</option>
+            }
+        </select>
+    }
+    <button @onclick="OnStartClick">Start</button>
+    <button @onclick="OnStopClick">Stop</button>
 </section>
 <section>
     <input type="text" placeholder="Name" minlength="3" maxlength="30" value="New Pattern">
@@ -18,4 +19,3 @@
     <input type="number" placeholder="Height" min="1" max="50" value="10">
     <button>Create</button>
 </section>
-<p>Generation: 52</p>

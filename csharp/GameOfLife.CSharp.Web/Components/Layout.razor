@@ -1,6 +1,10 @@
 ﻿@inherits LayoutBase
 
 <div class="layout">
-    <Selection />
-    <PopulationPatternGrid Rows="@World.Rows" />
+    <Selection OnStartClick="HandleOnStartClick" OnStopClick="HandleOnStopClick" />
+    <p>Generation: @Generation</p>
+    @if (World != null)
+    {
+        <PopulationPatternGrid Rows="@World.Rows" />
+    }
 </div>
