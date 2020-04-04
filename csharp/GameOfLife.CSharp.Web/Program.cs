@@ -10,7 +10,8 @@ namespace GameOfLife.CSharp.Web
         public static async Task Main(string[] args)
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
-            builder.Services.AddTransient<IPopulationDataService, PopulationDataService>();
+            builder.Services.AddSingleton<IGameService, GameService>();
+            builder.Services.AddSingleton<IPatternsService, PatternsService>();
             builder.RootComponents.Add<App>("app");
 
             await builder.Build().RunAsync();
