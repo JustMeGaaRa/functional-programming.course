@@ -2,10 +2,16 @@ import React from 'react';
 import { WorldRow } from '../../models/WorldRow';
 import { OnPatternCellClick } from "../population-pattern-grid";
 import PopulationPatternCell from './population-pattern-cell/population-pattern-cell';
+import { WorldColumn } from '../../models';
 
-type PopulationPatternRowProps = WorldRow & {
+type PopulationPatternRowProps = {
+    number: number;
+    columns: WorldColumn[];
     readonly?: boolean;
     onClick?: OnPatternCellClick;
+    onMouseDown?: OnPatternCellClick;
+    onMouseUp?: OnPatternCellClick;
+    onHover?: OnPatternCellClick;
 }
 
 const PopulationPatternRow: React.FC<PopulationPatternRowProps> = (props) => {
@@ -18,7 +24,11 @@ const PopulationPatternRow: React.FC<PopulationPatternRowProps> = (props) => {
                     row={cell.row}
                     column={cell.column}
                     isAlive={cell.isAlive}
-                    onClick={props.onClick}
+                    isEmpty={cell.isEmpty}
+                    onMouseClick={props.onClick}
+                    onMouseDown={props.onMouseDown}
+                    onMouseUp={props.onMouseUp}
+                    onMouseOver={props.onHover}
                 />
             ))}
         </tr>

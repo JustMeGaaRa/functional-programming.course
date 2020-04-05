@@ -5,25 +5,48 @@ import { WorldColumn } from '../../../models/WorldColumn';
 
 type PopulationPatternCellProps = WorldColumn & {
     readonly?: boolean;
-    onClick?: OnPatternCellClick;
+    onMouseClick?: OnPatternCellClick;
+    onMouseDown?: OnPatternCellClick;
+    onMouseUp?: OnPatternCellClick;
+    onMouseOver?: OnPatternCellClick;
 }
 
 const PopulationPatternCell: React.FC<PopulationPatternCellProps> = (props) => {
-    const className = props.isAlive
+    const cellStyle = props.isEmpty
+        ? "cell inactive"
+        : "cell active";
+    const populationStyle = !props.isEmpty && props.isAlive
         ? "population alive"
         : "population dead";
     const onClick = (event: any) => {
         props.readonly === false
-        && props.onClick
-        && props.onClick(props.row, props.column, props.isAlive);
+        && props.onMouseClick
+        && props.onMouseClick(props.row, props.column, props.isAlive, props.isEmpty);
     };
+    const onHover = (event: any) => {
+        props.onMouseOver
+        && props.onMouseOver(props.row, props.column, props.isAlive, props.isEmpty);
+    }
+    const onMouseDown = (event: any) => {
+        props.onMouseDown
+        && props.onMouseDown(props.row, props.column, props.isAlive, props.isEmpty);
+    }
+    const onMouseUp = (event: any) => {
+        props.onMouseUp
+        && props.onMouseUp(props.row, props.column, props.isAlive, props.isEmpty);
+    }
     
     return (
         <td>
             <div
-                className={className}
+                className={cellStyle}
                 onClick={onClick}
-            />
+                onMouseDown={onMouseDown}
+                onMouseUp={onMouseUp}
+                onMouseOver={onHover}
+            >
+                <div className={populationStyle} />
+            </div>
         </td>
     );
 }

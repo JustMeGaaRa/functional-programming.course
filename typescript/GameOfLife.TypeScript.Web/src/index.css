@@ -1,7 +1,12 @@
 html,body {
     margin: 0;
+    height: 100%;
     background-color: whitesmoke;
     font-family: 'Segoe UI', 'Roboto', 'Fira Sans', 'Droid Sans', 'Helvetica Neue';
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+    height: 100%;
 }

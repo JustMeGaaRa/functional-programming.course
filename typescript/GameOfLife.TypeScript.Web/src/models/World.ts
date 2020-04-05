@@ -5,6 +5,8 @@ export class World {
         public generation: number,
         public width: number,
         public height: number,
-        public rows: Array<WorldRow>
+        public rows: Array<WorldRow>,
+        public startX: number,
+        public startY: number
     ) { }
 }

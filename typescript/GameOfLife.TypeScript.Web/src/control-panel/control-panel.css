@@ -1,0 +1,9 @@
+.control-panel-layout{
+    background-color: darkgrey;
+    display: flex;
+    flex-direction: column;
+}
+
+.control-panel-layout>* {
+    margin: 5px;
+}

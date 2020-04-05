@@ -3,4 +3,13 @@
     height: 100%;
     margin: 0;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.selection-rect {
+    position: absolute;
+    border-radius: 10px;
+    opacity: 0.2;
+    background-color: deepskyblue;
 }
