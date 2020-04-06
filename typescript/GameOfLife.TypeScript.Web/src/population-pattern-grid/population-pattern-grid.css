@@ -1,3 +1,17 @@
 .grid {
     position: absolute;
 }
+
+.grid .draggable {
+    position: absolute;
+    visibility: hidden;
+    width: 20px;
+    height: 20px;
+    background-color: gray;
+    z-index: 1;
+}
+
+.grid:hover .draggable {
+    visibility: visible;
+    cursor: grab;
+}

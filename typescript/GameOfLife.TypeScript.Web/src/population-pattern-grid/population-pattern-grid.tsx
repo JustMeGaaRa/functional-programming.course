@@ -1,6 +1,5 @@
-import React from 'react';
 import './population-pattern-grid.css';
-import { World } from '../models/World';
+import React from 'react';
 import PopulationPatternRow from './population-pattern-row/population-pattern-row';
 import { WorldRow } from '../models';
 
@@ -32,20 +31,22 @@ const PopulationPatternGrid: React.FC<PopulationPatternProps> = (props) => {
             className="grid"
             style={{ left: startX, top: startY }}
         >
+            <div className="grid draggable" />
+            
             <table>
                 <tbody>
                     {props.rows.map(row => (
                         <PopulationPatternRow
-                            key={`pattern_row_${row.number}`}
-                            readonly={props.readonly}
-                            number={row.number}
-                            columns={row.columns}
-                            onClick={props.onClick}
-                            onMouseDown={props.onMouseDown}
-                            onMouseUp={props.onMouseUp}
-                            onHover={props.onHover}
+                        key={`pattern_row_${row.number}`}
+                        readonly={props.readonly}
+                        number={row.number}
+                        columns={row.columns}
+                        onClick={props.onClick}
+                        onMouseDown={props.onMouseDown}
+                        onMouseUp={props.onMouseUp}
+                        onHover={props.onHover}
                         />
-                    ))}
+                        ))}
                 </tbody>
             </table>
         </div>

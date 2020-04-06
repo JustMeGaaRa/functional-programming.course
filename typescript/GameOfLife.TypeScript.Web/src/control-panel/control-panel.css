@@ -1,9 +1,17 @@
-.control-panel-layout{
+.control-panel {
+    position: fixed;
+    right: 10px;
+    top: 10px;
+}
+
+.control-panel.layout{
+    width: 200px;
+    height: auto;
     background-color: darkgrey;
     display: flex;
     flex-direction: column;
 }
 
-.control-panel-layout>* {
+.control-panel.layout>* {
     margin: 5px;
 }

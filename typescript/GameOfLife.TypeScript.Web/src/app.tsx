@@ -1,5 +1,5 @@
-import React from 'react';
 import './app.css';
+import React from 'react';
 import PopulationPatternGrid from './population-pattern-grid/population-pattern-grid';
 import ControlPanel from './control-panel/control-panel';
 import { PopulationPattern } from './models/PopulationPattern';
@@ -84,44 +84,16 @@ class App extends React.Component<{}, AppState> {
 
         return (
             <div className="layout">
-                <section>
-                    <select onChange={this.handleOnSelect.bind(this)}>
-                        {patterns.map(pattern => (
-                            <option key={pattern.patternId} value={pattern.patternId}>
-                                {pattern.name}
-                            </option>
-                        ))}
-                    </select>
-                    <button onClick={this.handleOnStartClick}>Start</button>
-                    <button onClick={this.handleOnStopClick}>Stop</button>
-                </section>
-                <section>
-                    <input
-                        type="text"
-                        placeholder="Name"
-                        minLength={3}
-                        maxLength={30}
-                        defaultValue={newPatternName}
-                        onChange={this.handleOnNameChange}
-                    />
-                    <input
-                        type="number"
-                        placeholder="Width"
-                        min={1}
-                        max={50}
-                        defaultValue={newPatternWidth}
-                        onChange={this.handleOnWidthChange}
-                    />
-                    <input
-                        type="number"
-                        placeholder="Height"
-                        min={1}
-                        max={50}
-                        defaultValue={newPatternHeight}
-                        onChange={this.handleOnHeightChange}
-                    />
-                    <button onClick={this.handleOnCreateClick}>Create</button>
-                </section>
+                <ControlPanel
+                    patterns={this.state.patterns}
+                    handleOnSelect={this.handleOnSelect}
+                    handleOnStartClick={this.handleOnStartClick}
+                    handleOnStopClick={this.handleOnStopClick}
+                    handleOnCreateClick={this.handleOnCreateClick}
+                    handleOnNameChange={this.handleOnNameChange}
+                    handleOnHeightChange={this.handleOnHeightChange}
+                    handleOnWidthChange={this.handleOnWidthChange}
+                />
                 <div
                     style={{ position: "relative", flexGrow: 1 }}
                     onMouseDown={this.handleOnMouseDown}
