@@ -35,9 +35,9 @@ class App extends React.Component<{}, AppState> {
 
         this.gameService = new GameService();
         this.handleOnCellMouseClick = this.handleOnCellMouseClick.bind(this);
-        this.handleOnCellMouseDown = this.handleOnCellMouseDown.bind(this);
-        this.handleOnCellMouseUp = this.handleOnCellMouseUp.bind(this);
-        this.handleOnCellMouseOver = this.handleOnCellMouseOver.bind(this);
+        this.handleOnDraggableCaptured = this.handleOnDraggableCaptured.bind(this);
+        this.handleOnDraggableReleased = this.handleOnDraggableReleased.bind(this);
+        this.handleOnDraggableMoved = this.handleOnDraggableMoved.bind(this);
         this.handleOnCreateClick = this.handleOnCreateClick.bind(this);
         this.handleOnStartClick = this.handleOnStartClick.bind(this);
         this.handleOnStopClick = this.handleOnStopClick.bind(this);
@@ -59,10 +59,10 @@ class App extends React.Component<{}, AppState> {
             newPatternWidth: 10,
             newPatternHeight: 10,
             isMouseDown: false,
-            startX: 0,
-            startY: 0,
-            endX: 0,
-            endY: 0,
+            startX: -1,
+            startY: -1,
+            endX: -1,
+            endY: -1,
             startRow: -1,
             startColumn: -1,
             hoverRow: -1,
@@ -71,7 +71,7 @@ class App extends React.Component<{}, AppState> {
     }
 
     render() {
-        const { worlds, isReadonly, patterns, newPatternName, newPatternWidth, newPatternHeight } = this.state;
+        const { worlds, isReadonly } = this.state;
         const { startX, startY, endX, endY } = this.state;
         const selectionWidth = endX - startX;
         const selectionHeight = endY - startY;
@@ -86,13 +86,13 @@ class App extends React.Component<{}, AppState> {
             <div className="layout">
                 <ControlPanel
                     patterns={this.state.patterns}
-                    handleOnSelect={this.handleOnSelect}
-                    handleOnStartClick={this.handleOnStartClick}
-                    handleOnStopClick={this.handleOnStopClick}
-                    handleOnCreateClick={this.handleOnCreateClick}
-                    handleOnNameChange={this.handleOnNameChange}
-                    handleOnHeightChange={this.handleOnHeightChange}
-                    handleOnWidthChange={this.handleOnWidthChange}
+                    onSelect={this.handleOnSelect}
+                    onStartClick={this.handleOnStartClick}
+                    onStopClick={this.handleOnStopClick}
+                    onCreateClick={this.handleOnCreateClick}
+                    onNameChange={this.handleOnNameChange}
+                    onHeightChange={this.handleOnHeightChange}
+                    onWidthChange={this.handleOnWidthChange}
                 />
                 <div
                     style={{ position: "relative", flexGrow: 1 }}
@@ -108,10 +108,10 @@ class App extends React.Component<{}, AppState> {
                         <PopulationPatternGrid
                             readonly={isReadonly}
                             {...world}
-                            onClick={this.handleOnCellMouseClick}
-                            onMouseDown={this.handleOnCellMouseDown}
-                            onMouseUp={this.handleOnCellMouseUp}
-                            onHover={this.handleOnCellMouseOver}
+                            onCellClick={this.handleOnCellMouseClick}
+                            onDraggableCaptured={this.handleOnDraggableCaptured}
+                            onDraggableReleased={this.handleOnDraggableReleased}
+                            onDraggableMoved={this.handleOnDraggableMoved}
                         />
                     ))}
                 </div>
@@ -168,10 +168,6 @@ class App extends React.Component<{}, AppState> {
         });
     }
 
-    roundCoordinates(coordinate: number) {
-        return coordinate - coordinate % 31;
-    }
-
     handleOnMouseDown(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
         this.setState({
             isMouseDown: true,
@@ -182,29 +178,37 @@ class App extends React.Component<{}, AppState> {
 
     handleOnMouseUp(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
         const { startX, startY, endX, endY } = this.state;
-        const rows = Math.abs(Math.round((endY - startY) / 31));
-        const columns = Math.abs(Math.round((endX - startX) / 31));
-        const world = this.generateWorld(startX, startY, rows, columns);
 
-        this.setState({
-            isMouseDown: false,
-            startX: -1,
-            startY: -1,
-            endX: -1,
-            endY: -1,
-            startRow: -1,
-            startColumn: -1,
-            hoverRow: -1,
-            hoverColumn: -1,
-            worlds: this.state.worlds.concat(world)
-        });
+        if (startX >= 0 && startY >= 0 && endX > 0 && endY > 0) {
+            const rows = Math.abs(Math.round((endY - startY) / 31));
+            const columns = Math.abs(Math.round((endX - startX) / 31));
+            const world = this.generateWorld(startX, startY, rows, columns);
+            
+            this.setState({
+                isMouseDown: false,
+                startX: -1,
+                startY: -1,
+                endX: -1,
+                endY: -1,
+                startRow: -1,
+                startColumn: -1,
+                hoverRow: -1,
+                hoverColumn: -1,
+                worlds: this.state.worlds.concat(world)
+            });
+        }
+        else {
+            this.setState({
+                isMouseDown: false
+            });
+        }
     }
 
     handleOnMouseMove(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
         if (this.state.isMouseDown) {
             this.setState({
-                endX: this.roundCoordinates(event.clientX),
-                endY: this.roundCoordinates(event.clientY)
+                endX: event.clientX,
+                endY: event.clientY
             }); 
         }
     }
@@ -272,16 +276,14 @@ class App extends React.Component<{}, AppState> {
             .catch(error => { console.log(error); });
     }
 
-    handleOnCellMouseDown(row: number, column: number, isAlive: boolean, isEmpty: boolean) {
-        
+    handleOnDraggableCaptured(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     }
 
-    handleOnCellMouseUp(row: number, column: number, isAlive: boolean, isEmpty: boolean) {
-        
+    handleOnDraggableReleased(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     }
 
-    handleOnCellMouseOver(row: number, column: number, isAlive: boolean, isEmpty: boolean) {
-        
+    handleOnDraggableMoved(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
+
     }
 
     getPatternUrl(userId: number) {

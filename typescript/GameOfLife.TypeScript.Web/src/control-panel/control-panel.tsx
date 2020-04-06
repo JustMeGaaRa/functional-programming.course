@@ -4,13 +4,13 @@ import { PopulationPattern } from '../models';
 
 type ControlPanelProps = {
     patterns: Array<PopulationPattern>;
-    handleOnSelect: (event: React.ChangeEvent<HTMLSelectElement>) => void;
-    handleOnCreateClick: (event: any) => void;
-    handleOnStartClick: (event: any) => void;
-    handleOnStopClick: (event: any) => void;
-    handleOnNameChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-    handleOnWidthChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-    handleOnHeightChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    onSelect: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+    onCreateClick: (event: any) => void;
+    onStartClick: (event: any) => void;
+    onStopClick: (event: any) => void;
+    onNameChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    onWidthChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    onHeightChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const ControlPanel: React.FC<ControlPanelProps> = (props) => {
@@ -22,14 +22,14 @@ const ControlPanel: React.FC<ControlPanelProps> = (props) => {
         <section className="control-panel">
             <section className="control-panel layout">
                 <section>
-                    <button onClick={props.handleOnStartClick}>
+                    <button onClick={props.onStartClick}>
                         Start
                     </button>
-                    <button onClick={props.handleOnStopClick}>
+                    <button onClick={props.onStopClick}>
                         Stop
                     </button>
                 </section>
-                <select onChange={props.handleOnSelect}>
+                <select onChange={props.onSelect}>
                     {props.patterns.map(pattern => (
                         <option key={pattern.patternId} value={pattern.patternId}>
                         {pattern.name}
@@ -42,7 +42,7 @@ const ControlPanel: React.FC<ControlPanelProps> = (props) => {
                     minLength={3}
                     maxLength={30}
                     defaultValue={newPatternName}
-                    onChange={props.handleOnNameChange}
+                    onChange={props.onNameChange}
                 />
                 <input
                     type="number"
@@ -50,7 +50,7 @@ const ControlPanel: React.FC<ControlPanelProps> = (props) => {
                     min={1}
                     max={50}
                     defaultValue={newPatternWidth}
-                    onChange={props.handleOnWidthChange}
+                    onChange={props.onWidthChange}
                 />
                 <input
                     type="number"
@@ -58,9 +58,9 @@ const ControlPanel: React.FC<ControlPanelProps> = (props) => {
                     min={1}
                     max={50}
                     defaultValue={newPatternHeight}
-                    onChange={props.handleOnHeightChange}
+                    onChange={props.onHeightChange}
                 />
-                <button onClick={props.handleOnCreateClick}>
+                <button onClick={props.onCreateClick}>
                     Create
                 </button>
 

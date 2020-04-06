@@ -10,6 +10,8 @@ export type OnPatternCellClick = (
     isEmpty: boolean
 ) => void;
 
+export type OnMouseEvent = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+
 type PopulationPatternProps = {
     width: number;
     height: number;
@@ -17,10 +19,13 @@ type PopulationPatternProps = {
     startY: number;
     rows: WorldRow[];
     readonly?: boolean;
-    onClick?: OnPatternCellClick;
-    onMouseDown?: OnPatternCellClick;
-    onMouseUp?: OnPatternCellClick;
-    onHover?: OnPatternCellClick;
+    onCellClick?: OnPatternCellClick;
+    onCellMouseDown?: OnPatternCellClick;
+    onCellMouseUp?: OnPatternCellClick;
+    onCellHover?: OnPatternCellClick;
+    onDraggableCaptured?: OnMouseEvent;
+    onDraggableMoved?: OnMouseEvent;
+    onDraggableReleased?: OnMouseEvent;
 }
 
 const PopulationPatternGrid: React.FC<PopulationPatternProps> = (props) => {
@@ -31,22 +36,26 @@ const PopulationPatternGrid: React.FC<PopulationPatternProps> = (props) => {
             className="grid"
             style={{ left: startX, top: startY }}
         >
-            <div className="grid draggable" />
+            <div className="grid draggable"
+                onMouseDown={props.onDraggableCaptured}
+                onMouseMove={props.onDraggableMoved}
+                onMouseUp={props.onDraggableReleased}
+            />
             
             <table>
                 <tbody>
                     {props.rows.map(row => (
                         <PopulationPatternRow
-                        key={`pattern_row_${row.number}`}
-                        readonly={props.readonly}
-                        number={row.number}
-                        columns={row.columns}
-                        onClick={props.onClick}
-                        onMouseDown={props.onMouseDown}
-                        onMouseUp={props.onMouseUp}
-                        onHover={props.onHover}
+                            key={`pattern_row_${row.number}`}
+                            readonly={props.readonly}
+                            number={row.number}
+                            columns={row.columns}
+                            onClick={props.onCellClick}
+                            onMouseDown={props.onCellMouseDown}
+                            onMouseUp={props.onCellMouseUp}
+                            onHover={props.onCellHover}
                         />
-                        ))}
+                    ))}
                 </tbody>
             </table>
         </div>
