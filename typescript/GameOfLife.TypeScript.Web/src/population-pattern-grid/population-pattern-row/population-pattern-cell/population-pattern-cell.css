@@ -3,7 +3,7 @@
 }
 
 .cell.active {
-    border: 1px solid dodgerblue;
+    border: 1px solid lightgray;
 }
 
 .cell.inactive {

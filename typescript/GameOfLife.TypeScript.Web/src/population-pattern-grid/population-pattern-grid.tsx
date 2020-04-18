@@ -1,6 +1,7 @@
 import './population-pattern-grid.css';
 import React from 'react';
 import PopulationPatternRow from './population-pattern-row/population-pattern-row';
+import { Popup, Menu } from 'semantic-ui-react';
 import { WorldRow } from '../models';
 
 export type OnPatternCellClick = (
@@ -13,12 +14,14 @@ export type OnPatternCellClick = (
 export type OnMouseEvent = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 
 type PopulationPatternProps = {
-    width: number;
-    height: number;
+    name: string;
+    instanceId: string;
     startX: number;
     startY: number;
     rows: WorldRow[];
     readonly?: boolean;
+    onStartClick: (event: any, instanceId: string) => void;
+    onStopClick: (event: any, instanceId: string) => void;
     onCellClick?: OnPatternCellClick;
     onCellMouseDown?: OnPatternCellClick;
     onCellMouseUp?: OnPatternCellClick;
@@ -30,18 +33,11 @@ type PopulationPatternProps = {
 
 const PopulationPatternGrid: React.FC<PopulationPatternProps> = (props) => {
     const { startX, startY } = props;
-
-    return (
-        <div
-            className="grid"
-            style={{ left: startX, top: startY }}
-        >
-            <div className="grid draggable"
-                onMouseDown={props.onDraggableCaptured}
-                onMouseMove={props.onDraggableMoved}
-                onMouseUp={props.onDraggableReleased}
-            />
-            
+    const onStartClick = (event: any, data: any) => { props.onStartClick(event, props.instanceId) };
+    const onStopClick = (event: any, data: any) => { props.onStartClick(event, props.instanceId) };
+    const style = { left: startX, top: startY }
+    const grid = (
+        <div className="grid" style={style}>
             <table>
                 <tbody>
                     {props.rows.map(row => (
@@ -59,6 +55,24 @@ const PopulationPatternGrid: React.FC<PopulationPatternProps> = (props) => {
                 </tbody>
             </table>
         </div>
+    );
+
+    return (
+        <Popup
+            trigger={grid}
+            flowing
+            hoverable
+            basic
+            size="mini"
+            position="top right"
+        >
+            <Menu secondary size="mini">
+                <Menu.Item name="play" icon="play" onClick={onStartClick} />
+                <Menu.Item name="stop" icon="stop" onClick={onStopClick} />
+                <Menu.Item name="delete" icon="delete" onClick={() => {}} />
+                <Menu.Item name="label" content={props.name} />
+            </Menu>
+        </Popup>
     );
 }
 
