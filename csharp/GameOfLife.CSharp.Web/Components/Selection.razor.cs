@@ -1,8 +1,8 @@
 ﻿using GameOfLife.CSharp.Web.Data;
 using GameOfLife.CSharp.Web.Models;
 using Microsoft.AspNetCore.Components;
+using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace GameOfLife.CSharp.Web.Components
@@ -12,20 +12,80 @@ namespace GameOfLife.CSharp.Web.Components
         [Inject]
         public IPatternsService PatternsService { get; set; }
 
-        [Inject]
-        public HttpClient HttpClient { get; set; }
-
         public ICollection<Pattern> Patterns { get; private set; }
 
         [Parameter]
-        public EventCallback OnStartClick { get; set; }
+        public string PatternName { get; set; } = "New Pattern";
+
+        [Parameter]
+        public int PatternWidth { get; set; } = 10;
+
+        [Parameter]
+        public int PatternHeight { get; set; } = 10;
+
+        [Parameter]
+        public int UserId { get; set; }
+
+        protected int SelectedPatternId { get; set; }
+
+        [Parameter]
+        public EventCallback<int> OnPatternSelectClick { get; set; }
+
+        [Parameter]
+        public EventCallback<int> OnCreateClick { get; set; }
+
+        [Parameter]
+        public EventCallback<int> OnStartClick { get; set; }
 
         [Parameter]
         public EventCallback OnStopClick { get; set; }
 
+        [Parameter]
+        public EventCallback<World> OnPatternSelectCellClick { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
-            Patterns = await PatternsService.GetPattersByUserId(1);
+            Patterns = await PatternsService.GetPattersByUserId(UserId);
+        }
+
+        protected async Task HandleCreateClick()
+        {
+            var newPattern = new Pattern
+            {
+                PatternId = 0,
+                Name = PatternName,
+                Height = PatternHeight,
+                Width = PatternWidth
+            };
+
+            Patterns.Add(newPattern);
+
+            await OnCreateClick.InvokeAsync(SelectedPatternId);
+        }
+
+        protected async Task HandleStartClick()
+        {            
+            await OnStartClick.InvokeAsync(SelectedPatternId);
+        }
+
+        protected async Task HandleOnPatternSelect(ChangeEventArgs e)
+        {
+            SelectedPatternId = Convert.ToInt32(e.Value); 
+            await OnPatternSelectClick.InvokeAsync(SelectedPatternId);
+        }
+
+        protected async Task HandleOnPatternCellClick()
+        {
+            var worldColumn = new WorldColumn
+            {
+                Row = 1,
+                Column = 1,
+                IsAlive = true
+            };
+
+            var world = await PatternsService.GetPatternCell(UserId, SelectedPatternId, worldColumn);
+
+            await OnPatternSelectCellClick.InvokeAsync(world);
         }
     }
 }

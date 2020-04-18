@@ -1,21 +1,21 @@
 ﻿@inherits SelectionBase
 
-<section>
-    @if (Patterns != null)
-    {
-        <select>
-            @foreach (var pattern in Patterns)
-            {
-                <option value="@pattern.PatternId">@pattern.Name</option>
-            }
-        </select>
-    }
-    <button @onclick="OnStartClick">Start</button>
-    <button @onclick="OnStopClick">Stop</button>
-</section>
-<section>
-    <input type="text" placeholder="Name" minlength="3" maxlength="30" value="New Pattern">
-    <input type="number" placeholder="Width" min="1" max="50" value="10">
-    <input type="number" placeholder="Height" min="1" max="50" value="10">
-    <button>Create</button>
-</section>
+    <section>
+        @if (Patterns != null)
+        {
+            <select @onchange="HandleOnPatternSelect">
+                @foreach (var pattern in Patterns)
+                {
+                    <option value="@pattern.PatternId.ToString()">@pattern.Name</option>
+                }
+            </select>
+        }
+        <button @onclick="HandleStartClick">Start</button>
+        <button @onclick="OnStopClick">Stop</button>
+    </section>
+    <section>
+        <input type="text" placeholder="Name" minlength="3" maxlength="30" @bind="PatternName">
+        <input type="number" placeholder="Width" min="1" max="50" @bind="PatternWidth">
+        <input type="number" placeholder="Height" min="1" max="50" @bind="PatternHeight">
+        <button @onclick="HandleCreateClick">Create</button>
+    </section>
