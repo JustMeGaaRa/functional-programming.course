@@ -4,13 +4,12 @@ using GameOfLife.CSharp.Engine;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace GameOfLife.CSharp.Api.Services
 {
     public class InMemoryGameOfLifeService : IGameOfLifeService
     {
-        private readonly Dictionary<int, Time> _activeGames = new Dictionary<int, Time>();
+        private readonly Dictionary<(int, Guid), Time> _activeGames = new Dictionary<(int, Guid), Time>();
         private readonly IPopulationPatternRepository _repository;
         private readonly IHubContext<GameOfLifeHub> _hubContext;
 
@@ -20,20 +19,39 @@ namespace GameOfLife.CSharp.Api.Services
             _hubContext = hubContext ?? throw new ArgumentNullException(nameof(hubContext));
         }
 
-        public Task<Generation> StartGameAsync(int userId, int patternId)
+        public Generation CreateFromPattern(int userId, int patternId)
         {
             PopulationPattern pattern = _repository.GetPatternById(patternId);
-            _activeGames[userId] = new Time();
-            _activeGames[userId].Subscribe(PushGenerationToHub);
-            Generation generation = _activeGames[userId].Start(pattern);
-            return Task.FromResult(generation);
+            Generation generation = Generation.Zero(pattern);
+            _activeGames[(userId, generation.World.Identity)] = new Time(generation);
+            return generation;
         }
 
-        public Task EndGameAsync(int userId)
+        public bool StartGame(int userId, Guid instanceId)
         {
-            _activeGames.Remove(userId, out Time? time);
-            time?.Dispose();
-            return Task.CompletedTask;
+            if (_activeGames.ContainsKey((userId, instanceId)))
+            {
+                _activeGames[(userId, instanceId)].Subscribe(PushGenerationToHub);
+                _activeGames[(userId, instanceId)].Start();
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool EndGame(int userId, Guid instanceId)
+        {
+            if (_activeGames.Remove((userId, instanceId), out Time? time))
+            {
+                time?.Dispose();
+            }
+
+            return false;
+        }
+
+        public bool MergeGames(int userId, Guid firstId, Guid secondId)
+        {
+            throw new NotImplementedException();
         }
 
         private void PushGenerationToHub(Generation generation)

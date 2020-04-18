@@ -9,10 +9,13 @@ namespace GameOfLife.App
     {
         private static async Task Main(string[] args)
         {
-            Time time = new Time();
-            using var disposable = time.Subscribe(Render);
-            time.Start(PopulationPatterns.Pulsar);
-            await Task.Delay(10000);
+            Generation zero = Generation.Zero(PopulationPatterns.Pulsar);
+            Time time = new Time(zero);
+            using (var disposable = time.Subscribe(Render))
+            {
+                time.Start();
+                await Task.Delay(10000);
+            }
         }
 
         private static void Render(Generation generation)

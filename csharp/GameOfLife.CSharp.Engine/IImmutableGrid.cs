@@ -1,7 +1,14 @@
-﻿namespace GameOfLife.CSharp.Engine
+﻿using System;
+
+namespace GameOfLife.CSharp.Engine
 {
     public interface IImmutableGrid : IMutableConverter<IMutableGrid>
     {
+        /// <summary>
+        /// Gets the unique identity of the grid instance.
+        /// </summary>
+        Guid Identity { get; }
+
         /// <summary>
         /// Gets the cell at position relative to self.
         /// </summary>

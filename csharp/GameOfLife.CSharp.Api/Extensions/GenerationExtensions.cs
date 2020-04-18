@@ -25,6 +25,7 @@ namespace GameOfLife.CSharp.Api.Extensions
 
             return new PopulationPatternViewVM
             {
+                InstanceId = generation.World.Identity,
                 Generation = generation.Number,
                 Height = generation.Size.Height,
                 Width = generation.Size.Width,

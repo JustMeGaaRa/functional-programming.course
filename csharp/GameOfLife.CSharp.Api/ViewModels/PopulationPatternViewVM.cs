@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace GameOfLife.CSharp.Api.Models
 {
     public class PopulationPatternViewVM
     {
         public int PatternId { get; set; }
+
+        public Guid InstanceId { get; set; }
 
         public string? Name { get; set; }
 

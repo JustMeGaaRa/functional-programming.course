@@ -5,17 +5,29 @@ using System.Threading.Tasks;
 
 namespace GameOfLife.CSharp.Engine
 {
-    public class Time : IObservable<Generation>, IDisposable
+    public sealed class Time : IObservable<Generation>, IDisposable
     {
         private readonly CancellationTokenSource _cts = new CancellationTokenSource();
         private readonly ISubject<Generation> _observable = new Subject<Generation>();
+        private readonly Generation _zero;
         private IDisposable? _disposable;
         private Task<Generation>? _generationTask;
+
+        public Time(Generation zero)
+        {
+            _zero = zero ?? throw new ArgumentNullException(nameof(zero));
+        }
 
         public IDisposable Subscribe(IObserver<Generation> observer)
         {
             _disposable = _observable.Subscribe(observer);
             return _disposable;
+        }
+
+        public void Start()
+        {
+            const int defaultDelay = 1000;
+            _generationTask = Task.Run(() => Flow(_observable, _zero, defaultDelay, _cts.Token), _cts.Token);
         }
 
         public void Dispose()
@@ -26,14 +38,11 @@ namespace GameOfLife.CSharp.Engine
             _generationTask?.Wait();
         }
 
-        public Generation Start(PopulationPattern pattern)
-        {
-            var generation = Generation.Zero(pattern);
-            _generationTask = Task.Run(() => Flow(_observable, generation, _cts.Token));
-            return generation;
-        }
-
-        private static async Task<Generation> Flow(ISubject<Generation> observable, Generation generation, CancellationToken token)
+        private static async Task<Generation> Flow(
+            ISubject<Generation> observable,
+            Generation generation,
+            int delay,
+            CancellationToken token)
         {
             observable.OnNext(generation);
 
@@ -43,8 +52,8 @@ namespace GameOfLife.CSharp.Engine
                 return generation;
             }
 
-            await Task.Delay(1000);
-            return await Flow(observable, generation.Next(), token);
+            await Task.Delay(delay);
+            return await Flow(observable, generation.Next(), delay, token);
         }
     }
 }

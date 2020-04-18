@@ -6,28 +6,31 @@ namespace GameOfLife.CSharp.Engine
     {
         protected readonly Cell[,] _cells;
 
-        protected MutableGrid(Cell[,] cells, Size size)
+        protected MutableGrid(Guid identity, Cell[,] cells, Size size)
         {
             _cells = cells ?? throw new ArgumentNullException(nameof(cells));
             Size = size ?? throw new ArgumentNullException(nameof(size));
+            Identity = identity;
         }
 
-        public static MutableGrid Empty => new MutableGrid(new Cell[0, 0], Size.None);
+        public static MutableGrid Empty => new MutableGrid(Guid.Empty, new Cell[0, 0], Size.None);
 
         public static MutableGrid FromState(Cell[,] cells)
         {
             int width = cells.GetLength(1);
             int height = cells.GetLength(0);
             var size = new Size(width, height);
-            return new MutableGrid(cells, size);
+            return new MutableGrid(Guid.NewGuid(), cells, size);
         }
 
         public static MutableGrid FromSize(int width, int height)
         {
             Cell[,] cells = new Cell[width, height];
             var size = new Size(width, height);
-            return new MutableGrid(cells, size);
+            return new MutableGrid(Guid.NewGuid(), cells, size);
         }
+
+        public Guid Identity { get; }
 
         public Size Size { get; }
 

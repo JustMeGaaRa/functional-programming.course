@@ -1,12 +1,16 @@
 ﻿using GameOfLife.CSharp.Engine;
-using System.Threading.Tasks;
+using System;
 
 namespace GameOfLife.CSharp.Api.Services
 {
     public interface IGameOfLifeService
     {
-        Task<Generation> StartGameAsync(int userId, int patternId);
+        Generation CreateFromPattern(int userId, int patternId);
 
-        Task EndGameAsync(int userId);
+        bool StartGame(int userId, Guid instanceId);
+
+        bool EndGame(int userId, Guid instanceId);
+
+        bool MergeGames(int userId, Guid firstId, Guid secondId);
     }
 }

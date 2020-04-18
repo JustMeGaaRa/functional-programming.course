@@ -10,20 +10,32 @@ namespace GameOfLife.CSharp.Engine
 
         private Universe()
         {
+            Identity = Guid.NewGuid();
             Size = Size.None;
             Worlds = new List<IImmutableGrid>();
         }
 
-        private Universe(List<ImmutableIsland> islands, Size size)
+        private Universe(Guid identity, List<ImmutableIsland> islands, Size size)
         {
-            _islands = islands;
-            Size = size;
+            _islands = islands ?? throw new ArgumentNullException(nameof(islands));
+            Size = size ?? throw new ArgumentNullException(nameof(size));
             Worlds = islands.Select(x => x.ImmutableGrid).ToList();
+            Identity = identity;
+        }
+
+        public static IUniverse FromPattern(PopulationPattern pattern)
+        {
+            if (pattern is null) throw new ArgumentNullException(nameof(pattern));
+
+            Cell[,] cells = pattern.Select(alive => Cell.Create(alive ? Population.Alive : Population.Dead));
+            return Empty.Join(ImmutableGrid.FromState(cells), Offset.None);
         }
 
         #region Public Properties
 
         public static IUniverse Empty => new Universe();
+
+        public Guid Identity { get; }
 
         public Cell this[int row, int column] => InternalFindAndGet(row, column) ?? Cell.Empty;
 
@@ -34,14 +46,6 @@ namespace GameOfLife.CSharp.Engine
         #endregion
 
         #region Public Methods
-
-        public static IUniverse FromPattern(PopulationPattern pattern)
-        {
-            if (pattern is null) throw new ArgumentNullException(nameof(pattern));
-
-            Cell[,] cells = pattern.Select(alive => Cell.Create(alive ? Population.Alive : Population.Dead));
-            return Empty.Join(ImmutableGrid.FromState(cells), Offset.None);
-        }
 
         public Cell Get(int row, int column) => InternalFindAndGet(row, column) ?? Cell.Empty;
 
@@ -81,7 +85,7 @@ namespace GameOfLife.CSharp.Engine
                 .Select(island => island.Move(shift.Left, shift.Top))
                 .ToList();
 
-            return new Universe(islands, size);
+            return new Universe(Identity, islands, size);
         }
 
         public ICollection<IUniverse> Split(IImmutableGrid immutableGrid)
@@ -120,7 +124,7 @@ namespace GameOfLife.CSharp.Engine
             var islands = _islands
                 .Select(island => island.ToMutable())
                 .ToList();
-            return new MutableGridAggregate(islands, Size);
+            return new MutableGridAggregate(Identity, islands, Size);
         }
 
         #endregion
@@ -189,11 +193,14 @@ namespace GameOfLife.CSharp.Engine
         {
             private readonly List<MutableIsland> _islands = new List<MutableIsland>();
 
-            public MutableGridAggregate(List<MutableIsland> islands, Size size)
+            public MutableGridAggregate(Guid identity, List<MutableIsland> islands, Size size)
             {
                 _islands = islands ?? throw new ArgumentNullException(nameof(islands));
                 Size = size ?? throw new ArgumentNullException(nameof(size));
+                Identity = identity;
             }
+
+            public Guid Identity { get; }
 
             public Size Size { get; }
 
@@ -208,7 +215,7 @@ namespace GameOfLife.CSharp.Engine
                 var islands = _islands
                     .Select(island => island.ToImmutable())
                     .ToList();
-                return new Universe(islands, Size);
+                return new Universe(Identity, islands, Size);
             }
 
             protected void InternalFindAndSet(int row, int column, Cell cell)

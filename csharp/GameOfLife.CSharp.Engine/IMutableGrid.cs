@@ -1,7 +1,14 @@
-﻿namespace GameOfLife.CSharp.Engine
+﻿using System;
+
+namespace GameOfLife.CSharp.Engine
 {
     public interface IMutableGrid : IImmutableConverter<IImmutableGrid>
     {
+        /// <summary>
+        /// Gets the unique identity of the grid instance.
+        /// </summary>
+        Guid Identity { get; }
+
         /// <summary>
         /// Gets the size of the world space.
         /// </summary>

@@ -10,9 +10,8 @@ namespace GameOfLife.CSharp.Engine
         {
             _cells = cells ?? throw new ArgumentNullException(nameof(cells));
             Size = size ?? throw new ArgumentNullException(nameof(size));
+            Identity = Guid.NewGuid();
         }
-
-        public static ImmutableGrid Empty => new ImmutableGrid(new Cell[0, 0], Size.None);
 
         public static ImmutableGrid FromPattern(PopulationPattern pattern)
         {
@@ -37,6 +36,10 @@ namespace GameOfLife.CSharp.Engine
             var size = new Size(width, height);
             return new ImmutableGrid(cells, size);
         }
+
+        public static ImmutableGrid Empty => new ImmutableGrid(new Cell[0, 0], Size.None);
+
+        public Guid Identity { get; }
 
         public Cell this[int relativeRow, int relativeColumn] => InternalGet(relativeRow, relativeColumn);
 

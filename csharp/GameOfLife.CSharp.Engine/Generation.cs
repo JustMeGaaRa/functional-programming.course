@@ -2,24 +2,24 @@
 {
     public class Generation
     {
-        private readonly IUniverse _world;
-
         private Generation(IUniverse world, uint number)
         {
-            _world = world;
+            World = world;
             Number = number;
         }
 
-        public Cell this[int row, int column] => _world[row, column];
+        public static Generation Zero(PopulationPattern pattern) => new Generation(Universe.FromPattern(pattern), 0);
 
-        public Size Size => _world.Size;
+        public Cell this[int row, int column] => World[row, column];
+
+        public Size Size => World.Size;
 
         public uint Number { get; }
 
-        public static Generation Zero(PopulationPattern pattern) => new Generation(Universe.FromPattern(pattern), 0);
+        public IUniverse World { get; }
+
+        public Generation Next() => new Generation(World.Evolve(), Number + 1);
 
         public override string ToString() => $"Generation: {Number};";
-
-        public Generation Next() => new Generation(_world.Evolve(), Number + 1);
     }
 }

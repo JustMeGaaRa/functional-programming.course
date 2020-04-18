@@ -1,9 +1,11 @@
 ﻿using GameOfLife.CSharp.Api.Extensions;
 using GameOfLife.CSharp.Api.Models;
+using GameOfLife.CSharp.Api.Services;
 using GameOfLife.CSharp.Engine;
 using GameOfLife.Engine;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace GameOfLife.CSharp.Api.Controllers
 {
@@ -12,10 +14,14 @@ namespace GameOfLife.CSharp.Api.Controllers
     public class PopulationPatternController : ControllerBase
     {
         private readonly IPopulationPatternRepository _repository;
+        private readonly IGameOfLifeService _gameService;
 
-        public PopulationPatternController(IPopulationPatternRepository repository)
+        public PopulationPatternController(
+            IPopulationPatternRepository repository,
+            IGameOfLifeService gameService)
         {
             _repository = repository;
+            _gameService = gameService;
         }
 
         [ProducesResponseType(typeof(UserInfoVM), 200)]
@@ -61,8 +67,8 @@ namespace GameOfLife.CSharp.Api.Controllers
         [HttpGet("{userId:int}/patterns/{patternId:int}/view")]
         public IActionResult GetPopulationPatternViewsByUserId(int userId, int patternId)
         {
-            var populationPattern = _repository.GetPatternById(patternId);
-            var populationPatternVm = Generation.Zero(populationPattern).ToPatternViewVM();
+            var generation = _gameService.CreateFromPattern(userId, patternId);
+            var populationPatternVm = generation.ToPatternViewVM();
             return Ok(populationPatternVm);
         }
 
