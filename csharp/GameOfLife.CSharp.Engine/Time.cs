@@ -24,18 +24,29 @@ namespace GameOfLife.CSharp.Engine
             return _disposable;
         }
 
-        public void Start()
+        public Task<Generation> StartAsync()
         {
             const int defaultDelay = 1000;
             _generationTask = Task.Run(() => Flow(_observable, _zero, defaultDelay, _cts.Token), _cts.Token);
+            return Task.FromResult(_zero);
+        }
+
+        public Task<Generation> StopAsync()
+        {
+            InternalCancel();
+            return _generationTask;
         }
 
         public void Dispose()
         {
+            InternalCancel();
+        }
+
+        private void InternalCancel()
+        {
             _disposable?.Dispose();
             _cts.Cancel();
             _cts.Dispose();
-            _generationTask?.Wait();
         }
 
         private static async Task<Generation> Flow(

@@ -151,10 +151,10 @@ namespace GameOfLife.Engine.Tests
             // Arrange
             Size expectedSize = new Size(5, 5);
             IUniverse universe = Universe.Empty;
-            IImmutableGrid immutableGrid = ImmutableGrid.FromSize(5, 5);
+            IUniverse other = Universe.FromPattern(PopulationPattern.FromSize(0, "Empty", 5, 5));
 
             // Act
-            IUniverse modified = universe.Join(immutableGrid, Offset.None);
+            IUniverse modified = universe.Join(other, Offset.None);
 
             // Assert
             Assert.NotNull(modified);
@@ -175,13 +175,13 @@ namespace GameOfLife.Engine.Tests
             int expectedWorldCount = 2;
             Offset firstOffset = Offset.None;
             Offset secondOffset = new Offset(left, top);
-            IImmutableGrid firstGrid = ImmutableGrid.FromSize(3, 3);
-            IImmutableGrid secondGrid = ImmutableGrid.FromSize(2, 4);
+            IUniverse firstUniverse = Universe.FromPattern(PopulationPattern.FromSize(1, "First", 3, 3));
+            IUniverse secondUniverse = Universe.FromPattern(PopulationPattern.FromSize(2, "Second", 2, 4));
 
             // Act
             IUniverse modified = Universe.Empty
-                .Join(firstGrid, firstOffset)
-                .Join(secondGrid, secondOffset);
+                .Join(firstUniverse, firstOffset)
+                .Join(secondUniverse, secondOffset);
 
             // Assert
             Assert.NotNull(modified);
@@ -197,13 +197,13 @@ namespace GameOfLife.Engine.Tests
             int expectedWorldCount = 2;
             Offset firstOffset = Offset.None;
             Offset secondOffset = new Offset(3, 1);
-            IImmutableGrid firstGrid = ImmutableGrid.FromPattern(PopulationPatterns.Blinker);
-            IImmutableGrid secondGrid = ImmutableGrid.FromPattern(PopulationPatterns.Toad);
+            IUniverse firstUniverse = Universe.FromPattern(PopulationPatterns.Blinker);
+            IUniverse secondUniverse = Universe.FromPattern(PopulationPatterns.Toad);
 
             // Act
             IUniverse modified = Universe.Empty
-                .Join(firstGrid, firstOffset)
-                .Join(secondGrid, secondOffset)
+                .Join(firstUniverse, firstOffset)
+                .Join(secondUniverse, secondOffset)
                 .Evolve();
 
             // Assert

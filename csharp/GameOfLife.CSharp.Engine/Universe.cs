@@ -28,7 +28,9 @@ namespace GameOfLife.CSharp.Engine
             if (pattern is null) throw new ArgumentNullException(nameof(pattern));
 
             Cell[,] cells = pattern.Select(alive => Cell.Create(alive ? Population.Alive : Population.Dead));
-            return Empty.Join(ImmutableGrid.FromState(cells), Offset.None);
+            IImmutableGrid immutableGrid = ImmutableGrid.FromState(cells);
+            List<ImmutableIsland> islands = new List<ImmutableIsland> { new ImmutableIsland(immutableGrid, Offset.None) };
+            return new Universe(immutableGrid.Identity, islands, immutableGrid.Size);
         }
 
         #region Public Properties
@@ -66,31 +68,32 @@ namespace GameOfLife.CSharp.Engine
             return immutableConverter.ToImmutable();
         }
 
-        public IUniverse Join(IImmutableGrid immutableGrid, Offset offset)
+        public IUniverse Join(IUniverse immutableGrid, Offset offset)
         {
+            // TODO: Make offset for each island, not a general one
             if (immutableGrid is null) throw new ArgumentNullException(nameof(immutableGrid));
 
-            var island = new ImmutableIsland(immutableGrid, offset);
+            var otherIslands = immutableGrid.Worlds.Select(grid => new ImmutableIsland(grid, offset));
 
-            int left = Math.Min(0, island.TopLeft.Left);
-            int top = Math.Min(0, island.TopLeft.Top);
-            int right = Math.Max(Size.Width, island.BottomRight.Left);
-            int bottom = Math.Max(Size.Height, island.BottomRight.Top);
+            int left = Math.Min(0, otherIslands.Min(x => x.TopLeft.Left));
+            int top = Math.Min(0, otherIslands.Min(x => x.TopLeft.Top));
+            int right = Math.Max(Size.Width, otherIslands.Max(x => x.BottomRight.Left));
+            int bottom = Math.Max(Size.Height, otherIslands.Max(x => x.BottomRight.Top));
 
             var shift = new Offset(Math.Abs(left), Math.Abs(top));
             var size = new Size(right - left, bottom - top);
 
-            var islands = _islands
-                .Concat(new ImmutableIsland[] { island })
+            var mergedIslands = _islands
+                .Concat(otherIslands)
                 .Select(island => island.Move(shift.Left, shift.Top))
                 .ToList();
 
-            return new Universe(Identity, islands, size);
+            return new Universe(Guid.NewGuid(), mergedIslands, size);
         }
 
-        public ICollection<IUniverse> Split(IImmutableGrid immutableGrid)
+        public ICollection<IUniverse> Split(IUniverse immutableGrid)
         {
-            var island = _islands.FirstOrDefault(island => island.ImmutableGrid == immutableGrid);
+            var island = _islands.FirstOrDefault(island => island.ImmutableGrid.Identity == immutableGrid.Identity);
 
             if (island != null && _islands.Remove(island))
             {

@@ -24,7 +24,7 @@ namespace GameOfLife.CSharp.Api.Hubs
         {
             if (Guid.TryParse(instanceId, out Guid id))
             {
-                _gameOfLifeService.StartGame(userId, id);
+                _gameOfLifeService.StartGameAsync(userId, id);
             }
             return Task.CompletedTask;
         }
@@ -33,7 +33,7 @@ namespace GameOfLife.CSharp.Api.Hubs
         {
             if (Guid.TryParse(instanceId, out Guid id))
             {
-                _gameOfLifeService.EndGame(userId, id);
+                _gameOfLifeService.EndGameAsync(userId, id);
             }
             return Task.CompletedTask;
         }

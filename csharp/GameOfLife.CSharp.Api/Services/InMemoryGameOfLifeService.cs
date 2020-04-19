@@ -4,6 +4,7 @@ using GameOfLife.CSharp.Engine;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace GameOfLife.CSharp.Api.Services
 {
@@ -27,31 +28,41 @@ namespace GameOfLife.CSharp.Api.Services
             return generation;
         }
 
-        public bool StartGame(int userId, Guid instanceId)
+        public Task<bool> StartGameAsync(int userId, Guid instanceId)
         {
             if (_activeGames.ContainsKey((userId, instanceId)))
             {
                 _activeGames[(userId, instanceId)].Subscribe(PushGenerationToHub);
-                _activeGames[(userId, instanceId)].Start();
-                return true;
+                _activeGames[(userId, instanceId)].StartAsync();
+                return Task.FromResult(true);
             }
 
-            return false;
+            return Task.FromResult(false);
         }
 
-        public bool EndGame(int userId, Guid instanceId)
+        public Task<bool> EndGameAsync(int userId, Guid instanceId)
         {
             if (_activeGames.Remove((userId, instanceId), out Time? time))
             {
                 time?.Dispose();
+                Task.FromResult(true);
             }
 
-            return false;
+            return Task.FromResult(false);
         }
 
-        public bool MergeGames(int userId, Guid firstId, Guid secondId)
+        public async Task<Generation> MergeGamesAsync(int userId, Guid firstId, Guid secondId)
         {
-            throw new NotImplementedException();
+            // TODO: Set a proper offset for the merging universe
+            Generation firstGeneration = await _activeGames[(userId, firstId)].StopAsync();
+            Generation secondGeneration = await _activeGames[(userId, secondId)].StopAsync();
+            IUniverse universe = firstGeneration.World.Join(secondGeneration.World, Offset.None);
+            Generation mergedGeneration = Generation.Zero(universe);
+            Guid instanceId = mergedGeneration.World.Identity;
+
+            _activeGames[(userId, instanceId)] = new Time(mergedGeneration);
+            _activeGames[(userId, instanceId)].Subscribe(PushGenerationToHub);
+            return await _activeGames[(userId, instanceId)].StartAsync();
         }
 
         private void PushGenerationToHub(Generation generation)

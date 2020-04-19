@@ -13,7 +13,7 @@ namespace GameOfLife.App
             Time time = new Time(zero);
             using (var disposable = time.Subscribe(Render))
             {
-                time.Start();
+                time.StartAsync();
                 await Task.Delay(10000);
             }
         }
