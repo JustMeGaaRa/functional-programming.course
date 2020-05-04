@@ -1,6 +1,6 @@
 ﻿namespace GameOfLife.CSharp.Web.Models
 {
-    public class WorldColumn
+    public class WorldCell
     {
         public int Row { get; set; }
 

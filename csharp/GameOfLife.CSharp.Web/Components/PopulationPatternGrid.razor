@@ -5,7 +5,11 @@
         <tbody>
             @foreach (var row in Rows)
             {
-                <PopulationPatternRow Columns=@row.Columns OnCellClick="@OnCellClick" Readonly="@Readonly"/>
+                <PopulationPatternRow 
+                    Columns=@row.Columns 
+                    OnCellClick="@OnCellClick" 
+                    IsReadonly="@IsReadonly"
+                />
             }
         </tbody>
     </table>

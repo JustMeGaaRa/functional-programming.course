@@ -6,6 +6,6 @@ namespace GameOfLife.CSharp.Web.Models
     {
         public int Number { get; set; }
 
-        public ICollection<WorldColumn> Columns { get; set; }
+        public ICollection<WorldCell> Columns { get; set; }
     }
 }

@@ -17,20 +17,29 @@ namespace GameOfLife.CSharp.Web.Data
             _httpClient.BaseAddress = new Uri("https://localhost:44370");
         }
 
-        public async Task<ICollection<Pattern>> GetPattersByUserId(int userId)
+        public async Task<UserInfo> CreateUser()
         {
-            var url = $"api/users/{userId}/patterns";
+            var url = $"api/users";
 
-            var response = await _httpClient.GetJsonAsync<ICollection<Pattern>>(url);
+            var response = await _httpClient.PostJsonAsync<UserInfo>(url, null);
 
             return response;
         }
 
-        public async Task<Pattern> CreatePattern(int userId, Pattern pattern)
+        public async Task<ICollection<PatternInfo>> GetPattersByUserId(int userId)
         {
             var url = $"api/users/{userId}/patterns";
 
-            var response = await _httpClient.PostJsonAsync<Pattern>(url, pattern);
+            var response = await _httpClient.GetJsonAsync<ICollection<PatternInfo>>(url);
+
+            return response;
+        }
+
+        public async Task<PatternInfo> CreatePattern(int userId, PatternInfo pattern)
+        {
+            var url = $"api/users/{userId}/patterns";
+
+            var response = await _httpClient.PostJsonAsync<PatternInfo>(url, pattern);
 
             return response;
         }
@@ -44,20 +53,11 @@ namespace GameOfLife.CSharp.Web.Data
             return response;
         }
 
-        public async Task<World> GetPatternCell(int userId, int patternId, WorldColumn column)
+        public async Task<World> GetPatternCell(int userId, int patternId, WorldCell column)
         {
             var url = $"api/users/{userId}/patterns/{patternId}/view/cell";
 
             var response = await _httpClient.PutJsonAsync<World>(url, column);
-
-            return response;
-        }
-
-        public async Task<UserInfo> CreateUser()
-        {
-            var url = $"api/users";
-
-            var response = await _httpClient.PostJsonAsync<UserInfo>(url, null);
 
             return response;
         }

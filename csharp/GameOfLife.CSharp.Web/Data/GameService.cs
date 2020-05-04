@@ -9,8 +9,6 @@ namespace GameOfLife.CSharp.Web.Data
     {
         private readonly HubConnection _hubConnection;
 
-        public bool IsConnected => _hubConnection.State == HubConnectionState.Connected;
-
         public GameService()
         {
             _hubConnection = new HubConnectionBuilder()
@@ -20,7 +18,10 @@ namespace GameOfLife.CSharp.Web.Data
 
         public async Task Connect()
         {
-            await _hubConnection.StartAsync();
+            if (_hubConnection.State == HubConnectionState.Disconnected)
+            {
+                await _hubConnection.StartAsync();
+            }
         }
 
         public async Task End(int userId)

@@ -18,16 +18,16 @@ namespace GameOfLife.CSharp.Web.Components
         public bool IsAlive { get; set; }
 
         [Parameter]
-        public bool Readonly { get; set; }
+        public bool IsReadonly { get; set; }
 
         [Parameter]
-        public EventCallback<WorldColumn> OnCellClick { get; set; }
+        public EventCallback<WorldCell> OnCellClick { get; set; }
 
         protected async Task HandleOnCellClick()
         {
-            if (!Readonly)
+            if (!IsReadonly)
             {
-                var worldColumn = new WorldColumn
+                var worldColumn = new WorldCell
                 {
                     Row = Row,
                     Column = Column,

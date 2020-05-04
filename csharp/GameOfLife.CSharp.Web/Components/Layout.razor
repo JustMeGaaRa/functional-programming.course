@@ -1,20 +1,21 @@
 ﻿@inherits LayoutBase
 
 <div class="layout">
-    <Selection 
+    <Selection
         OnStartClick="HandleOnStartClick"
         OnStopClick="HandleOnStopClick"
         OnCreateClick="HandleOnCreateClick"
         OnPatternSelectClick="HandleOnPatternSelect"
-        UserId ="@UserId"
-        SelectedPatternId="@SelectedPatternId">
-    </Selection>
-    <p>Generation: @Generation</p>
-    @if (SelectedWorld != null)
-    {
-        <PopulationPatternGrid 
-            Rows="@SelectedWorld.Rows"
-            Readonly="@Readonly"                   
-            OnCellClick="@HandleOnCellClick"/>
-    }
+        UserId="@UserId"
+        SelectedPatternId="@SelectedPatternId"
+    />
+        <p>Generation: @Generation</p>
+        @if (SelectedWorld != null)
+        {
+            <PopulationPatternGrid 
+                Rows="@SelectedWorld.Rows"
+                IsReadonly="@IsReadonly"
+                OnCellClick="@HandleOnCellClick" 
+            />
+        }
 </div>
