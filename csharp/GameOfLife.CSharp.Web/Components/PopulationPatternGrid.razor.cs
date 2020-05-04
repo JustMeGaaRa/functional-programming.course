@@ -8,5 +8,11 @@ namespace GameOfLife.CSharp.Web.Components
     {
         [Parameter]
         public ICollection<WorldRow> Rows { get; set; }
+
+        [Parameter]
+        public bool Readonly { get; set; }
+
+        [Parameter]
+        public EventCallback<WorldColumn> OnCellClick { get; set; }
     }
 }

@@ -35,7 +35,8 @@ namespace GameOfLife.CSharp.Api
                     .WithOrigins(Configuration["CORS:Origin"])
                     .AllowCredentials()
                     .AllowAnyMethod()
-                    .AllowAnyHeader()));
+                    .AllowAnyHeader()
+                    .SetIsOriginAllowed((host) => true)));
             services.AddSignalR();
             services.AddSwaggerGen(ConfigureSwaggerGenOptions);
             services.AddSingleton<IWorldPatternRepository, JsonWorldPatternRepository>();
