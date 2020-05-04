@@ -9,12 +9,12 @@ namespace GameOfLife.CSharp.Web.Components
         public int Number { get; set; }
 
         [Parameter]
-        public bool Readonly { get;set;}
+        public bool IsReadonly { get; set; }
 
         [Parameter]
-        public ICollection<WorldColumn> Columns { get; set; }
+        public ICollection<WorldCell> Columns { get; set; }
 
         [Parameter]
-        public EventCallback<WorldColumn> OnCellClick { get; set; }
+        public EventCallback<WorldCell> OnCellClick { get; set; }
     }
 }

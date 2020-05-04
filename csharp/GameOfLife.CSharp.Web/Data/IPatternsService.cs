@@ -8,12 +8,12 @@ namespace GameOfLife.CSharp.Web.Data
     {
         Task<UserInfo> CreateUser();
 
-        Task<Pattern> CreatePattern(int userId, Pattern pattern);
+        Task<PatternInfo> CreatePattern(int userId, PatternInfo pattern);
 
-        Task<ICollection<Pattern>> GetPattersByUserId(int userId);
+        Task<ICollection<PatternInfo>> GetPattersByUserId(int userId);
 
         Task<World> GetPatternView(int userId, int patternId);
 
-        Task<World> GetPatternCell(int userId, int patternId, WorldColumn column);
+        Task<World> GetPatternCell(int userId, int patternId, WorldCell column);
     }
 }

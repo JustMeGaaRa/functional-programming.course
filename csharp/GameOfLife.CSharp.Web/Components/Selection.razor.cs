@@ -12,16 +12,16 @@ namespace GameOfLife.CSharp.Web.Components
         [Inject]
         public IPatternsService PatternsService { get; set; }
 
-        public ICollection<Pattern> Patterns { get; private set; }
+        public ICollection<PatternInfo> Patterns { get; private set; }
 
         [Parameter]
-        public string PatternName { get; set; } = "New Pattern";
+        public string PatternName { get; set; }
 
         [Parameter]
-        public int PatternWidth { get; set; } = 10;
+        public int PatternWidth { get; set; }
 
         [Parameter]
-        public int PatternHeight { get; set; } = 10;
+        public int PatternHeight { get; set; }
 
         [Parameter]
         public int UserId { get; set; }
@@ -44,11 +44,13 @@ namespace GameOfLife.CSharp.Web.Components
         protected override async Task OnInitializedAsync()
         {
             Patterns = await PatternsService.GetPattersByUserId(UserId);
+
+            InitializeDefaultState();
         }
 
         protected async Task HandleCreateClick()
         {
-            var newPattern = new Pattern
+            var newPattern = new PatternInfo
             {
                 PatternId = 0,
                 Name = PatternName,
@@ -70,6 +72,13 @@ namespace GameOfLife.CSharp.Web.Components
         {
             SelectedPatternId = Convert.ToInt32(e.Value); 
             await OnPatternSelectClick.InvokeAsync(SelectedPatternId);
+        }
+
+        private void InitializeDefaultState()
+        {
+            PatternName = "New Pattern";
+            PatternWidth = 10;
+            PatternHeight = 10;
         }
     }
 }

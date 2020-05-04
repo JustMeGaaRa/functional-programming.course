@@ -10,9 +10,9 @@ namespace GameOfLife.CSharp.Web.Components
         public ICollection<WorldRow> Rows { get; set; }
 
         [Parameter]
-        public bool Readonly { get; set; }
+        public bool IsReadonly { get; set; }
 
         [Parameter]
-        public EventCallback<WorldColumn> OnCellClick { get; set; }
+        public EventCallback<WorldCell> OnCellClick { get; set; }
     }
 }
