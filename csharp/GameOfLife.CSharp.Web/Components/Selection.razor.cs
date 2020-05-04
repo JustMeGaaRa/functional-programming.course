@@ -26,7 +26,8 @@ namespace GameOfLife.CSharp.Web.Components
         [Parameter]
         public int UserId { get; set; }
 
-        protected int SelectedPatternId { get; set; }
+        [Parameter]
+        public int SelectedPatternId { get; set; }
 
         [Parameter]
         public EventCallback<int> OnPatternSelectClick { get; set; }
@@ -39,9 +40,6 @@ namespace GameOfLife.CSharp.Web.Components
 
         [Parameter]
         public EventCallback OnStopClick { get; set; }
-
-        [Parameter]
-        public EventCallback<World> OnPatternSelectCellClick { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -72,20 +70,6 @@ namespace GameOfLife.CSharp.Web.Components
         {
             SelectedPatternId = Convert.ToInt32(e.Value); 
             await OnPatternSelectClick.InvokeAsync(SelectedPatternId);
-        }
-
-        protected async Task HandleOnPatternCellClick()
-        {
-            var worldColumn = new WorldColumn
-            {
-                Row = 1,
-                Column = 1,
-                IsAlive = true
-            };
-
-            var world = await PatternsService.GetPatternCell(UserId, SelectedPatternId, worldColumn);
-
-            await OnPatternSelectCellClick.InvokeAsync(world);
         }
     }
 }

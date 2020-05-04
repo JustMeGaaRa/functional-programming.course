@@ -6,11 +6,15 @@
         OnStopClick="HandleOnStopClick"
         OnCreateClick="HandleOnCreateClick"
         OnPatternSelectClick="HandleOnPatternSelect"
-        UserId ="@UserId">
+        UserId ="@UserId"
+        SelectedPatternId="@SelectedPatternId">
     </Selection>
     <p>Generation: @Generation</p>
-    @if (World != null)
+    @if (SelectedWorld != null)
     {
-        <PopulationPatternGrid Rows="@World.Rows"/>
+        <PopulationPatternGrid 
+            Rows="@SelectedWorld.Rows"
+            Readonly="@Readonly"                   
+            OnCellClick="@HandleOnCellClick"/>
     }
 </div>

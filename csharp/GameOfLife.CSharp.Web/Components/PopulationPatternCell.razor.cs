@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using GameOfLife.CSharp.Web.Models;
+using Microsoft.AspNetCore.Components;
+using System.Threading.Tasks;
 
 namespace GameOfLife.CSharp.Web.Components
 {
@@ -17,5 +19,23 @@ namespace GameOfLife.CSharp.Web.Components
 
         [Parameter]
         public bool Readonly { get; set; }
+
+        [Parameter]
+        public EventCallback<WorldColumn> OnCellClick { get; set; }
+
+        protected async Task HandleOnCellClick()
+        {
+            if (!Readonly)
+            {
+                var worldColumn = new WorldColumn
+                {
+                    Row = Row,
+                    Column = Column,
+                    IsAlive = !IsAlive
+                };
+
+                await OnCellClick.InvokeAsync(worldColumn);
+            }
+        }
     }
 }
