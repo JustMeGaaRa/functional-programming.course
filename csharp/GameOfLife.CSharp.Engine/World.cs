@@ -12,7 +12,7 @@
             BottomRight = new Offset(topLeft.Left + size.Width, topLeft.Top + size.Height);
         }
 
-        public static World Empty => new World(new Cell[0, 0], Offset.None, Size.None);
+        public static World Empty => new (new Cell[0, 0], Offset.None, Size.None);
 
         public Cell this[int relativeRow, int relativeColumn]
         {
