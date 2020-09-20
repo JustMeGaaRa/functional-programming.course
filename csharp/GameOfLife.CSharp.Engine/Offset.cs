@@ -1,28 +1,9 @@
 ﻿namespace GameOfLife.CSharp.Engine
 {
-    public class Offset
+    public record Offset(int Left, int Top)
     {
-        public Offset(int left, int top)
-        {
-            Left = left;
-            Top = top;
-        }
+        public static Offset None => new (0, 0);
 
-        public static Offset None => new Offset(0, 0);
-
-        public int Left { get; }
-
-        public int Top { get; }
-
-        public override string ToString() => $"(x, y): ({Left}, {Top});";
-
-        public override bool Equals(object obj) =>
-            obj is Offset offset
-                && offset.Left == Left
-                && offset.Top == Top;
-
-        public override int GetHashCode() => Left ^ Top;
-
-        public Offset Shift(int shiftLeft, int shiftTop) => new Offset(Left + shiftLeft, Top + shiftTop);
+        public Offset Shift(int shiftLeft, int shiftTop) => this with { Left = Left + shiftLeft, Top = Top + shiftTop };
     }
 }

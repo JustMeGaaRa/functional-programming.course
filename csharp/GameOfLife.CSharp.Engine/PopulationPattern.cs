@@ -49,7 +49,7 @@ namespace GameOfLife.CSharp.Engine
                 throw new ArgumentException("Parameter cannot be null, empty or whitespace.", nameof(name));
             }
 
-            return new PopulationPattern(patternId, name, width, height);
+            return new (patternId, name, width, height);
         }
 
         public static PopulationPattern FromArray2D(int patternId, string name, bool[,] aliveCells)
@@ -61,7 +61,7 @@ namespace GameOfLife.CSharp.Engine
 
             int width = aliveCells.GetLength(1);
             int height = aliveCells.GetLength(0);
-            var pattern = new PopulationPattern(patternId, name, width, height);
+            PopulationPattern pattern = new (patternId, name, width, height);
 
             for (int row = 0; row < height; row++)
             {

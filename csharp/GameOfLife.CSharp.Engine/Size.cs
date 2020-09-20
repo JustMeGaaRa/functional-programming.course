@@ -1,26 +1,7 @@
 ﻿namespace GameOfLife.CSharp.Engine
 {
-    public class Size
+    public record Size(int Width, int Height)
     {
-        public Size(int width, int height)
-        {
-            Width = width;
-            Height = height;
-        }
-
-        public static Size None => new Size(0, 0);
-
-        public int Width { get; }
-
-        public int Height { get; }
-
-        public override string ToString() => $"Width: {Width}; Height: {Height};";
-
-        public override bool Equals(object obj) =>
-            obj is Size size
-                && size.Width == Width
-                && size.Height == Height;
-
-        public override int GetHashCode() => Height ^ Width;
+        public static Size None => new (0, 0);
     }
 }

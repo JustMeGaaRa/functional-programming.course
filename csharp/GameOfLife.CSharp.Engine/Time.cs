@@ -7,7 +7,7 @@ namespace GameOfLife.CSharp.Engine
 {
     public class Time : IObservable<Generation>, IDisposable
     {
-        private readonly CancellationTokenSource _cts = new CancellationTokenSource();
+        private readonly CancellationTokenSource _cts = new ();
         private readonly ISubject<Generation> _observable = new Subject<Generation>();
         private IDisposable? _disposable;
         private Task<Generation>? _generationTask;
@@ -43,7 +43,7 @@ namespace GameOfLife.CSharp.Engine
                 return generation;
             }
 
-            await Task.Delay(1000);
+            await Task.Delay(1000, token);
             return await Flow(observable, generation.Next(), token);
         }
     }
