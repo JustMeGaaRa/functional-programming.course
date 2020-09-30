@@ -1,0 +1,14 @@
+﻿@inherits PopulationPatternRowBase
+
+<tr>
+    @foreach (var cell in Columns)
+    {
+        <PopulationPatternCell
+            Column="@cell.Column" 
+            Row="@cell.Row"
+            IsAlive="@cell.IsAlive"
+            IsReadonly="@IsReadonly"
+            OnCellClick="@OnCellClick"
+        />
+    }
+</tr>

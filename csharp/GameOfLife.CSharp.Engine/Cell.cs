@@ -1,15 +1,9 @@
 ﻿namespace GameOfLife.CSharp.Engine
 {
-    public class Cell
+    public record Cell(Population Population)
     {
-        private Cell(Population state) => Population = state;
+        public static Cell Empty => new (Population.None);
 
-        public Population Population { get; }
-
-        public static Cell Empty => new Cell(Population.None);
-
-        public static Cell Create(Population state) => new Cell(state);
-
-        public override string ToString() => $"Population: {Population}";
+        public static Cell Create(Population state) => new (state);
     }
 }

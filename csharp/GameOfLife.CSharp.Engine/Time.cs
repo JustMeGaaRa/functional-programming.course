@@ -7,7 +7,7 @@ namespace GameOfLife.CSharp.Engine
 {
     public sealed class Time : IObservable<Generation>, IDisposable
     {
-        private readonly CancellationTokenSource _cts = new CancellationTokenSource();
+        private readonly CancellationTokenSource _cts = new ();
         private readonly ISubject<Generation> _observable = new Subject<Generation>();
         private readonly Generation _zero;
         private IDisposable? _disposable;

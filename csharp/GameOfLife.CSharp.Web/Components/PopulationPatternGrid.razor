@@ -1,0 +1,16 @@
+﻿@inherits PopulationPatternGridBase
+
+<div class="grid centered">
+    <table>
+        <tbody>
+            @foreach (var row in Rows)
+            {
+                <PopulationPatternRow 
+                    Columns=@row.Columns 
+                    OnCellClick="@OnCellClick" 
+                    IsReadonly="@IsReadonly"
+                />
+            }
+        </tbody>
+    </table>
+</div>
