@@ -1,8 +1,8 @@
 ﻿using GameOfLife.CSharp.Web.Models;
-using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 
 namespace GameOfLife.CSharp.Web.Data
@@ -11,9 +11,9 @@ namespace GameOfLife.CSharp.Web.Data
     {
         private readonly HttpClient _httpClient;
 
-        public PatternsService(HttpClient httpClient)
+        public PatternsService(IHttpClientFactory clientFactory)
         {
-            _httpClient = httpClient;
+            _httpClient = clientFactory.CreateClient();
             _httpClient.BaseAddress = new Uri("https://localhost:44370");
         }
 
@@ -21,16 +21,17 @@ namespace GameOfLife.CSharp.Web.Data
         {
             var url = $"api/users";
 
-            var response = await _httpClient.PostJsonAsync<UserInfo>(url, null);
+            var response = await _httpClient.PostAsync(url, null);
+            var content = await response.Content.ReadFromJsonAsync<UserInfo>();
 
-            return response;
+            return content;
         }
 
         public async Task<ICollection<PatternInfo>> GetPattersByUserId(int userId)
         {
             var url = $"api/users/{userId}/patterns";
 
-            var response = await _httpClient.GetJsonAsync<ICollection<PatternInfo>>(url);
+            var response = await _httpClient.GetFromJsonAsync<ICollection<PatternInfo>>(url);
 
             return response;
         }
@@ -39,16 +40,17 @@ namespace GameOfLife.CSharp.Web.Data
         {
             var url = $"api/users/{userId}/patterns";
 
-            var response = await _httpClient.PostJsonAsync<PatternInfo>(url, pattern);
+            var response = await _httpClient.PostAsJsonAsync(url, pattern);
+            var content = await response.Content.ReadFromJsonAsync<PatternInfo>();
 
-            return response;
+            return content;
         }
 
         public async Task<World> GetPatternView(int userId, int patternId)
         {
             var url = $"api/users/{userId}/patterns/{patternId}/view";
 
-            var response = await _httpClient.GetJsonAsync<World>(url);
+            var response = await _httpClient.GetFromJsonAsync<World>(url);
 
             return response;
         }
@@ -57,9 +59,10 @@ namespace GameOfLife.CSharp.Web.Data
         {
             var url = $"api/users/{userId}/patterns/{patternId}/view/cell";
 
-            var response = await _httpClient.PutJsonAsync<World>(url, column);
+            var response = await _httpClient.PutAsJsonAsync(url, column);
+            var content = await response.Content.ReadFromJsonAsync<World>();
 
-            return response;
+            return content;
         }
     }
 }
