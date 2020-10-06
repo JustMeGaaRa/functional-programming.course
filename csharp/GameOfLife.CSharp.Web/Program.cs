@@ -1,7 +1,7 @@
-﻿using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using GameOfLife.CSharp.Web.Data;
+﻿using GameOfLife.CSharp.Web.Data;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using System.Threading.Tasks;
 
 namespace GameOfLife.CSharp.Web
 {
