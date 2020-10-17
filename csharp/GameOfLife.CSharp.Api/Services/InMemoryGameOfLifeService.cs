@@ -10,7 +10,8 @@ namespace GameOfLife.CSharp.Api.Services
 {
     public class InMemoryGameOfLifeService : IGameOfLifeService
     {
-        private readonly Dictionary<(int, Guid), Time> _activeGames = new Dictionary<(int, Guid), Time>();
+        private readonly Dictionary<(int, Guid), Time> _activeGames = new();
+        private readonly Dictionary<(int, Guid), IDisposable> _gameSubscriptions = new();
         private readonly IPopulationPatternRepository _repository;
         private readonly IHubContext<GameOfLifeHub> _hubContext;
 
@@ -22,47 +23,82 @@ namespace GameOfLife.CSharp.Api.Services
 
         public Generation CreateFromPattern(int userId, int patternId)
         {
-            PopulationPattern pattern = _repository.GetPatternById(patternId);
-            Generation generation = Generation.Zero(pattern);
-            _activeGames[(userId, generation.World.Identity)] = new Time(generation);
+            var pattern = _repository.GetPatternById(patternId);
+            var generation = Generation.Zero(pattern);
+
+            InternalRegister(userId, generation.World.Identity, generation);
+
             return generation;
         }
 
         public Task<bool> StartGameAsync(int userId, Guid instanceId)
-        {
-            if (_activeGames.ContainsKey((userId, instanceId)))
-            {
-                _activeGames[(userId, instanceId)].Subscribe(PushGenerationToHub);
-                _activeGames[(userId, instanceId)].StartAsync();
-                return Task.FromResult(true);
-            }
-
-            return Task.FromResult(false);
+        {           
+            return Task.FromResult(InternalStartGameAsync(userId, instanceId) != null);
         }
 
-        public Task<bool> EndGameAsync(int userId, Guid instanceId)
+        public Task<bool> StopGameAsync(int userId, Guid instanceId)
         {
-            if (_activeGames.Remove((userId, instanceId), out Time? time))
+            return Task.FromResult(InternalStopGameAsync(userId, instanceId) != null);
+        }
+
+        public async Task<bool> RemoveGameAsync(int userId, Guid instanceId)
+        {
+            var key = (userId, instanceId);
+            if (_activeGames.Remove(key, out Time? time)
+                && _gameSubscriptions.Remove(key, out IDisposable? subscription))
             {
+                subscription?.Dispose();
+                await time.StopAsync();
                 time?.Dispose();
-                Task.FromResult(true);
+                return true;
             }
 
-            return Task.FromResult(false);
+            return false;
         }
 
         public async Task<Generation> MergeGamesAsync(int userId, Guid firstId, Guid secondId)
         {
+            // TODO: when mergin two worlds - one active and other paused, should the merged one become active or paused?
             // TODO: Set a proper offset for the merging universe
-            Generation firstGeneration = await _activeGames[(userId, firstId)].StopAsync();
-            Generation secondGeneration = await _activeGames[(userId, secondId)].StopAsync();
+            Generation firstGeneration = await InternalStopGameAsync(userId, firstId);
+            Generation secondGeneration = await InternalStopGameAsync(userId, secondId);
+
             IUniverse universe = firstGeneration.World.Join(secondGeneration.World, Offset.None);
             Generation mergedGeneration = Generation.Zero(universe);
             Guid instanceId = mergedGeneration.World.Identity;
 
-            _activeGames[(userId, instanceId)] = new Time(mergedGeneration);
-            _activeGames[(userId, instanceId)].Subscribe(PushGenerationToHub);
-            return await _activeGames[(userId, instanceId)].StartAsync();
+            InternalRegister(userId, instanceId, mergedGeneration);
+            return await InternalStartGameAsync(userId, instanceId);
+        }
+
+        public Task<IReadOnlyCollection<Generation>> SplitGamesAsync(int userId, Guid firstId, Guid secondId)
+        {
+            // TODO: actually split into several games
+            throw new NotImplementedException();
+        }
+
+        private Time InternalRegister(int userId, Guid instanceId, Generation generation)
+        {
+            var key = (userId, instanceId);
+            _activeGames[key] = new Time(generation);
+            _gameSubscriptions[key] = _activeGames[key].Subscribe(PushGenerationToHub);
+            return _activeGames[key];
+        }
+
+        private async Task<Generation> InternalStartGameAsync(int userId, Guid instanceId)
+        {
+            var key = (userId, instanceId);
+            return _activeGames.TryGetValue(key, out Time time)
+                ? await time.StartAsync()
+                : null;
+        }
+
+        private async Task<Generation> InternalStopGameAsync(int userId, Guid instanceId)
+        {
+            var key = (userId, instanceId);
+            return _activeGames.TryGetValue(key, out Time time)
+                ? await time.StopAsync()
+                : null;
         }
 
         private void PushGenerationToHub(Generation generation)

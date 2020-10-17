@@ -12,6 +12,7 @@ namespace GameOfLife.CSharp.Engine
         private readonly Generation _zero;
         private IDisposable? _disposable;
         private Task<Generation>? _generationTask;
+        private bool _disposedValue;
 
         public Time(Generation zero)
         {
@@ -20,8 +21,7 @@ namespace GameOfLife.CSharp.Engine
 
         public IDisposable Subscribe(IObserver<Generation> observer)
         {
-            _disposable = _observable.Subscribe(observer);
-            return _disposable;
+            return (_disposable = _observable.Subscribe(observer));
         }
 
         public Task<Generation> StartAsync()
@@ -39,7 +39,25 @@ namespace GameOfLife.CSharp.Engine
 
         public void Dispose()
         {
-            InternalCancel();
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (!_disposedValue)
+            {
+                if (disposing)
+                {
+                    // dispose managed state (managed objects)
+                    InternalCancel();
+                }
+
+                // free unmanaged resources (unmanaged objects) and override finalizer
+                // set large fields to null
+                _disposedValue = true;
+            }
         }
 
         private void InternalCancel()
@@ -63,7 +81,7 @@ namespace GameOfLife.CSharp.Engine
                 return generation;
             }
 
-            await Task.Delay(delay);
+            await Task.Delay(delay, token);
             return await Flow(observable, generation.Next(), delay, token);
         }
     }

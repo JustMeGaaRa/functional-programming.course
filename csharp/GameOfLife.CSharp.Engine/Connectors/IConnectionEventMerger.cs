@@ -1,41 +1,18 @@
-﻿using System;
-
-namespace GameOfLife.CSharp.Engine.Connectors
+﻿namespace GameOfLife.CSharp.Engine.Connectors
 {
-    public interface IConnectionEvent
+    public interface IConnectionEvent<TCell>
     {
-        object Cell { get; }
+        TCell Cell { get; }
     }
 
-    public sealed class ConnectorActivated : IConnectionEvent
+    public record ConnectorActivated<TCell>(TCell Cell) : IConnectionEvent<TCell>;
+
+    public record ConnectorDeactivated<TCell>(TCell Cell) : IConnectionEvent<TCell>;
+
+    public record MergeEvent<TCell>(TCell SourceCell, TCell TargetCell);
+
+    public interface IConnectionEventMerger<TCell>
     {
-        public ConnectorActivated(object cell)
-        {
-            Cell = cell ?? throw new ArgumentNullException(nameof(cell));
-        }
-
-        public object Cell { get; }
-    }
-
-    public sealed class ConnectorDeactivated : IConnectionEvent
-    {
-        public ConnectorDeactivated(object cell)
-        {
-            Cell = cell ?? throw new ArgumentNullException(nameof(cell));
-        }
-
-        public object Cell { get; }
-    }
-
-    public class MergeEvent
-    {
-        public object SourceCell { get; set; }
-
-        public object TargetCell { get; set; }
-    }
-
-    public interface IConnectionEventMerger
-    {
-        MergeEvent? Enqueue(IConnectionEvent connectionEvent);
+        MergeEvent<TCell>? Enqueue(IConnectionEvent<TCell> connectionEvent);
     }
 }

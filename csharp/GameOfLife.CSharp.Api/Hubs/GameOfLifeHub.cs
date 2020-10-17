@@ -22,20 +22,16 @@ namespace GameOfLife.CSharp.Api.Hubs
 
         public Task StartUserGame(int userId, string instanceId)
         {
-            if (Guid.TryParse(instanceId, out Guid id))
-            {
-                _gameOfLifeService.StartGameAsync(userId, id);
-            }
-            return Task.CompletedTask;
+            return Guid.TryParse(instanceId, out Guid id)
+                ? _gameOfLifeService.StartGameAsync(userId, id)
+                : Task.CompletedTask;
         }
 
         public Task EndUserGame(int userId, string instanceId)
         {
-            if (Guid.TryParse(instanceId, out Guid id))
-            {
-                _gameOfLifeService.EndGameAsync(userId, id);
-            }
-            return Task.CompletedTask;
+            return Guid.TryParse(instanceId, out Guid id)
+                ? _gameOfLifeService.StopGameAsync(userId, id)
+                : Task.CompletedTask;
         }
     }
 }

@@ -97,10 +97,14 @@ namespace GameOfLife.CSharp.Engine
 
             if (island != null && _islands.Remove(island))
             {
-                return new List<IUniverse>();
+                return new List<IUniverse>
+                {
+                    new Universe(Identity, _islands, Size),
+                    new Universe(island.ImmutableGrid.Identity, new() { island }, island.ImmutableGrid.Size)
+                };
             }
 
-            return new List<IUniverse>();
+            return new List<IUniverse> { this };
         }
 
         #endregion
@@ -134,25 +138,16 @@ namespace GameOfLife.CSharp.Engine
 
         #region Private Internal Types
 
-        internal class ImmutableIsland : IMoveable<ImmutableIsland>, IMutableConverter<MutableIsland>
+        internal record ImmutableIsland(IImmutableGrid ImmutableGrid, Offset TopLeft) : 
+            IMoveable<ImmutableIsland>, 
+            IMutableConverter<MutableIsland>
         {
-            public ImmutableIsland(IImmutableGrid immutableGrid, Offset topLeft)
-            {
-                ImmutableGrid = immutableGrid ?? throw new ArgumentNullException(nameof(immutableGrid));
-                TopLeft = topLeft ?? throw new ArgumentNullException(nameof(topLeft));
-                BottomRight = new Offset(topLeft.Left + immutableGrid.Size.Width, topLeft.Top + immutableGrid.Size.Height);
-            }
-
-            public IImmutableGrid ImmutableGrid { get; }
-
-            public Offset TopLeft { get; }
-
-            public Offset BottomRight { get; }
+            public Offset BottomRight => new (TopLeft.Left + ImmutableGrid.Size.Width, TopLeft.Top + ImmutableGrid.Size.Height);
 
             public ImmutableIsland Move(int shiftLeft, int shiftTop)
             {
                 var shiftedTopLeft = new Offset(TopLeft.Left + shiftLeft, TopLeft.Top + shiftTop);
-                return new ImmutableIsland(ImmutableGrid, shiftedTopLeft);
+                return new (ImmutableGrid, shiftedTopLeft);
             }
 
             public bool IsInBounds(int absoluteRow, int absoluteColumn)
@@ -163,23 +158,13 @@ namespace GameOfLife.CSharp.Engine
                     && absoluteRow < BottomRight.Top;
             }
 
-            public MutableIsland ToMutable() => new MutableIsland(ImmutableGrid.ToMutable(), TopLeft);
+            public MutableIsland ToMutable() => new (ImmutableGrid.ToMutable(), TopLeft);
         }
 
-        internal class MutableIsland : IImmutableConverter<ImmutableIsland>
+        internal record MutableIsland(IMutableGrid MutableGrid, Offset TopLeft) : 
+            IImmutableConverter<ImmutableIsland>
         {
-            public MutableIsland(IMutableGrid mutableGrid, Offset topLeft)
-            {
-                MutableGrid = mutableGrid ?? throw new ArgumentNullException(nameof(mutableGrid));
-                TopLeft = topLeft ?? throw new ArgumentNullException(nameof(topLeft));
-                BottomRight = new Offset(topLeft.Left + mutableGrid.Size.Width, topLeft.Top + mutableGrid.Size.Height);
-            }
-
-            public IMutableGrid MutableGrid { get; }
-
-            public Offset TopLeft { get; }
-
-            public Offset BottomRight { get; }
+            public Offset BottomRight => new (TopLeft.Left + MutableGrid.Size.Width, TopLeft.Top + MutableGrid.Size.Height);
 
             public bool IsInBounds(int absoluteRow, int absoluteColumn)
             {
@@ -189,7 +174,7 @@ namespace GameOfLife.CSharp.Engine
                     && absoluteRow < BottomRight.Top;
             }
 
-            public ImmutableIsland ToImmutable() => new ImmutableIsland(MutableGrid.ToImmutable(), TopLeft);
+            public ImmutableIsland ToImmutable() => new (MutableGrid.ToImmutable(), TopLeft);
         }
 
         internal class MutableGridAggregate : IMutableUniverse
@@ -207,26 +192,24 @@ namespace GameOfLife.CSharp.Engine
 
             public Size Size { get; }
 
-            public void Set(int row, int column, Cell cell) => InternalFindAndSet(row, column, cell);
-
-            IUniverse IImmutableConverter<IUniverse>.ToImmutable() => ToImmutableGrid();
-
-            IImmutableGrid IImmutableConverter<IImmutableGrid>.ToImmutable() => ToImmutableGrid();
-
-            private IUniverse ToImmutableGrid()
-            {
-                var islands = _islands
-                    .Select(island => island.ToImmutable())
-                    .ToList();
-                return new Universe(Identity, islands, Size);
-            }
-
-            protected void InternalFindAndSet(int row, int column, Cell cell)
+            public void Set(int row, int column, Cell cell)
             {
                 _islands
                     .Where(island => island.IsInBounds(row, column))
                     .ToList()
                     .ForEach(island => InternalSet(island, row, column, cell));
+            }
+
+            IUniverse IImmutableConverter<IUniverse>.ToImmutable() => ToImmutableGrid();
+
+            IImmutableGrid IImmutableConverter<IImmutableGrid>.ToImmutable() => ToImmutableGrid();
+
+            private Universe ToImmutableGrid()
+            {
+                var islands = _islands
+                    .Select(island => island.ToImmutable())
+                    .ToList();
+                return new (Identity, islands, Size);
             }
 
             protected void InternalSet(MutableIsland island, int row, int column, Cell cell)

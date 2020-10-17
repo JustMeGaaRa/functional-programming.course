@@ -30,19 +30,20 @@ namespace GameOfLife.CSharp.Engine
         private static Population GetNextPopulationState(IImmutableGrid grid, int row, int column)
         {
             int aliveNeighbours = CountAliveNeighbours(grid, row, column);
-            var state = (grid[row, column], aliveNeighbours) switch
+            var cellState = grid[row, column];
+            var state = (cellState, aliveNeighbours) switch
             {
                 // Any empty cell with should remain empty.
                 ({ Population: Population.None }, _) => Population.None,
 
                 // Any live cell with fewer than two live neighbours dies, as if by underpopulation.
-                ({ Population: Population.Alive }, var alive) when alive < 2 => Population.Dead,
+                ({ Population: Population.Alive }, < 2) => Population.Dead,
 
                 // Any live cell with two or three live neighbours lives on to the next generation.
-                ({ Population: Population.Alive }, var alive) when alive < 4 => Population.Alive,
+                ({ Population: Population.Alive }, < 4) => Population.Alive,
 
                 // Any live cell with more than three live neighbours dies, as if by overpopulation.
-                ({ Population: Population.Alive }, var alive) when alive > 3 => Population.Dead,
+                ({ Population: Population.Alive }, > 3) => Population.Dead,
 
                 // Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
                 ({ Population: Population.Dead }, 3) => Population.Alive,
