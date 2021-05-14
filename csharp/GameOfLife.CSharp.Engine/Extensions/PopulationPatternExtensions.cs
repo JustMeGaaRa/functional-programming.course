@@ -1,10 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace GameOfLife.CSharp.Engine
 {
     public static class PopulationPatternExtensions
     {
-        public static TOutput[,] Select<TOutput>(this PopulationPattern pattern, Func<bool, int, int, TOutput> func)
+        public static IEnumerable<TOutput> ToEnumerable<TOutput>(this PopulationPattern pattern, Func<bool, TOutput> func)
+        {
+            for (int row = 0; row < pattern.Height; row++)
+            {
+                for (int column = 0; column < pattern.Width; column++)
+                {
+                    yield return func(pattern[row, column]);
+                }
+            }
+        }
+
+        public static TOutput[,] ToArray<TOutput>(this PopulationPattern pattern, Func<bool, int, int, TOutput> func)
         {
             TOutput[,] clone = new TOutput[pattern.Height, pattern.Width];
 
@@ -19,9 +31,9 @@ namespace GameOfLife.CSharp.Engine
             return clone;
         }
 
-        public static TOutput[,] Select<TOutput>(this PopulationPattern pattern, Func<bool, TOutput> func)
+        public static TOutput[,] ToArray<TOutput>(this PopulationPattern pattern, Func<bool, TOutput> func)
         {
-            return Select(pattern, (value, row, column) => func(value));
+            return ToArray(pattern, (value, row, column) => func(value));
         }
     }
 }

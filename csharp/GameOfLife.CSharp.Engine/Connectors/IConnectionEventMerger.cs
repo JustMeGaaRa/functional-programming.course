@@ -15,4 +15,19 @@
     {
         MergeEvent<TCell>? Enqueue(IConnectionEvent<TCell> connectionEvent);
     }
+
+    public class ConnectionEventMerger : IConnectionEventMerger<Cell>
+    {
+        private readonly IUniverse _universe;
+
+        public ConnectionEventMerger(IUniverse universe)
+        {
+            _universe = universe ?? throw new System.ArgumentNullException(nameof(universe));
+        }
+
+        public MergeEvent<Cell>? Enqueue(IConnectionEvent<Cell> connectionEvent)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
 }

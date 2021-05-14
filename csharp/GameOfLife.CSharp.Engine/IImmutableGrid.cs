@@ -2,7 +2,7 @@
 
 namespace GameOfLife.CSharp.Engine
 {
-    public interface IImmutableGrid : IMutableConverter<IMutableGrid>
+    public interface IImmutableGrid
     {
         /// <summary>
         /// Gets the unique identity of the grid instance.
@@ -21,13 +21,5 @@ namespace GameOfLife.CSharp.Engine
         /// Gets the size of the world space.
         /// </summary>
         Size Size { get; }
-
-        /// <summary>
-        /// Gets the cell state by row and column numbers.
-        /// </summary>
-        /// <param name="row">Row number relative to self.</param>
-        /// <param name="column">Column number relative to self.</param>
-        /// <returns>The modified instance of <see cref="IImmutableGrid"/>.</returns>
-        Cell Get(int row, int column);
     }
 }

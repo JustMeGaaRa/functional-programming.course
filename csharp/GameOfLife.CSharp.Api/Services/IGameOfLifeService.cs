@@ -13,7 +13,5 @@ namespace GameOfLife.CSharp.Api.Services
         Task<bool> StopGameAsync(int userId, Guid instanceId);
 
         Task<bool> RemoveGameAsync(int userId, Guid instanceId);
-
-        Task<Generation> MergeGamesAsync(int userId, Guid firstId, Guid secondId);
     }
 }

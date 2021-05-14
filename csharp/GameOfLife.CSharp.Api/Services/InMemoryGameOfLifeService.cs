@@ -56,21 +56,6 @@ namespace GameOfLife.CSharp.Api.Services
             return false;
         }
 
-        public async Task<Generation> MergeGamesAsync(int userId, Guid firstId, Guid secondId)
-        {
-            // TODO: when mergin two worlds - one active and other paused, should the merged one become active or paused?
-            // TODO: Set a proper offset for the merging universe
-            Generation firstGeneration = await InternalStopGameAsync(userId, firstId);
-            Generation secondGeneration = await InternalStopGameAsync(userId, secondId);
-
-            IUniverse universe = firstGeneration.World.Join(secondGeneration.World, Offset.None);
-            Generation mergedGeneration = Generation.Zero(universe);
-            Guid instanceId = mergedGeneration.World.Identity;
-
-            InternalRegister(userId, instanceId, mergedGeneration);
-            return await InternalStartGameAsync(userId, instanceId);
-        }
-
         public Task<IReadOnlyCollection<Generation>> SplitGamesAsync(int userId, Guid firstId, Guid secondId)
         {
             // TODO: actually split into several games

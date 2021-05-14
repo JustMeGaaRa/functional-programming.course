@@ -1,4 +1,6 @@
-﻿using System;
+﻿using GameOfLife.CSharp.Engine.Extensions;
+using Silent.Collections;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,7 +8,8 @@ namespace GameOfLife.CSharp.Engine
 {
     public class Universe : IUniverse
     {
-        private readonly List<ImmutableIsland> _islands = new List<ImmutableIsland>();
+        private readonly IGridGraph<Cell> _cellsGraph = GridGraph<Cell>.FromSize(5, 5);
+        private readonly Dictionary<Guid, Offset> _cellOffsets = new();
 
         private Universe()
         {
@@ -15,22 +18,36 @@ namespace GameOfLife.CSharp.Engine
             Worlds = new List<IImmutableGrid>();
         }
 
-        private Universe(Guid identity, List<ImmutableIsland> islands, Size size)
+        private Universe(Guid identity, Size size, IGridGraph<Cell> cellsGraph, Dictionary<Guid, Offset> cellOffsets)
         {
-            _islands = islands ?? throw new ArgumentNullException(nameof(islands));
-            Size = size ?? throw new ArgumentNullException(nameof(size));
-            Worlds = islands.Select(x => x.ImmutableGrid).ToList();
             Identity = identity;
+            Size = size;
+            _cellsGraph = cellsGraph;
+            _cellOffsets = cellOffsets;
         }
 
         public static IUniverse FromPattern(PopulationPattern pattern)
         {
             if (pattern is null) throw new ArgumentNullException(nameof(pattern));
 
-            Cell[,] cells = pattern.Select(alive => Cell.Create(alive ? Population.Alive : Population.Dead));
-            IImmutableGrid immutableGrid = ImmutableGrid.FromState(cells);
-            List<ImmutableIsland> islands = new List<ImmutableIsland> { new ImmutableIsland(immutableGrid, Offset.None) };
-            return new Universe(immutableGrid.Identity, islands, immutableGrid.Size);
+            var cellOffsets = new Dictionary<Guid, Offset>();
+            var cellsGraph = GridGraph<Cell>.Empty();
+
+            for (int row = 0; row < pattern.Height; row++)
+            {
+                for (int column = 0; column < pattern.Width; column++)
+                {
+                    var position = new Position(row, column);
+                    var cell = pattern[row, column] ? Cell.Alive : Cell.Dead;
+                    var offset = new Offset(column, row);
+                    cellOffsets[cell.Identity] = offset;
+                    cellsGraph.SetVertex(position, cell);
+                }
+            }
+
+            // TODO: calculate the size
+            Size size = Size.None;
+            return new Universe(Guid.NewGuid(), size, cellsGraph, cellOffsets);
         }
 
         #region Public Properties
@@ -45,186 +62,79 @@ namespace GameOfLife.CSharp.Engine
 
         public ICollection<IImmutableGrid> Worlds { get; }
 
+        public IReadOnlyCollection<Cell> Cells => _cellsGraph.Vertices.Select(x => x.Value).ToList();
+
         #endregion
 
         #region Public Methods
 
-        public Cell Get(int row, int column) => InternalFindAndGet(row, column) ?? Cell.Empty;
-
-        IMutableUniverse IMutableConverter<IMutableUniverse>.ToMutable() => ToMutableGrid();
-
-        IMutableGrid IMutableConverter<IMutableGrid>.ToMutable() => ToMutableGrid();
-
         public IUniverse Evolve()
         {
-            IUniverse immutableUniverse = this;
-            IMutableConverter<IMutableUniverse> mutableConverter = immutableUniverse;
+            var gameOfLifeRules = new SquareCellPopulationRules();
+            // TODO: clone the graph, so that it possile to modify new instance without changing the existing one
+            //var graphCopy = _blueGraph.Clone();
+            var graphCopy = GridGraph<Cell>.Empty();
 
-            IMutableUniverse mutableUniverse = mutableConverter.ToMutable();
-            IImmutableConverter<IUniverse> immutableConverter = mutableUniverse;
-
-            immutableUniverse.Evolve(mutableUniverse);
-
-            return immutableConverter.ToImmutable();
-        }
-
-        public IUniverse Join(IUniverse immutableGrid, Offset offset)
-        {
-            // TODO: Make offset for each island, not a general one
-            if (immutableGrid is null) throw new ArgumentNullException(nameof(immutableGrid));
-
-            var otherIslands = immutableGrid.Worlds.Select(grid => new ImmutableIsland(grid, offset));
-
-            int left = Math.Min(0, otherIslands.Min(x => x.TopLeft.Left));
-            int top = Math.Min(0, otherIslands.Min(x => x.TopLeft.Top));
-            int right = Math.Max(Size.Width, otherIslands.Max(x => x.BottomRight.Left));
-            int bottom = Math.Max(Size.Height, otherIslands.Max(x => x.BottomRight.Top));
-
-            var shift = new Offset(Math.Abs(left), Math.Abs(top));
-            var size = new Size(right - left, bottom - top);
-
-            var mergedIslands = _islands
-                .Concat(otherIslands)
-                .Select(island => island.Move(shift.Left, shift.Top))
-                .ToList();
-
-            return new Universe(Guid.NewGuid(), mergedIslands, size);
-        }
-
-        public ICollection<IUniverse> Split(IUniverse immutableGrid)
-        {
-            var island = _islands.FirstOrDefault(island => island.ImmutableGrid.Identity == immutableGrid.Identity);
-
-            if (island != null && _islands.Remove(island))
+            foreach (var existingCell in Cells)
             {
-                return new List<IUniverse>
-                {
-                    new Universe(Identity, _islands, Size),
-                    new Universe(island.ImmutableGrid.Identity, new() { island }, island.ImmutableGrid.Size)
-                };
+                var vertexOffset = _cellOffsets[existingCell.Identity];
+                var vertexCell = _cellsGraph[vertexOffset.Top, vertexOffset.Left];
+                var vertexPosition = new Position(vertexOffset.Top, vertexOffset.Left);
+                var aliveNeighbours = vertexCell.Neighbors.Count(vertex => vertex.Value.IsAlive());
+                var populationNextState = gameOfLifeRules.GetNextPopulationState(existingCell, aliveNeighbours);
+                var updatedCell = existingCell with { Population = populationNextState };
+                graphCopy.SetVertex(vertexPosition, updatedCell);
             }
 
-            return new List<IUniverse> { this };
+            return new Universe(Identity, Size, graphCopy, _cellOffsets);
+        }
+
+        public IUniverse Merge(IUniverse universe, Offset offset)
+        {
+            if (universe is not null)
+            {
+                int left = Math.Min(0, _cellOffsets.Min(x => x.Value.Left));
+                int top = Math.Min(0, _cellOffsets.Min(x => x.Value.Top));
+                int right = Math.Min(0, _cellOffsets.Max(x => x.Value.Left));
+                int bottom = Math.Min(0, _cellOffsets.Max(x => x.Value.Top));
+
+                var shift = new Offset(Math.Abs(left), Math.Abs(top));
+                var size = new Size(right - left, bottom - top);
+
+                return new Universe(Identity, size, _cellsGraph, _cellOffsets);
+            }
+
+            return null;
+        }
+
+        public IUniverse Join(Cell first, Cell second)
+        {
+            var sourceOffset = _cellOffsets[first.Identity];
+            var sourceVertex = _cellsGraph[sourceOffset.Top, sourceOffset.Left];
+            var sourcePosition = new Position(sourceOffset.Top, sourceOffset.Left);
+            var targetOffset = _cellOffsets[second.Identity];
+            var targetVertex = _cellsGraph[targetOffset.Top, targetOffset.Left];
+            var targetPosition = new Position(targetOffset.Top, targetOffset.Left);
+            _cellsGraph.SetEdge(sourcePosition, targetPosition, 1);
+            _cellsGraph.SetEdge(targetPosition, sourcePosition, 1);
+            return this;
+        }
+
+        public IUniverse Split(Cell first, Cell second)
+        {
+            var sourceOffset = _cellOffsets[first.Identity];
+            var sourceVertex = _cellsGraph[sourceOffset.Top, sourceOffset.Left];
+            var sourcePosition = new Position(sourceOffset.Top, sourceOffset.Left);
+            var targetOffset = _cellOffsets[second.Identity];
+            var targetVertex = _cellsGraph[targetOffset.Top, targetOffset.Left];
+            var targetPosition = new Position(targetOffset.Top, targetOffset.Left);
+            _cellsGraph.RemoveEdge(sourcePosition, targetPosition);
+            _cellsGraph.RemoveEdge(targetPosition, sourcePosition);
+            return this;
         }
 
         #endregion
 
-        #region Private Methods
-
-        private Cell? InternalFindAndGet(int row, int column)
-        {
-            return _islands
-                .Where(island => island.IsInBounds(row, column))
-                .Select(island => InternalGet(island, row, column))
-                .FirstOrDefault();
-        }
-
-        private Cell? InternalGet(ImmutableIsland island, int row, int column)
-        {
-            int relativeRow = row - island.TopLeft.Top;
-            int relativeColumn = column - island.TopLeft.Left;
-            return island.ImmutableGrid[relativeRow, relativeColumn];
-        }
-
-        private MutableGridAggregate ToMutableGrid()
-        {
-            var islands = _islands
-                .Select(island => island.ToMutable())
-                .ToList();
-            return new MutableGridAggregate(Identity, islands, Size);
-        }
-
-        #endregion
-
-        #region Private Internal Types
-
-        internal record ImmutableIsland(IImmutableGrid ImmutableGrid, Offset TopLeft) : 
-            IMoveable<ImmutableIsland>, 
-            IMutableConverter<MutableIsland>
-        {
-            public Offset BottomRight => new (TopLeft.Left + ImmutableGrid.Size.Width, TopLeft.Top + ImmutableGrid.Size.Height);
-
-            public ImmutableIsland Move(int shiftLeft, int shiftTop)
-            {
-                var shiftedTopLeft = new Offset(TopLeft.Left + shiftLeft, TopLeft.Top + shiftTop);
-                return new (ImmutableGrid, shiftedTopLeft);
-            }
-
-            public bool IsInBounds(int absoluteRow, int absoluteColumn)
-            {
-                return TopLeft.Left <= absoluteColumn
-                    && TopLeft.Top <= absoluteRow
-                    && absoluteColumn < BottomRight.Left
-                    && absoluteRow < BottomRight.Top;
-            }
-
-            public MutableIsland ToMutable() => new (ImmutableGrid.ToMutable(), TopLeft);
-        }
-
-        internal record MutableIsland(IMutableGrid MutableGrid, Offset TopLeft) : 
-            IImmutableConverter<ImmutableIsland>
-        {
-            public Offset BottomRight => new (TopLeft.Left + MutableGrid.Size.Width, TopLeft.Top + MutableGrid.Size.Height);
-
-            public bool IsInBounds(int absoluteRow, int absoluteColumn)
-            {
-                return TopLeft.Left <= absoluteColumn
-                    && TopLeft.Top <= absoluteRow
-                    && absoluteColumn < BottomRight.Left
-                    && absoluteRow < BottomRight.Top;
-            }
-
-            public ImmutableIsland ToImmutable() => new (MutableGrid.ToImmutable(), TopLeft);
-        }
-
-        internal class MutableGridAggregate : IMutableUniverse
-        {
-            private readonly List<MutableIsland> _islands = new List<MutableIsland>();
-
-            public MutableGridAggregate(Guid identity, List<MutableIsland> islands, Size size)
-            {
-                _islands = islands ?? throw new ArgumentNullException(nameof(islands));
-                Size = size ?? throw new ArgumentNullException(nameof(size));
-                Identity = identity;
-            }
-
-            public Guid Identity { get; }
-
-            public Size Size { get; }
-
-            public void Set(int row, int column, Cell cell)
-            {
-                _islands
-                    .Where(island => island.IsInBounds(row, column))
-                    .ToList()
-                    .ForEach(island => InternalSet(island, row, column, cell));
-            }
-
-            IUniverse IImmutableConverter<IUniverse>.ToImmutable() => ToImmutableGrid();
-
-            IImmutableGrid IImmutableConverter<IImmutableGrid>.ToImmutable() => ToImmutableGrid();
-
-            private Universe ToImmutableGrid()
-            {
-                var islands = _islands
-                    .Select(island => island.ToImmutable())
-                    .ToList();
-                return new (Identity, islands, Size);
-            }
-
-            protected void InternalSet(MutableIsland island, int row, int column, Cell cell)
-            {
-                int relativeRow = row - island.TopLeft.Top;
-                int relativeColumn = column - island.TopLeft.Left;
-                var size = island.MutableGrid.Size;
-
-                if (ImmutableGridExtensions.IsValidIndex(size, row, column))
-                {
-                    island.MutableGrid.Set(relativeRow, relativeColumn, cell);
-                }
-            }
-        }
-
-        #endregion
+        private Cell? InternalFindAndGet(int row, int column) => _cellsGraph[row, column]?.Value;
     }
 }
