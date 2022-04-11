@@ -1,4 +1,4 @@
-import { HubConnectionState, HubConnection, HubConnectionBuilder } from "@aspnet/signalr";
+import { HubConnection, HubConnectionBuilder } from "@aspnet/signalr";
 import { World } from "../models/World";
 
 export class GameService {
@@ -11,9 +11,7 @@ export class GameService {
     }
     
     public connect() {
-        return this.connection.state === HubConnectionState.Disconnected
-            ? this.connection.start()
-            : Promise.resolve();
+        return this.connection.start();
     }
 
     public subscribe(func: (world: World) => void) {
@@ -21,15 +19,11 @@ export class GameService {
     }
     
     public start(userId: number, patternId: number) {
-        return this.connection.state === HubConnectionState.Connected
-            ? this.connection.invoke("StartGameFromPattern", userId, patternId)
-            : Promise.resolve();
+        return this.connection.invoke("StartGameFromPattern", userId, patternId)
     }
 
     public end(userId: number) {
-        return this.connection.state === HubConnectionState.Connected
-            ? this.connection.invoke("EndUserGame", userId)
-            : Promise.resolve();
+        return this.connection.invoke("EndUserGame", userId)
     }
 }
 
