@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace GameOfLife.CSharp.Api.Models
+namespace GameOfLife.CSharp.Api.ViewModels
 {
     public class PopulationPatternInfoVM
     {

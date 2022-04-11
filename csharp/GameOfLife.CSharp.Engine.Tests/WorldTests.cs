@@ -2,7 +2,7 @@
 using System;
 using Xunit;
 
-namespace GameOfLife.Engine.Tests
+namespace GameOfLife.CSharp.Engine.Tests
 {
     public class WorldTests
     {

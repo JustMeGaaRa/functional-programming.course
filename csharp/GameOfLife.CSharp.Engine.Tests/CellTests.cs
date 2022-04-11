@@ -1,7 +1,7 @@
 using GameOfLife.CSharp.Engine;
 using Xunit;
 
-namespace GameOfLife.Engine.Tests
+namespace GameOfLife.CSharp.Engine.Tests
 {
     public class CellTests
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace GameOfLife.CSharp.Api.Models
+namespace GameOfLife.CSharp.Api.ViewModels
 {
     public class PopulationPatternViewVM
     {

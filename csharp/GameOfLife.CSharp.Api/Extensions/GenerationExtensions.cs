@@ -1,4 +1,4 @@
-﻿using GameOfLife.CSharp.Api.Models;
+﻿using GameOfLife.CSharp.Api.ViewModels;
 using GameOfLife.CSharp.Engine;
 using System.Collections.Generic;
 

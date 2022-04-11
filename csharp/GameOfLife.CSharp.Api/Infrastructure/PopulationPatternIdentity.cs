@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 
-namespace GameOfLife.Engine
+namespace GameOfLife.CSharp.Api.Infrastructure
 {
     public class PopulationPatternIdentity
     {

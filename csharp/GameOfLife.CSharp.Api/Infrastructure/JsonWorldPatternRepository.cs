@@ -1,7 +1,6 @@
 ﻿using GameOfLife.CSharp.Api.Extensions;
-using GameOfLife.CSharp.Api.Models;
+using GameOfLife.CSharp.Api.ViewModels;
 using GameOfLife.CSharp.Engine;
-using GameOfLife.Engine;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System.Collections.Generic;

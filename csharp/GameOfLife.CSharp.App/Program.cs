@@ -1,9 +1,8 @@
 ﻿using GameOfLife.CSharp.Engine;
-using GameOfLife.Engine;
 using System;
 using System.Threading.Tasks;
 
-namespace GameOfLife.App
+namespace GameOfLife.CSharp.App
 {
     public static class Program
     {
