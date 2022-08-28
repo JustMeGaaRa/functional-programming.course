@@ -27,19 +27,18 @@ namespace GameOfLife.CSharp.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<GameOptions>(Configuration.GetSection(nameof(GameOptions)));
             services.AddControllers();
             services.AddMvc();
             services.AddCors(policy => policy
                 .AddPolicy(CorsPolicyName, options => options
-                    .WithOrigins(Configuration["CORS:Origin"])
+                    .WithOrigins(Configuration["BACKEND:ALLOWED_ORIGINS"])
                     .AllowCredentials()
                     .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .SetIsOriginAllowed((host) => true)));
+                    .AllowAnyHeader()));
             services.AddSignalR();
             services.AddSwaggerGen(ConfigureSwaggerGenOptions);
-            services.AddSingleton<IWorldPatternRepository, JsonWorldPatternRepository>();
+            //services.AddSingleton<IWorldPatternRepository, JsonWorldPatternRepository>(provider => new (Configuration["BACKEND:PATTERN_DIR"]));
+            services.AddSingleton<IWorldPatternRepository, InMemoryWorldPatternRepository>();
             services.AddSingleton<IGameOfLifeService, InMemoryGameOfLifeService>();
         }
 
@@ -63,7 +62,11 @@ namespace GameOfLife.CSharp.Api
             app.UseStaticFiles();
 
             app.UseSwagger();
-            app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.json", SwaggerApiName));
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", SwaggerApiName);
+                options.RoutePrefix = string.Empty;
+            });
         }
 
         private static void ConfigureSwaggerGenOptions(SwaggerGenOptions options)

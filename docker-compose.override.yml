@@ -1,0 +1,25 @@
+version: '3.4'
+
+services:
+  gameoflife.csharp.api:
+    image: ${DOCKER_REGISTRY-}gameoflifecsharpapi
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - BACKEND__ALLOWED_ORIGINS=http://localhost:3000
+      - BACKEND__PATTERN_DIR=../resources/patterns
+    ports:
+      - "44371:80"
+      - "44370:443"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+  
+  gameoflife.typescript.web:
+    image: ${DOCKER_REGISTRY-}gameoflifetypescriptweb
+    environment:
+      - REACT_APP_API_URL=https://localhost:44370
+    #env_file:
+    #  - .env.dev
+    ports:
+      - "3000:3000"

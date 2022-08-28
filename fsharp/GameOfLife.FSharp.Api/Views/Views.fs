@@ -1,7 +1,7 @@
 ﻿namespace GameOfLife.FSharp.Api
 
 open Giraffe
-open GiraffeViewEngine
+open Giraffe.ViewEngine
 open GameOfLife.FSharp.Engine
 
 module Views =

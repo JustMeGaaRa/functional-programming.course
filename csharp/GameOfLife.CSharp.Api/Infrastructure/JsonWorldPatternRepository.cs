@@ -1,7 +1,6 @@
 ﻿using GameOfLife.CSharp.Api.Extensions;
 using GameOfLife.CSharp.Api.ViewModels;
 using GameOfLife.CSharp.Engine;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
@@ -11,12 +10,12 @@ namespace GameOfLife.CSharp.Api.Infrastructure
 {
     public class JsonWorldPatternRepository : IWorldPatternRepository
     {
-        private readonly Dictionary<int, PopulationPattern> _patterns = new Dictionary<int, PopulationPattern>();
-        private readonly IOptions<GameOptions> _options;
+        private readonly Dictionary<int, PopulationPattern> _patterns = new ();
+        private readonly string _patternsDirectory;
 
-        public JsonWorldPatternRepository(IOptions<GameOptions> options)
+        public JsonWorldPatternRepository(string patternsDirectory)
         {
-            _options = options;
+            _patternsDirectory = patternsDirectory;
         }
 
         public PopulationPattern? SavePattern(PopulationPattern pattern)
@@ -35,9 +34,9 @@ namespace GameOfLife.CSharp.Api.Infrastructure
 
         public ICollection<PopulationPattern> GetUserPatterns(int userId)
         {
-            if (_patterns.Count == 0)
+            if (_patterns.Count == 0 && Directory.Exists(_patternsDirectory))
             {
-                var patterns = Directory.EnumerateFiles(_options.Value.PatternsDirectory, "*.json")
+                var patterns = Directory.EnumerateFiles(_patternsDirectory, "*.json")
                     .Select(DeserializePattern)
                     .Select(ToPopulationPattern)
                     .Select(pattern => _patterns[pattern.PatternId] = pattern)
@@ -67,7 +66,7 @@ namespace GameOfLife.CSharp.Api.Infrastructure
         {
             char[] invalids = Path.GetInvalidFileNameChars();
             string sanitizedName = invalids.Aggregate(patternName.ToLower(), (current, symbol) => current.Replace(symbol, '-'));
-            return Path.Combine(_options.Value.PatternsDirectory, $"{sanitizedName}.json");
+            return Path.Combine(_patternsDirectory, $"{sanitizedName}.json");
         }
 
         private bool SerializePattern(PopulationPattern pattern)

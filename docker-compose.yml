@@ -1,0 +1,28 @@
+version: '3.4'
+
+services:
+  gameoflife.csharp.api:
+    image: ${DOCKER_REGISTRY-}gameoflifecsharpapi:${IMG_TAG}
+    container_name: game-of-life.csharp.api
+    build:
+      context: .
+      dockerfile: csharp/GameOfLife.CSharp.Api/Dockerfile
+    networks:
+      - game-of-life-net
+
+  gameoflife.typescript.web:
+    image: ${DOCKER_REGISTRY-}gameoflifetypescriptweb:${IMG_TAG}
+    container_name: game-of-life.typescript.web
+    build:
+      context: .
+      dockerfile: typescript/GameOfLife.TypeScript.Web/Dockerfile
+    networks:
+      - game-of-life-net
+    depends_on:
+      - gameoflife.csharp.api
+
+networks:
+  game-of-life-net:
+    name: game-of-life-net
+    driver: bridge
+    external: false

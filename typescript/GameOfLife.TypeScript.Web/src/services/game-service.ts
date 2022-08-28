@@ -5,8 +5,10 @@ export class GameService {
     private connection: HubConnection;
 
     constructor() {
+        console.log(process.env.REACT_APP_API_URL);
+        const websocketUrl = `${process.env.REACT_APP_API_URL}/game`;
         this.connection = new HubConnectionBuilder()
-            .withUrl("https://localhost:44370/game")
+            .withUrl(websocketUrl)
             .build();
     }
     

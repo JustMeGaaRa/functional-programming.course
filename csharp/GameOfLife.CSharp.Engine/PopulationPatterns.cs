@@ -1,7 +1,6 @@
-﻿using GameOfLife.CSharp.Engine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace GameOfLife.CSharp.App
+namespace GameOfLife.CSharp.Engine
 {
     public static class PopulationPatterns
     {
