@@ -7,8 +7,6 @@ services:
     build:
       context: .
       dockerfile: csharp/GameOfLife.CSharp.Api/Dockerfile
-    networks:
-      - game-of-life-net
 
   gameoflife.typescript.web:
     image: ${DOCKER_REGISTRY-}gameoflifetypescriptweb:${IMG_TAG}
@@ -16,13 +14,5 @@ services:
     build:
       context: .
       dockerfile: typescript/GameOfLife.TypeScript.Web/Dockerfile
-    networks:
-      - game-of-life-net
     depends_on:
       - gameoflife.csharp.api
-
-networks:
-  game-of-life-net:
-    name: game-of-life-net
-    driver: bridge
-    external: false

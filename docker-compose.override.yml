@@ -19,7 +19,5 @@ services:
     image: ${DOCKER_REGISTRY-}gameoflifetypescriptweb
     environment:
       - REACT_APP_API_URL=https://localhost:44370
-    #env_file:
-    #  - .env.dev
     ports:
       - "3000:3000"
